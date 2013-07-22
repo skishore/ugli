@@ -1,0 +1,59 @@
+<head>
+  <title>grabble</title>
+</head>
+
+<body>
+  {{> top_bar}}
+  {{> side_bar}}
+  <!--{{> games_list}}-->
+</body>
+
+<template name="top_bar">
+  <div id="top-bar">
+    <div class="inner">
+      <span id="nav-title">Grabble</span>
+      {{loginButtons}}
+    </div>
+  </div>
+</template>
+
+<template name="side_bar">
+  {{> user_list}}
+  {{> chat_box}}
+</template>
+
+<template name="user_list">
+  <div id="user-wrapper" class="vertical-fullscreen">
+    <ul id="user-list">
+      <li class="num_users">{{num_users}} users</li>
+      {{#each users}}
+        <li>{{name}}</li>
+      {{/each}}
+    </ul>
+  </div>
+</template>
+
+<template name="chat_box">
+  <div id="chat-wrapper" class="vertical-fullscreen">
+    <ul id="message-list">
+      {{#each messages}}
+        <li>
+          <span class="sender">{{sender}}:</span>
+          {{message}}
+        </li>
+      {{/each}}
+    </ul>
+    <div id="chat-input-wrapper">
+      Message:
+      <input id="chat-input" type="text">
+    </div>
+  </div>
+</template>
+
+<template name="games_list">
+  <ul>
+    {{#each games}}
+      <li>Name: {{name}}, owner: {{owner}}</li>
+    {{/each}}
+  </ul>
+</template>

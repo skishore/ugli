@@ -1,0 +1,5 @@
+.meteor
+*.css
+*.js
+*.sass-cache
+*.swp
