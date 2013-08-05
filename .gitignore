@@ -1,5 +1,6 @@
 .meteor
-*.css
-*.js
+packages
+smart.json
+smart.lock
 *.sass-cache
 *.swp

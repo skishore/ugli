@@ -4,8 +4,14 @@
 
 <body>
   {{> top_bar}}
-  {{> side_bar}}
-  <!--{{> games_list}}-->
+  <div id="remainder-wrapper">
+    <div id="remainder">
+      <div id="main-content">
+        {{> games_list}}
+      </div>
+      {{> side_bar}}
+    </div>
+  </div>
 </body>
 
 <template name="top_bar">
@@ -18,12 +24,14 @@
 </template>
 
 <template name="side_bar">
-  {{> user_list}}
-  {{> chat_box}}
+  <div id="side-bar">
+    {{> user_list}}
+    {{> chat_box}}
+  </div>
 </template>
 
 <template name="user_list">
-  <div id="user-wrapper" class="vertical-fullscreen">
+  <div id="user-wrapper" class="full-height">
     <ul id="user-list">
       <li class="num_users">{{num_users}} users</li>
       {{#each users}}
@@ -34,8 +42,8 @@
 </template>
 
 <template name="chat_box">
-  <div id="chat-wrapper" class="vertical-fullscreen">
-    <ul id="message-list">
+  <div id="chat-wrapper">
+    <ul id="message-list" class="full-height">
       {{#each messages}}
         <li>
           <span class="sender">{{sender}}:</span>
@@ -44,7 +52,7 @@
       {{/each}}
     </ul>
     <div id="chat-input-wrapper">
-      Message:
+      <div id="chat-message">Message:</div>
       <input id="chat-input" type="text">
     </div>
   </div>
