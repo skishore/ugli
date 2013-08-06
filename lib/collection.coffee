@@ -53,7 +53,7 @@ class @Collection
     @check_fields_legal selector
     @check_update update
     console.log(@collection, selector, update) if @verbose
-    @collection.update selector, update
+    @collection.update selector, update, multi: true
 
   @remove: (selector) ->
     if not selector
