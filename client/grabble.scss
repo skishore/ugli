@@ -18,8 +18,14 @@ body {
   #login-buttons {
     float: right;
 
+    #login-name-link, #login-sign-in-link {
+      display: block;
+      text-align: right;
+      width: 204px;
+    }
+
     #login-dropdown-list {
-      left: -145px;
+      left: 0px;
       padding: 4px 12px;
       top: 6px;
 
