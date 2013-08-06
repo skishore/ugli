@@ -29,8 +29,17 @@ Template.user_list.users = ->
     return []
   Users.find('fields.room_ids': Session.get 'room_id')
 
-Template.chat_box.messages = ->
-  (sender: 'skishore', message: 'hello' for i in [0...64])
+Template.chat_box.chats = ->
+  Chats.find(room_id: Session.get 'room_id')
+
+Template.chat_box.events({
+  'keydown #chat-input': (e) ->
+    if e.keyCode == 13
+      message = $(e.target).val().strip()
+      if message
+        Meteor.call 'send_chat', Session.get('room_id'), message
+        $(e.target).val ''
+})
 
 
 Template.games_list.games = ->
@@ -41,6 +50,7 @@ Meteor.startup () ->
   Deps.autorun () ->
     Meteor.subscribe 'rooms'
     Meteor.subscribe 'users'
+    Meteor.subscribe 'chats'
     if not Rooms.findOne(_id: Session.get 'room_id')
       Session.set 'room_id', Rooms.get_lobby()?._id
 

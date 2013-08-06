@@ -10,7 +10,16 @@ class @Rooms extends @Collection
   if Meteor.isServer
     @collection._ensureIndex 'name', unique: true
 
-  @lobby_name = 'Lobby'
+  @publish: (user_id) ->
+    lobby_cursor = @find(name: Common.lobby_name)
+    user = Users.findOne(_id: user_id)
+    if not user?.fields?.room_ids
+      if user
+        Users.update({_id: user_id},
+          $set: 'fields.room_ids': [@get_lobby()._id],
+        )
+      return lobby_cursor
+    @find(_id: $in: user.fields.room_ids)
 
   @get_lobby = ->
-    @findOne(name: @lobby_name)
+    @findOne(name: Common.lobby_name)
