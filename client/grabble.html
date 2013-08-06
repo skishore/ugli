@@ -31,10 +31,16 @@
 </template>
 
 <template name="side_bar">
-  <div id="side-bar">
-    {{> user_list}}
-    {{> chat_box}}
-  </div>
+  {{#if is_logged_in}}
+    <div id="side-bar" class="logged-in">
+      {{> user_list}}
+      {{> chat_box}}
+    </div>
+  {{else}}
+    <div id="side-bar" class="logged-out">
+      Sign in using the link in the top right.
+    </div>
+  {{/if}}
 </template>
 
 <template name="user_list">

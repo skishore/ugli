@@ -3,11 +3,11 @@ Accounts.ui.config {
 }
 
 
-Template.top_bar.rooms = () ->
+Template.top_bar.rooms = ->
   Rooms.find()
 
-Template.top_bar.selected = () ->
-  if @_id == Session.get 'room_id'
+Template.top_bar.selected = ->
+  if Meteor.user() and @_id == Session.get 'room_id'
     return 'selected'
 
 Template.top_bar.events({
@@ -16,20 +16,24 @@ Template.top_bar.events({
 })
 
 
-Template.user_list.num_users = () ->
+Template.side_bar.is_logged_in = ->
+  Meteor.user()
+
+Template.user_list.num_users = ->
   if not Session.get 'room_id'
     return 0
   Users.find('fields.room_ids': Session.get 'room_id').count()
 
-Template.user_list.users = () ->
+Template.user_list.users = ->
   if not Session.get 'room_id'
     return []
   Users.find('fields.room_ids': Session.get 'room_id')
 
-Template.chat_box.messages = () ->
+Template.chat_box.messages = ->
   (sender: 'skishore', message: 'hello' for i in [0...64])
 
-Template.games_list.games = () ->
+
+Template.games_list.games = ->
   (name: 'Game #' + i, owner: 'skishore' for i in [0...16])
 
 

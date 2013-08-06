@@ -55,16 +55,16 @@ body {
       font-size: 14px;
       margin-left: 12px;
       padding: 0px 6px;
-    }
 
-    .room-tab.selected {
-      background-color: white;
-      border: 1px solid black;
-      border-bottom-left-radius: 0px;
-      border-bottom-right-radius: 0px;
-      border-width: 1px 1px 0px;
-      color: black;
-      padding: 0px 6px 5px;
+      &.selected {
+        background-color: white;
+        border: 1px solid black;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-width: 1px 1px 0px;
+        color: black;
+        padding: 0px 6px 5px;
+      }
     }
   }
 }
@@ -95,9 +95,16 @@ body {
     }
 
     #side-bar {
-      border: 1px solid black;
       right: 0;
       width: 32%;
+
+      &.logged-in {
+        border: 1px solid black;
+      }
+
+      &.logged-out {
+        text-align: right;
+      }
     }
   }
 
