@@ -31,7 +31,9 @@ body {
 
   #tab-bar {
     background-color: #AAA;
-    height: 23px;
+    border: solid black;
+    border-width: 0px 0px 1px;
+    height: 22px;
     padding: 4px 0px 0px;
     position: absolute;
     top: 23px;
@@ -99,13 +101,13 @@ body {
   }
 }
 
-#user-wrapper {
+#player-wrapper {
   left: 0px;
   overflow-x: hidden;
   overflow-y: scroll;
   width: 140px;
 
-  #user-list {
+  #player-list {
     margin: 0px;
     padding: 0px;
 

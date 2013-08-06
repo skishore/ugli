@@ -32,16 +32,16 @@
 
 <template name="side_bar">
   <div id="side-bar">
-    {{> user_list}}
+    {{> player_list}}
     {{> chat_box}}
   </div>
 </template>
 
-<template name="user_list">
-  <div id="user-wrapper" class="full-height">
-    <ul id="user-list">
-      <li class="num_users">{{num_users}} users</li>
-      {{#each users}}
+<template name="player_list">
+  <div id="player-wrapper" class="full-height">
+    <ul id="player-list">
+      <li class="num_players">{{num_players}} players</li>
+      {{#each players}}
         <li>{{name}}</li>
       {{/each}}
     </ul>
