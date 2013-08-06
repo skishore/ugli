@@ -3,12 +3,12 @@ body {
   overflow-y: scroll;
 }
 
-#top-bar {
+#top-bar-wrapper {
   position: fixed;
   top: 0;
   width: 100%;
 
-  .inner {
+  #top-bar {
     background-color: #BDF;
     border: solid black;
     border-width: 0px 0px 1px;
@@ -28,6 +28,37 @@ body {
       }
     }
   }
+
+  #tab-bar {
+    background-color: #AAA;
+    height: 23px;
+    padding: 4px 0px 0px;
+    position: absolute;
+    top: 23px;
+    width: 100%;
+
+    .room-tab {
+      background-color: #EEE;
+      border: 1px solid #444;
+      border-radius: 4px;
+      color: #444;
+      cursor: pointer;
+      float: left;
+      font-size: 14px;
+      margin-left: 12px;
+      padding: 0px 6px;
+    }
+
+    .room-tab.selected {
+      background-color: white;
+      border: 1px solid black;
+      border-bottom-left-radius: 0px;
+      border-bottom-right-radius: 0px;
+      border-width: 1px 1px 0px;
+      color: black;
+      padding: 0px 6px 5px;
+    }
+  }
 }
 
 #remainder-wrapper {
@@ -35,7 +66,8 @@ body {
   left: 0px;
   position: fixed;
   right: 0px;
-  top: 23px;
+  /* The height of the top bar and tab bar. */
+  top: 46px;
   /* Needed to keep the main content underneath the login buttons. */
   z-index: -1;
 
