@@ -1,12 +1,16 @@
-# name: string
-@Rooms = new Collection('rooms', ['name'], 'name')
+# This collections stores data about rooms, which can be lobbys,
+# singleplayer games, or multiplayer games.
+#   name: string
 
-@using @Rooms, ->
-  @get_initial_room_ids = ->
-    rooms = @find().fetch()
-    room_ids = []
-    while not room_ids.length
-      for room in rooms
-        if Math.random() > 0.5
-          room_ids.push room._id
-    room_ids
+class @Rooms extends @Collection
+  @collection = new Meteor.Collection 'rooms'
+  @fields = [
+    'name',
+  ]
+  if Meteor.isServer
+    @collection._ensureIndex 'name', unique: true
+
+  @lobby_name = 'Lobby'
+
+  @get_lobby = ->
+    @findOne(name: @lobby_name)

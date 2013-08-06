@@ -32,17 +32,17 @@
 
 <template name="side_bar">
   <div id="side-bar">
-    {{> player_list}}
+    {{> user_list}}
     {{> chat_box}}
   </div>
 </template>
 
-<template name="player_list">
-  <div id="player-wrapper" class="full-height">
-    <ul id="player-list">
-      <li class="num_players">{{num_players}} players</li>
-      {{#each players}}
-        <li>{{name}}</li>
+<template name="user_list">
+  <div id="user-wrapper" class="full-height">
+    <ul id="user-list">
+      <li class="num_users">{{num_users}} users</li>
+      {{#each users}}
+        <li>{{username}}</li>
       {{/each}}
     </ul>
   </div>
@@ -66,9 +66,5 @@
 </template>
 
 <template name="games_list">
-  <ul>
-    {{#each games}}
-      <li>Name: {{name}}, owner: {{owner}}</li>
-    {{/each}}
-  </ul>
+  The games list should go here.
 </template>

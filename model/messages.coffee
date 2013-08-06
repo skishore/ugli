@@ -1,10 +1,14 @@
-# room_id: room _id
-# sender: string
-# message: string
-# sent: ts
-@Messages = new Collection(
-  'messages',
-  ['room_id', 'sender', 'message', 'sent'],
-)
+# This collection stores messages that are local to a room:
+#   room_id: room _id
+#   sender: string
+#   message: string
+#   sent: ts
 
-@using @Messages, ->
+class @Messages extends @Collection
+  @collection = new Meteor.Collection 'messages'
+  @fields = [
+    'room_id',
+    'sender',
+    'message',
+    'sent',
+  ]

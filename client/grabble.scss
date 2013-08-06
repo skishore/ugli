@@ -84,7 +84,6 @@ body {
     }
 
     #main-content {
-      background-color: #FF0;
       left: 0;
       width: 62%;
     }
@@ -101,13 +100,14 @@ body {
   }
 }
 
-#player-wrapper {
+#user-wrapper {
+  background-color: #EEE;
   left: 0px;
   overflow-x: hidden;
   overflow-y: scroll;
   width: 140px;
 
-  #player-list {
+  #user-list {
     margin: 0px;
     padding: 0px;
 
