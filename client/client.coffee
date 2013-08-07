@@ -7,7 +7,7 @@ Template.top_bar.rooms = ->
   # Return the list Rooms.find(), but sorted with the lobby first.
   lobby = Rooms.get_lobby()
   if not lobby
-    return []
+    return [{name: Common.lobby_name}]
   [lobby].concat(room for room in Rooms.find(
     {}, sort: name: 1,
   ).fetch() when room._id != lobby._id)
@@ -28,11 +28,6 @@ Meteor.startup ->
       Meteor.subscribe 'users'
       Meteor.subscribe 'rooms'
 
-      Meteor.setInterval(() ->
-        Meteor.call 'heartbeat', (err, result) ->
-          return console.log err if err
-      , 1000)
-
   Deps.autorun ->
     if not Rooms.findOne(_id: Session.get 'room_id')
       Session.set 'room_id', Rooms.get_lobby()?._id
@@ -40,3 +35,9 @@ Meteor.startup ->
   Deps.autorun ->
     room_ids = (room._id for room in Rooms.find().fetch())
     Meteor.subscribe 'chats', room_ids
+
+  Meteor.setInterval(() ->
+    if Meteor.userId()
+      Meteor.call 'heartbeat', (err, result) ->
+        return console.log err if err
+  , 1000)
