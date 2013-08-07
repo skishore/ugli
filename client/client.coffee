@@ -22,46 +22,6 @@ Template.top_bar.events({
 })
 
 
-Template.side_bar.is_logged_in = ->
-  Meteor.user()
-
-Template.user_list.num_users = ->
-  if not Session.get 'room_id'
-    return 0
-  Users.find('fields.room_ids': Session.get 'room_id').count()
-
-Template.user_list.users = ->
-  if not Session.get 'room_id'
-    return []
-  Users.find({'fields.room_ids': Session.get 'room_id'}, sort: username: 1)
-
-Template.chat_box.chats = ->
-  Session.set 'scroll_chats', true
-  Chats.find({room_id: Session.get 'room_id'}, sort: sent: 1)
-
-Template.chat_box.rendered = ->
-  if Session.get 'scroll_chats'
-    scroll_chats()
-    Session.set 'scroll_chats', false
-
-Template.chat_box.events({
-  'keydown #chat-input': (e) ->
-    if e.keyCode == 13
-      message = $(e.target).val().strip()
-      if message
-        Meteor.call 'send_chat', Session.get('room_id'), message
-        $(e.target).val ''
-})
-
-are_chats_scrolled = ->
-  elt = $ '#message-list'
-  not elt.length or elt[0].scrollTop + elt.height() + 1 >= elt[0].scrollHeight
-
-scroll_chats = ->
-  elt = $ '#message-list'
-  not elt.length or elt.scrollTop(elt[0].scrollHeight)
-
-
 Template.games_list.games = ->
   (name: 'Game #' + i, owner: 'skishore' for i in [0...16])
 
@@ -74,13 +34,6 @@ Meteor.startup ->
   Deps.autorun ->
     if not Rooms.findOne(_id: Session.get 'room_id')
       Session.set 'room_id', Rooms.get_lobby()?._id
-
-  Deps.autorun ->
-    Template.chat_box.chats().observe({
-      added: (document) ->
-        if are_chats_scrolled()
-          Session.set 'scroll_chats', true
-    })
 
   Meteor.setInterval(() =>
     Meteor.call 'heartbeat', (err, result) ->
