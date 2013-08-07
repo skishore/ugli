@@ -19,7 +19,7 @@ class @Chats extends @Collection
       return @find(room_id: Rooms.get_lobby()._id)
     @find(room_id: $in: user.fields.room_ids)
 
-  @send_chat: (room_id, user_id, message) ->
+  @send_chat: (user_id, room_id, message) ->
     message = message.strip()
     if message
       user = Users.findOne(_id: user_id)

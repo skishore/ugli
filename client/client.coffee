@@ -27,8 +27,8 @@ Template.games_list.games = ->
 
 
 Meteor.startup ->
-  Meteor.subscribe 'rooms'
   Meteor.subscribe 'users'
+  Meteor.subscribe 'rooms'
   Meteor.subscribe 'chats'
 
   Deps.autorun ->
