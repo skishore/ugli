@@ -17,7 +17,6 @@ class @Chats extends @Collection
     user = Users.findOne(_id: user_id)
     if not user?.fields?.room_ids
       return @find(room_id: Rooms.get_lobby()._id)
-    console.log @find(room_id: $in: user.fields.room_ids).fetch()
     @find(room_id: $in: user.fields.room_ids)
 
   @send_chat: (room_id, user_id, message) ->

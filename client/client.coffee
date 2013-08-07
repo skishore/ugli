@@ -4,7 +4,13 @@ Accounts.ui.config {
 
 
 Template.top_bar.rooms = ->
-  Rooms.find()
+  # Return the list Rooms.find(), but sorted with the lobby first.
+  lobby = Rooms.get_lobby()
+  if not lobby
+    return []
+  [lobby].concat(room for room in Rooms.find(
+    {}, sort: name: 1,
+  ) when room._id != lobby._id)
 
 Template.top_bar.selected = ->
   if Meteor.user() and @_id == Session.get 'room_id'
@@ -27,10 +33,10 @@ Template.user_list.num_users = ->
 Template.user_list.users = ->
   if not Session.get 'room_id'
     return []
-  Users.find('fields.room_ids': Session.get 'room_id')
+  Users.find({'fields.room_ids': Session.get 'room_id'}, sort: username: 1)
 
 Template.chat_box.chats = ->
-  Chats.find(room_id: Session.get 'room_id')
+  Chats.find({room_id: Session.get 'room_id'}, sort: sent: 1)
 
 Template.chat_box.events({
   'keydown #chat-input': (e) ->
