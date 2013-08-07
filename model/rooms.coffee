@@ -1,62 +1,50 @@
 # This collections stores data about rooms, which can be lobbys,
 # singleplayer games, or multiplayer games.
 #   name: string
-#   invite_ids: [list of user _ids]
-#   max_size: int or null
-#   member_ids: [list of user _ids]
+#   user_ids: [user _ids]
 #   private: bool
+#   invites: [string usernames]
 #   rules: dict or null (for lobbies)
 
 class @Rooms extends @Collection
   @collection = new Meteor.Collection 'rooms'
   @fields = [
     'name',
-    'invited_ids',
-    'max_size',
-    'member_ids',
+    'user_ids',
     'private',
+    'invites',
     'rules',
   ]
   if Meteor.isServer
     @collection._ensureIndex 'name', unique: true
 
   @publish: (user_id) ->
-    lobby_cursor = @find(name: Common.lobby_name)
-    user = Users.findOne(_id: user_id)
-    if not user?.fields?.room_ids
-      if user
-        @join_room(@get_lobby(), user)
-      return lobby_cursor
-    @find(_id: $in: user.fields.room_ids)
+    check(user_id, String)
+    @find(user_ids: user_id)
 
   @get_lobby = ->
     result = @findOne(name: Common.lobby_name)
     if not result and Meteor.isServer
       @insert(
         name: Common.lobby_name,
-        invited_ids: [],
-        max_size: null,
-        member_ids: [],
+        user_ids: [],
         private: false,
+        invites: [],
         rules: null,
       )
       result = @findOne(name: Common.lobby_name)
     result
 
-  @join_room = (room, user) ->
-    # Adds a user to a room's list of members and the room to the user's.
-    @update({_id: room._id},
-      $addToSet: 'member_ids': user._id,
-    )
-    Users.update({_id: user._id},
-      $addToSet: 'fields.room_ids': room._id,
-    )
+  @join_room = (user_id, room_id) ->
+    check(user_id, String)
+    check(room_id, String)
+    @update({_id: room_id}, $addToSet: 'user_ids': user_id)
 
-  @leave_room = (room, user) ->
-    # The inverse operation to join_room.
-    Users.update({_id: user._id},
-      $pull: 'fields.room_ids': room._id,
-    )
-    @update({_id: room._id},
-      $pull: 'member_ids': user._id,
-    )
+  @leave_room = (user_id, room_id) ->
+    check(user_id, String)
+    check(room_id, String)
+    @update({_id: room_id}, $pull: 'user_ids': user_id)
+
+  @boot_users = (user_ids) ->
+    check(user_ids, [String])
+    @update({}, $pull: 'user_ids': $in: user_ids)

@@ -1,6 +1,12 @@
-Meteor.publish('users', -> Users.publish @userId)
-Meteor.publish('rooms', -> Rooms.publish @userId)
-Meteor.publish('chats', -> Chats.publish @userId)
+Meteor.publish('users', ->
+  Users.publish @userId
+)
+Meteor.publish('rooms', ->
+  Rooms.publish @userId
+)
+Meteor.publish('chats', (room_ids) ->
+  Chats.publish @userId, room_ids
+)
 
 
 Meteor.methods({
@@ -13,5 +19,5 @@ Meteor.methods({
 
 
 Meteor.setInterval((() ->
-  Users.mark_idle_users(Common.idle_timeout)
+  Users.mark_users_idle(Common.idle_timeout)
 ), Common.idle_timeout)

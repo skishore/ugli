@@ -16,14 +16,12 @@ Template.side_bar.is_logged_in = ->
   Meteor.user()
 
 Template.user_list.num_users = ->
-  if not Session.get 'room_id'
-    return 0
-  Users.find('fields.room_ids': Session.get 'room_id').count()
+  room = Rooms.findOne(_id: Session.get 'room_id')
+  Users.find(_id: $in: room?.user_ids or []).count()
 
 Template.user_list.users = ->
-  if not Session.get 'room_id'
-    return []
-  Users.find({'fields.room_ids': Session.get 'room_id'}, sort: username: 1)
+  room = Rooms.findOne(_id: Session.get 'room_id')
+  Users.find({_id: $in: room?.user_ids or []}, sort: username: 1)
 
 Template.chat_box.chats = ->
   # Scroll chats when this template is created anew, on login or room change.
