@@ -4,7 +4,7 @@
 #   message: string
 #   sent: ts
 
-class @Chats extends @Collection
+class @Chats extends Collection
   @collection = new Meteor.Collection 'chats'
   @fields = [
     'room_id',

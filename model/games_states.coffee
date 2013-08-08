@@ -5,7 +5,7 @@
 #   state: arbitrary JSON-able state
 #   views: dict mapping user_id -> view of state
 
-class @GameStates extends @Collection
+class @GameStates extends Collection
   @collection = new Meteor.Collection 'game_states'
   @fields = [
     'room_id',

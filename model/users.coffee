@@ -3,7 +3,7 @@
 #   fields.active: bool
 #   fields.heartbeat: ts
 
-class @Users extends @Collection
+class @Users extends Collection
   @collection = Meteor.users
   @fields = [
     'fields.active',

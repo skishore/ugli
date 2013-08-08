@@ -6,7 +6,7 @@
 #   game_state_id: game_state _id or null (for lobbies)
 # privates and invites fields to come soon.
 
-class @Rooms extends @Collection
+class @Rooms extends Collection
   @collection = new Meteor.Collection 'rooms'
   @fields = [
     'name',
