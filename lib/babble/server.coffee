@@ -18,7 +18,7 @@ is_valid_sentence = (words, sentence) ->
 generate_word_list = ->
     ["foo", "bar"] #TODO
 
-    
+
 client_handlers = {}
 
 start_countdown = (ugli) ->
@@ -74,7 +74,7 @@ end_voting = (ugli) ->
             ugli.state.scores[uid] += submitter_score
 
     # end scoring
-    if ugli.state.round isnt ugli.config.num_rounds
+    if ugli.state.round isnt ugli.rules.num_rounds
         ugli.state.round += 1
         start_countdown ugli
     else
