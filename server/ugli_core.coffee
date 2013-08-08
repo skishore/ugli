@@ -25,7 +25,7 @@ class @UGLICore
     }
 
   @get_views: (context) ->
-    console.log 'get_viws'
+    console.log 'get_views'
     views = {}
     for user_id in context.user_ids
       views[user_id] = Common.ugli_server.get_user_view context, user_id
@@ -38,4 +38,4 @@ class @UGLICore
     context = @create_initial_context user_id, rules
     Common.ugli_server.initialize_state context
     views = @get_views context
-    GameStates.create_game name, rules, context.state, views
+    GameStates.create_game user_id, name, rules, context.state, views

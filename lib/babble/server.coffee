@@ -3,7 +3,7 @@
 #   rules: read-only client-supplied game rules
 #   state: mutable game state (persisted after each call)
 #   setTimeout(callback, timeout):
-#     call callback(ugli) after <timeout> seconds.
+#     call callback(ugli) after <timeout> milliseconds.
 #     #TODO: returns a handle that supports .time_left() and .cancel()
 
 inv_map = (m) ->
