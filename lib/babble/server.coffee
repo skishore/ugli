@@ -97,7 +97,7 @@ class @BabbleServer
         # generate what client sees as ugli.state
         s = {}
         for prop in ['round', 'phase', 'words', 'scores']
-            s[prop] = ugli.state[prop]
+            s[prop] = ugli.state[prop] if prop of ugli.state
         if ugli.state.phase is "voting"
             s.sentences = (s for s of inv_map ugli.state.submissions)
         if ugli.state.phase isnt "voting"
