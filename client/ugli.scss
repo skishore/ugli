@@ -233,3 +233,10 @@ body {
     }
   }
 }
+
+#game-ui-container {
+  .ugli-game-ui {
+    border: 1px solid black;
+    position: absolute;
+  }
+}
