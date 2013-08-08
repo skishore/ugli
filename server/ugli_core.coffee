@@ -3,7 +3,7 @@ call_state_mutator = (room_id, callback) ->
   ctx = UGLICore.create_ugli_context room_id
   callback ctx
   if GameStates.update_game_state room_id, ctx.state, ctx._get_views()
-  ctx._after_save room_id
+    ctx._after_save room_id
 
 class @UGLIContext
   constructor: (@user_ids, @rules, @state=null) ->
