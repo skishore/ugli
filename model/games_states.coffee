@@ -22,7 +22,9 @@ class @GameStates extends @Collection
     # Restrict the user's view of states to rooms that he is in.
     rooms = Rooms.find(_id: {$in: room_ids}, user_ids: user_id).fetch()
     legal_room_ids = (room._id for room in rooms)
-    @find(room_id: $in: room_ids)
+    fields = {}
+    fields["views.#{user_id}"] = 1
+    @find({room_id: $in: room_ids}, fields: fields)
 
   @update_game_state: (room_id, state, views) ->
     # Update a game to the new state. Return true on success.
