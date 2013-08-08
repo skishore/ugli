@@ -1,5 +1,5 @@
 # client-side ugli context object (passed to Client constructor):
-#   config: read-only game config
+#   rules: read-only game config
 #   state: read-only client view of game state
 #   send(message):
 #     send an arbitrary JSONable message to server's on_client_message method
@@ -21,10 +21,13 @@ class @BabbleClient
         # populate the provided jquery-wrapped div with the game ui.
         @container.append(
             $('<pre class="babble-params"/>')
+            'Submit sentence: '
             $('<input class="babble-sentence"/>')
+            ' '
             $('<button/>').text('submit').on 'click', =>
                 ugli.send ['submit_sentence',
                     @container.find('.babble-sentence').val()]
+            'Submissions: '
             $('<ul class="babble-submissions"/>').on 'click', 'button', ->
                 ugli.send ['vote',
                     $(@).closest('li').find('.babble-submission').text()]
@@ -33,7 +36,7 @@ class @BabbleClient
 
     on_update: ->
         # called to notify client that ugli.state has changed.
-        @container.find('.babble-params').text @ugli.state
+        @container.find('.babble-params').text JSON.stringify @ugli.state
         @container.find('.babble-submissions').empty().append((
             $('<li/>').append(
                 $('<span class="babble-submission"/>').text s
