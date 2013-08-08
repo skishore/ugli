@@ -13,7 +13,8 @@ class @GameStates extends @Collection
     'state',
     'views',
   ]
-  @collection._ensureIndex 'room_id'
+  if Meteor.isServer
+    @collection._ensureIndex 'room_id'
 
   @publish: (user_id, room_ids) ->
     check(user_id, String)
