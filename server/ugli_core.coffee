@@ -47,4 +47,5 @@ class @UGLICore
     Common.ugli_server.initialize_state context
     views = context._get_views()
     room_id = GameStates.create_game user_id, name, rules, context.state, views
-    context._commit room_id
+    if room_id?
+      context._commit room_id
