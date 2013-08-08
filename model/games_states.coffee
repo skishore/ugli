@@ -25,10 +25,11 @@ class @GameStates extends @Collection
     @find(room_id: $in: room_ids)
 
   @create_game: (user_id, name, rules, initial_state, initial_views) ->
-    # Create a game with the given parameters. Return true on success.
+    # Create a game. Return room_id on success and false on failure.
     room_id = Rooms.create_room(name, [user_id], rules)
     room = Rooms.findOne(_id: room_id)
-    @update_game_state(room, initial_state, initial_views)
+    result = @update_game_state(room, initial_state, initial_views)
+    return if result then room_id else false
 
   @update_game_state: (room, state, views) ->
     # Update a game to the new state. Return true on success.
