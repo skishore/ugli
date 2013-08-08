@@ -12,7 +12,6 @@
 # In addition, the context provides these UGLI framework helper methods:
 #   setTimeout: (callback, delay) -> call callback after delay ms
 
-# TODO(skishore): setTimeout should produce a new ugli context in which to call the callback
 # TODO(skishore): the constructor for this context should just take a room_id
 # TODO(skishore): this context should store usernames instead of (or in addition to) user_ids
 
