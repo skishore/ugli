@@ -63,6 +63,6 @@ Meteor.startup ->
       show_game_ui key
       # Listen for changes on the room's game state.
       Rooms.find({_id: Session.get 'room_id'}).observeChanges({
-        added: -> update_game_ui
-        changed: -> update_game_ui
+        added: update_game_ui
+        changed: update_game_ui
       })
