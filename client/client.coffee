@@ -10,6 +10,12 @@ Meteor.startup ->
       Meteor.subscribe 'rooms'
 
   Deps.autorun ->
+    Rooms.find(user_ids: Meteor.userId()).observe(
+      added: (document) ->
+        Session.set 'room_id', document._id
+    )
+
+  Deps.autorun ->
     if not Rooms.findOne(_id: Session.get 'room_id')
       Session.set 'room_id', Rooms.get_lobby()?._id
 
