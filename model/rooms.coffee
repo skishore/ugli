@@ -22,7 +22,6 @@ class @Rooms extends @Collection
     @find()
 
   @create_room: (name, user_ids, rules) ->
-    console.log name, user_ids, rules
     # Create a new game room with no initial game state. Return its _id.
     check(name, String)
     check(user_ids, [String])

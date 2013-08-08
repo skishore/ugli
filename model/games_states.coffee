@@ -23,8 +23,7 @@ class @GameStates extends @Collection
     @find(room_id: $in: room_ids)
 
   @create_game: (user_id, name, rules, initial_state, initial_views) ->
-    console.log user_id, name, rules, initial_state, initial_views
-    room_id = Rooms.create_room(name, rules, [user_id])
+    room_id = Rooms.create_room(name, [user_id], rules)
     room = Rooms.findOne(_id: room_id)
     @update_game_state(room, initial_state, initial_views)
 
