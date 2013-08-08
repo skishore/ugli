@@ -12,7 +12,7 @@ scroll_chats = ->
   not elt.length or elt.scrollTop(elt[0].scrollHeight)
 
 
-Template.side_bar.is_logged_in = ->
+Template.side_bar.logged_in = ->
   Meteor.user()
 
 Template.user_list.num_users = ->

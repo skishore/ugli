@@ -6,10 +6,12 @@ fix_games_list_height = ->
   width = 0.455*$('#games-list').width() - 12
   $('#games-list .game').width width
 
+
 Template.games_list.games = ->
   Rooms.find(_id: $ne: Rooms.get_lobby()?._id)
 
 Template.games_list.rendered = ->
   fix_games_list_height()
+
 
 $(window).on('resize', fix_games_list_height)
