@@ -16,7 +16,8 @@ Meteor.startup ->
   Deps.autorun ->
     # TODO(skishore): This dependency reruns when there are any changes to the
     # room, including (for example) when new  users enter. Restrict it.
-    room_ids = (room._id for room in Rooms.find().fetch())
+    rooms = Rooms.find(user_ids: Meteor.userId()).fetch()
+    room_ids = (room._id for room in rooms)
     Meteor.subscribe 'chats', room_ids
 
   Meteor.setInterval(() ->

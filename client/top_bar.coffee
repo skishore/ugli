@@ -3,9 +3,8 @@ Template.top_bar.rooms = ->
   lobby = Rooms.get_lobby()
   if not lobby
     return [{name: Common.lobby_name}]
-  [lobby].concat(room for room in Rooms.find(
-    {user_ids: Meteor.userId()}, sort: name: 1,
-  ).fetch() when room._id != lobby._id)
+  rooms = Rooms.find({user_ids: Meteor.userId()}, sort: name: 1).fetch()
+  [lobby].concat(room for room in rooms when room._id != lobby._id)
 
 Template.top_bar.selected = ->
   if Meteor.user() and Session.equals('room_id', @_id)

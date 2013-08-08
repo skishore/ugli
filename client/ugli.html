@@ -6,11 +6,8 @@
   {{> top_bar}}
   <div id="remainder-wrapper">
     <div id="remainder">
-      <div id="main-content">
-        {{> rules_box}}
-        {{> games_list}}
-      </div>
       {{> side_bar}}
+      {{> main_content}}
     </div>
   </div>
 </body>
@@ -69,6 +66,15 @@
       <div id="chat-message">Message:</div>
       <input id="chat-input" type="text">
     </div>
+  </div>
+</template>
+
+<template name="main_content">
+  <div id="main-content">
+    {{#if in_lobby}}
+      {{> rules_box}}
+      {{> games_list}}
+    {{/if}}
   </div>
 </template>
 
