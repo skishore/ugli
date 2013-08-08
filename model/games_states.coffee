@@ -13,6 +13,8 @@ class @GameStates extends @Collection
     'state',
     'views',
   ]
+  if Meteor.isServer
+    @collection._ensureIndex 'room_id'
 
   @publish: (user_id, room_ids) ->
     check(user_id, String)
@@ -23,12 +25,13 @@ class @GameStates extends @Collection
     @find(room_id: $in: room_ids)
 
   @create_game: (user_id, name, rules, initial_state, initial_views) ->
-    console.log user_id, name, rules, initial_state, initial_views
-    room_id = Rooms.create_room(name, rules, [user_id])
+    # Create a game with the given parameters. Return true on success.
+    room_id = Rooms.create_room(name, [user_id], rules)
     room = Rooms.findOne(_id: room_id)
     @update_game_state(room, initial_state, initial_views)
 
   @update_game_state: (room, state, views) ->
+    # Update a game to the new state. Return true on success.
     check(room._id, String)
     check(room.game_state_id, Match.OneOf(String, null))
     check((user_id for user_id of views), [String])
@@ -38,6 +41,28 @@ class @GameStates extends @Collection
       state: state,
       views: views,
     )
-    Rooms.update({_id: room.id, game_state_id: room.game_state_id},
+    Rooms.update({_id: room._id, game_state_id: room.game_state_id},
       $set: game_state_id: new_state_id,
     )
+    @check_update_result room._id, room.game_state_id, new_state_id
+
+  @check_update_result: (room_id, previous_state_id, new_state_id) ->
+    # Return true if an update from the previous state to the new one succeeded.
+    room = Rooms.findOne(_id: room_id)
+    if not room
+      return false
+    cur_state_id = room.game_state_id
+    if cur_state_id == new_state_id
+      return true
+    # We've moved past the new state. Walk the tree to see if we encounter it.
+    game_states = GameStates.find({room_id: room_id},
+      fields: {_id: 1, previous_state_id: 1}
+    ).fetch()
+    parent_map = {}
+    for game_state in game_states
+      parent_map[game_state._id] = game_state.previous_state_id
+    while cur_state_id? and cur_state_id != previous_state_id
+      cur_state_id = parent_map[cur_state_id]
+      if cur_state_id == new_state_id
+        return true
+    false

@@ -41,7 +41,7 @@ class @UGLICore
 
   @create_game: (user_id, rules) ->
     console.log 'create_game'
-    user = Users.find(_id: user_id)
+    user = Users.findOne(_id: user_id)
     name = "#{user.username}'s game ##{Common.get_uid()}"
     context = @create_initial_context user_id, rules
     Common.ugli_server.initialize_state context
