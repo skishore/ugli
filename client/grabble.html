@@ -7,6 +7,7 @@
   <div id="remainder-wrapper">
     <div id="remainder">
       <div id="main-content">
+        {{> rules_box}}
         {{> games_list}}
       </div>
       {{> side_bar}}
@@ -71,6 +72,23 @@
   </div>
 </template>
 
+<template name="rules_box">
+  <div id="rules-box">
+    Set up the rules for a new game here:
+    <button id="create-button">Create</button>
+  </div>
+</template>
+
 <template name="games_list">
-  The games list should go here.
+  <div id="games-list-wrapper">
+    <div id="games-list">
+      {{#each games}}
+        <div class="game">
+          <div class="game-name">{{name}}</div>
+          <button class="join-button">Join</button>
+          <div class="game-size">{{user_ids.length}} players</div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
 </template>

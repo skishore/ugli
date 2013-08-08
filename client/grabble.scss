@@ -1,6 +1,6 @@
 body {
   margin: 0px;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 
 #top-bar-wrapper {
@@ -185,6 +185,51 @@ body {
       left: 54px;
       position: absolute;
       right: 0px;
+    }
+  }
+}
+
+#rules-box {
+  border: 1px solid black;
+  height: 36%;
+  padding: 8px;
+
+  #create-button {
+    padding: 8px;
+  }
+}
+
+#games-list-wrapper {
+  border: 1px solid black;
+  margin-top: 3.226%;
+  overflow-y: scroll;
+  padding-bottom: 1px;
+  padding-right: 14px;
+
+  #games-list {
+    .game {
+      background-color: #EEE;
+      border: 1px solid #AAA;
+      border-radius: 4px;
+      float: left;
+      font-size: 14px;
+      margin: 1% 0% 0% 3%;
+      padding: 2px 8px;
+      width: 43%;
+
+      .game-name {
+        float: left;
+        font-weight: bold;
+      }
+
+      .game-size {
+        clear: left;
+      }
+
+      .join-button {
+        float: right;
+        padding: 8px;
+      }
     }
   }
 }

@@ -2,17 +2,14 @@
 # singleplayer games, or multiplayer games.
 #   name: string
 #   user_ids: [user _ids]
-#   private: bool
-#   invites: [string usernames]
 #   rules: dict or null (for lobbies)
+# privates and invites fields to come soon.
 
 class @Rooms extends @Collection
   @collection = new Meteor.Collection 'rooms'
   @fields = [
     'name',
     'user_ids',
-    'private',
-    'invites',
     'rules',
   ]
   if Meteor.isServer
@@ -20,7 +17,7 @@ class @Rooms extends @Collection
 
   @publish: (user_id) ->
     check(user_id, String)
-    @find(user_ids: user_id)
+    @find()
 
   @get_lobby = ->
     result = @findOne(name: Common.lobby_name)
@@ -28,8 +25,6 @@ class @Rooms extends @Collection
       @insert(
         name: Common.lobby_name,
         user_ids: [],
-        private: false,
-        invites: [],
         rules: null,
       )
       result = @findOne(name: Common.lobby_name)

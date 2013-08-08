@@ -9,7 +9,7 @@ Template.top_bar.rooms = ->
   if not lobby
     return [{name: Common.lobby_name}]
   [lobby].concat(room for room in Rooms.find(
-    {}, sort: name: 1,
+    {user_ids: Meteor.userId()}, sort: name: 1,
   ).fetch() when room._id != lobby._id)
 
 Template.top_bar.selected = ->
