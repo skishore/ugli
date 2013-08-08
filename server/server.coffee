@@ -15,6 +15,9 @@ Meteor.methods({
 
   'send_chat': (room_id, message) ->
     Chats.send_chat @userId, room_id, message
+
+  'create_game': (rules) ->
+    UGLICore.create_game @user_id, rules
 })
 
 

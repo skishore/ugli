@@ -21,13 +21,14 @@ class @Rooms extends @Collection
     check(user_id, String)
     @find()
 
-  @create_room: (name, rules) ->
+  @create_room: (name, user_ids, rules) ->
     # Create a new game room with no initial game state. Return its _id.
     check(name, String)
+    check(user_ids, [String])
     check(rules, Match.OneOf(Object, null))
     @insert(
       name: name,
-      user_ids: [],
+      user_ids: user_ids,
       rules: rules,
       game_state_id: null,
     )
@@ -35,7 +36,7 @@ class @Rooms extends @Collection
   @get_lobby = ->
     result = @findOne(name: Common.lobby_name)
     if not result and Meteor.isServer
-      @create_room(Common.lobby_name, null)
+      @create_room(Common.lobby_name, [], null)
       result = @findOne(name: Common.lobby_name)
     result
 

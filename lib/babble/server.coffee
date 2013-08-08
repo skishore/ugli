@@ -1,7 +1,8 @@
 # server-side ugli context object:
-#   config: read-only client-supplied game config
+#   user_ids: read-only list of user_ids currently in the game
+#   rules: read-only client-supplied game rules
 #   state: mutable game state (persisted after each call)
-#   setTimeout(timeout, callback):
+#   setTimeout(callback, timeout):
 #     call callback(ugli) after <timeout> seconds.
 #     #TODO: returns a handle that supports .time_left() and .cancel()
 
@@ -22,13 +23,13 @@ client_handlers = {}
 
 start_countdown = (ugli) ->
     ugli.state.phase = "countdown"
-    ugli.setTimeout COUNTDOWN_TIME, start_compose
+    ugli.setTimeout start_compose, COUNTDOWN_TIME
 
 start_compose = (ugli) ->
     ugli.state.phase = "compose"
     ugli.state.submissions = {}
     ugli.state.words = generate_word_list()
-    ugli.setTimeout COMPOSE_TIME, start_voting
+    ugli.setTimeout start_voting, COMPOSE_TIME
 
 client_handlers.submit_sentence = (ugli, user_id, sentence) ->
     if ugli.state.phase is "compose" and
@@ -38,7 +39,7 @@ client_handlers.submit_sentence = (ugli, user_id, sentence) ->
 start_voting = (ugli) ->
     ugli.state.phase = "voting"
     ugli.state.votes = {}
-    ugli.setTimeout VOTING_TIME, end_voting
+    ugli.setTimeout end_voting, VOTING_TIME
 
 client_handlers.vote = (ugli, user_id, sentence) ->
     if ugli.state.phase is "voting" and
@@ -80,8 +81,8 @@ end_voting = (ugli) ->
         ugli.state.round = ugli.state.phase = null
 
 class @BabbleServer
-    @init_state: (ugli) ->
-        # initialize ugli.state based on ugli.config or throw if config is invalid.
+    @initialize_state: (ugli) ->
+        # initialize ugli.state based on ugli.rules or throw if config is invalid.
         ugli.state =
             round: 1
             scores: {}
@@ -92,7 +93,7 @@ class @BabbleServer
         [method, args...] = message
         client_handlers[method]?(ugli, user_id, args...)
 
-    @get_user_visible_state: (ugli, user_id) ->
+    @get_user_view: (ugli, user_id) ->
         # generate what client sees as ugli.state
         s = {}
         for prop in ['round', 'phase', 'words', 'scores']
