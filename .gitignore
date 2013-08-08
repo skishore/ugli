@@ -2,3 +2,4 @@ smart.json
 smart.lock
 *.sass-cache
 *.swp
+*.css
