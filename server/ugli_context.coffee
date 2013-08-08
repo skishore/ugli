@@ -1,4 +1,17 @@
-# TODO(karl): use this to wrap calls to server.on_client_message
+# An UGLI server context is the first argument passed to the UGLI server each
+# time any of the following methods are called:
+#   initialize_state
+#   handle_client_message
+#   any UGLI callback
+#
+# The context stores the following data, which is read-only except for state:
+#   usernames: list of users currently in the game
+#   rules: the game's rules dictionary
+#   state: complete server view of game state
+#
+# In addition, the context provides these UGLI framework helper methods:
+#   setTimeout: (callback, delay) -> call callback after delay ms
+
 class @UGLIContext
   @verbose = false
 

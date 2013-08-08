@@ -25,7 +25,7 @@ class @UGLICore
     @call_state_mutator room_id, (context) ->
       Common.ugli_server.initialize_state context
 
-  @on_client_message: (room_id, user_id, message) ->
-    console.log('on_client_message', room_id, user_id, message) if @verbose
+  @handle_client_message: (room_id, user_id, message) ->
+    console.log('handle_client_message', room_id, user_id, message) if @verbose
     @call_state_mutator room_id, (context) ->
-      Common.ugli_server.on_client_message context, user_id, message
+      Common.ugli_server.handle_client_message context, user_id, message

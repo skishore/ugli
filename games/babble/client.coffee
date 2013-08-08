@@ -1,8 +1,13 @@
-# client-side ugli context object (passed to Client constructor):
-#   rules: read-only game config
-#   state: read-only client view of game state
-#   send(message):
-#     send an arbitrary JSONable message to server's on_client_message method
+# The UGLI framework maintains this client's @ugli member variable, which is
+# a read-only client-side game context.
+#
+# This context stores the following data, all of which is read-only:
+#   usernames: list of users currently in the game
+#   rules: the game's rules dictionary
+#   state: partial client view of game state
+#
+# In addition, the context provides these UGLI framework helper methods:
+#   send: (message) -> send EJSON-able message to server's handle_client_message
 
 class @BabbleClient
     @make_rules_ui: (container, start_game) ->
@@ -32,9 +37,10 @@ class @BabbleClient
                 ugli.send ['vote',
                     $(@).closest('li').find('.babble-submission').text()]
         )
-        do @on_update
+        # TODO(skishore): Does this need to be async?
+        do @handle_update
 
-    on_update: ->
+    handle_update: ->
         # called to notify client that ugli.state has changed.
         @container.find('.babble-params').text JSON.stringify @ugli.state
         @container.find('.babble-submissions').empty().append((
@@ -43,4 +49,3 @@ class @BabbleClient
                 $('<button/>').text 'vote'
             ) for s in @ugli.state.sentences ? [])...
         )
-
