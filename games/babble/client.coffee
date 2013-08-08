@@ -5,7 +5,7 @@
 #     send an arbitrary JSONable message to server's on_client_message method
 
 class @BabbleClient
-    @make_config_ui: (container, start_game) ->
+    @make_rules_ui: (container, start_game) ->
         # populate the provided jquery-wrapped div with pre-game config ui.
         # the ui should call start_game(config) with JSONable game parameters
         # that will be passed server.init_state as ugli.config

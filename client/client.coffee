@@ -5,18 +5,17 @@ Accounts.ui.config {
 
 Meteor.startup ->
   Deps.autorun ->
-    if Meteor.userId()
+    if Meteor.userId()?
       Meteor.subscribe 'users'
       Meteor.subscribe 'rooms'
 
   Deps.autorun ->
-    Rooms.find(user_ids: Meteor.userId()).observe(
+    Rooms.find(user_ids: Meteor.userId()).observe
       added: (document) ->
         Session.set 'room_id', document._id
-    )
 
   Deps.autorun ->
-    if not Rooms.findOne(_id: Session.get 'room_id')
+    if not Rooms.findOne(_id: Session.get 'room_id')?
       Session.set 'room_id', Rooms.get_lobby()?._id
 
   Deps.autorun ->
@@ -27,8 +26,8 @@ Meteor.startup ->
     Meteor.subscribe 'chats', room_ids
     Meteor.subscribe 'game_states', room_ids
 
-  Meteor.setInterval(() ->
-    if Meteor.userId()
+  Meteor.setInterval (->
+    if Meteor.userId()?
       Meteor.call 'heartbeat', (err, result) ->
-        return console.log err if err
-  , 1000)
+        return console.log err if err?
+  ), 1000

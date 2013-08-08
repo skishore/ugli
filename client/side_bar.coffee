@@ -5,7 +5,7 @@ scroll_chats_on_render = false
 
 are_chats_scrolled = ->
   elt = $ '#message-list'
-  not elt.length or elt[0].scrollTop + elt.height() + 1 >= elt[0].scrollHeight
+  not elt.length or (elt[0].scrollTop + elt.height() + 1 >= elt[0].scrollHeight)
 
 scroll_chats = ->
   elt = $ '#message-list'
@@ -17,11 +17,11 @@ Template.side_bar.logged_in = ->
 
 Template.user_list.num_users = ->
   room = Rooms.findOne(_id: Session.get 'room_id')
-  Users.find(_id: $in: room?.user_ids or []).count()
+  Users.find(_id: $in: (room?.user_ids or [])).count()
 
 Template.user_list.users = ->
   room = Rooms.findOne(_id: Session.get 'room_id')
-  Users.find({_id: $in: room?.user_ids or []}, sort: username: 1)
+  Users.find({_id: $in: (room?.user_ids or [])}, sort: username: 1)
 
 Template.chat_box.chats = ->
   # Scroll chats when this template is created anew, on login or room change.
@@ -33,21 +33,19 @@ Template.chat_box.rendered = ->
     scroll_chats()
     scroll_chats_on_render = false
 
-Template.chat_box.events({
+Template.chat_box.events
   'keydown #chat-input': (e) ->
     if e.keyCode == 13
       message = $(e.target).val().strip()
       if message
         Meteor.call 'send_chat', Session.get('room_id'), message
         $(e.target).val ''
-})
 
 
 Meteor.startup ->
   Deps.autorun ->
-    Template.chat_box.chats().observe({
+    Template.chat_box.chats().observe
       added: (document) ->
         # Scroll chats if they were fully scrolled before the update.
         if are_chats_scrolled()
           scroll_chats_on_render = true
-    })

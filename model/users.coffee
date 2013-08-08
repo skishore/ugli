@@ -25,11 +25,11 @@ class @Users extends @Collection
 
   @heartbeat = (user_id) ->
     check(user_id, String)
-    @update({_id: user_id},
-      $set: {
+    @update(
+      {_id: user_id},
+      $set:
         'fields.heartbeat': new Date().getTime(),
         'fields.active': true,
-      },
     )
     Rooms.join_room user_id, Rooms.get_lobby()?._id
 

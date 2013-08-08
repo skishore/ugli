@@ -13,7 +13,8 @@ class @UGLIContext
   # that should be calling these (i think)
 
   _get_views: ->
-    # called by framework after game server code mutates state
+    # Called by the framework after the game's server code mutates this
+    # context's state.
     console.log('_get_views') if @verbose
     views = {}
     for user_id in @user_ids
@@ -21,11 +22,11 @@ class @UGLIContext
     views
 
   _after_save: (room_id) ->
-    # called by framework after state is successfully saved
+    # Called by the framework after this context is successfully saved.
     console.log('_after_save', room_id) if @verbose
     for [callback, delay] in @_timeouts
-      Meteor.setTimeout(
-        -> UGLICore.call_state_mutator room_id, callback
-        delay
-      )
-    @_after_save = -> throw "_after_save called twice"
+      Meteor.setTimeout (->
+        UGLICore.call_state_mutator room_id, callback
+      ), delay
+    @_after_save = ->
+      throw '_after_save called twice'
