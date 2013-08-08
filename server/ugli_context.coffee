@@ -12,6 +12,12 @@
 # In addition, the context provides these UGLI framework helper methods:
 #   setTimeout: (callback, delay) -> call callback after delay ms
 
+# TODO(skishore): setTimeout should produce a new ugli context in which to call the callback
+# TODO(skishore): the constructor for this context should just take a room_id
+# TODO(skishore): this context should store usernames instead of (or in addition to) user_ids
+
+# TODO(skishore): race condition! this context should store the initial state of the room and pass it to update game state. right now the update is super-racy...!!!!
+
 class @UGLIContext
   @verbose = false
 

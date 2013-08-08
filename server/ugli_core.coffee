@@ -27,5 +27,6 @@ class @UGLICore
 
   @handle_client_message: (room_id, user_id, message) ->
     console.log('handle_client_message', room_id, user_id, message) if @verbose
+    # TODO(skishore): we should check if the user is in the room here...
     @call_state_mutator room_id, (context) ->
       Common.ugli_server.handle_client_message context, user_id, message
