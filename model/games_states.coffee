@@ -27,12 +27,12 @@ class @GameStates extends @Collection
   @create_game: (user_id, name, rules, initial_state, initial_views) ->
     # Create a game. Return room_id on success and false on failure.
     room_id = Rooms.create_room(name, [user_id], rules)
-    room = Rooms.findOne(_id: room_id)
-    result = @update_game_state(room, initial_state, initial_views)
-    return if result then room_id else false
+    result = @update_game_state(room_id, initial_state, initial_views)
+    if result then room_id else null
 
-  @update_game_state: (room, state, views) ->
+  @update_game_state: (room_id, state, views) ->
     # Update a game to the new state. Return true on success.
+    room = Rooms.findOne(_id: room_id)
     check(room._id, String)
     check(room.game_state_id, Match.OneOf(String, null))
     check((user_id for user_id of views), [String])

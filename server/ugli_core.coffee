@@ -1,5 +1,9 @@
-# TODO(skishore): Implement an UGLI context class.
-# TODO(skishore): Implement a timeout object with time_left() and cancel().
+# TODO(karl): use this to wrap calls to server.on_client_message
+call_state_mutator = (room_id, callback) ->
+  ctx = UGLICore.create_ugli_context room_id
+  callback ctx
+  if GameStates.update_game_state room_id, ctx.state, ctx._get_views()
+  ctx._after_save room_id
 
 class @UGLIContext
   constructor: (@user_ids, @rules, @state=null) ->
@@ -16,12 +20,12 @@ class @UGLIContext
       views[user_id] = Common.ugli_server.get_user_view @, user_id
     views
 
-  _commit: (room_id) ->
-    # called by framework after state is saved
-    console.log '_commit'
+  _after_save: (room_id) ->
+    # called by framework after state is successfully saved
+    console.log '_after_save', arguments
     for [callback, delay] in @_timeouts
       Meteor.setTimeout(
-        -> callback UGLICore.create_ugli_context room_id
+        -> call_state_mutator room_id, callback
         delay
       )
     @_timeouts = []
@@ -48,4 +52,4 @@ class @UGLICore
     views = context._get_views()
     room_id = GameStates.create_game user_id, name, rules, context.state, views
     if room_id?
-      context._commit room_id
+      context._after_save room_id
