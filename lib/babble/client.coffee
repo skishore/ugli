@@ -10,7 +10,11 @@ class @BabbleClient
         # the ui should call start_game(config) with JSONable game parameters
         # that will be passed server.init_state as ugli.config
         container.append(
-            $('<button/>').text('GO!!!!').on 'click', -> start_game(num_rounds: 5)
+            'Number of rounds: '
+            $ '<input type="number" min="1" max="20" value="5"/>'
+            ' '
+            $('<button/>').text('Play!').on 'click', ->
+                start_game num_rounds: parseInt container.find('input').val()
         )
 
     constructor: (@ugli, @container) ->
