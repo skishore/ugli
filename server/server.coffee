@@ -7,6 +7,9 @@ Meteor.publish('rooms', ->
 Meteor.publish('chats', (room_ids) ->
   Chats.publish @userId, room_ids
 )
+Meteor.publish('game_states', (room_ids) ->
+  GameStates.publish @userId, room_ids
+)
 
 
 Meteor.methods({

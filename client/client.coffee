@@ -25,6 +25,7 @@ Meteor.startup ->
     rooms = Rooms.find(user_ids: Meteor.userId()).fetch()
     room_ids = (room._id for room in rooms)
     Meteor.subscribe 'chats', room_ids
+    Meteor.subscribe 'game_states', room_ids
 
   Meteor.setInterval(() ->
     if Meteor.userId()
