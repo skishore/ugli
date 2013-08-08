@@ -100,10 +100,9 @@ class @BabbleServer
             s[prop] = ugli.state[prop] if prop of ugli.state
         if ugli.state.phase is "voting"
             s.sentences = (s for s of inv_map ugli.state.submissions)
-        if ugli.state.phase isnt "voting"
-            s.votes = inv_map ugli.state.votes
         if ugli.state.phase not in ["compose", "voting"]
+            s.votes = inv_map ugli.state.votes
             s.submissions = ugli.state.submissions
-        #TODO include current phase remaining time
+        #TODO include current phase remaining time?
         s
 
