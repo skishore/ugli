@@ -1,6 +1,7 @@
 @Common = do ->
   # Top-level constants.
   idle_timeout = 10*1000
+  keep_history = false
   lobby_name = 'Lobby'
 
   # Prototype overrides.
@@ -16,4 +17,5 @@
   # These are the members of Common that are actually exported.
   get_uid: get_uid
   idle_timeout: idle_timeout
+  keep_history: keep_history
   lobby_name: lobby_name

@@ -81,3 +81,26 @@ class @Rooms extends Collection
   @boot_users = (user_ids) ->
     for user_id in user_ids
       @boot_user(user_id)
+
+  @mark_all_games_idle = ->
+    # Marks all game rooms inactive.
+    #
+    # If Common.keep_history is false, removes these rooms instead.
+    clause = active: true, is_game: true
+    if Common.keep_history
+      @update clause, $set: $active: false
+    else
+      @remove clause
+
+  @mark_orphaned_games_idle = (idle_timeout) ->
+    # Marks orphaned game rooms (that is, games that have existed for
+    # idle_timeout ms without a game state) inactive.
+    #
+    # If Common.keep_history is false, removes these rooms instead.
+    game_states = GameStates.find(active: true).fetch()
+    active_room_ids = _.uniq(game_state.room_id for game_state in game_states)
+    clause = active: true, is_game: true, _id: $not: $in: active_room_ids
+    if Common.keep_history
+      @update clause, $set: $active: false
+    else
+      @remove clause
