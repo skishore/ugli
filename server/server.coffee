@@ -47,4 +47,4 @@ Meteor.setInterval (->
 
 Meteor.startup ->
   # TODO(skishore): Comment this out while we're testing.
-  #Rooms.cleanup_all_game_rooms()
+  Rooms.cleanup_all_game_rooms()

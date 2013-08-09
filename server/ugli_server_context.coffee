@@ -14,13 +14,14 @@
 class @UGLIServerContext
   @verbose = false
 
-  constructor: (@_user_id_map, @state) ->
+  constructor: (@_room_id, @_user_id_map, @state) ->
     @players = (player for user_id, player of @_user_id_map)
     @_timeouts = []
 
   setTimeout: (callback, delay) ->
-    timeout = Meteor.setTimeout (->
-      UGLICore.call_state_mutator room_id, (context) ->
+    timeout = Common.get_uid()
+    Meteor.setTimeout (=>
+      UGLICore.call_state_mutator @_room_id, (context) ->
         # Need to check if this timeout was actually committed to the game state.
         if timeout of context.state.ugli_timeouts ? {}
           delete context.state.ugli_timeouts[timeout]

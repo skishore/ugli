@@ -11,7 +11,7 @@
 
   # Helper methods.
   get_uid = ->
-    num = '' + Math.floor 1000000*Math.random()
+    num = '' + Math.floor 1000000000*Math.random()
     num + (0 for i in [0...(6 - num.length)]).join ''
 
   # These are the members of Common that are actually exported.
