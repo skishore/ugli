@@ -5,7 +5,7 @@
 #   any UGLI callback
 #
 # The context stores the following data:
-#   players: read-only list of players currently in the game
+#   players: read-only mapping from user_id -> player currently in the game
 #   state: mutable view of game state
 #
 # In addition, the context provides these UGLI framework helper methods:
@@ -14,7 +14,8 @@
 class @UGLIContext
   @verbose = false
 
-  constructor: (@players, @state=null) ->
+  constructor: (@_user_id_map, @state=null) ->
+    @players = (player for user_id, player of @_user_id_map)
     @_timeouts = []
 
   setTimeout: (callback, delay) ->
@@ -29,8 +30,8 @@ class @UGLIContext
     # context's state. Returns the player-visible views of the state.
     console.log('_get_views') if @verbose
     views = {}
-    for player in @players
-      views[player] = Common.ugli_server.get_player_view @, player
+    for user_id, player of @_user_id_map
+      views[user_id] = Common.ugli_server.get_player_view @, player
     views
 
   _after_save: (room_id) ->
@@ -42,3 +43,15 @@ class @UGLIContext
       ), delay
     @_after_save = ->
       throw '_after_save called twice'
+
+  _add_user: (user) ->
+    console.log('_add_user', user) if @verbose
+    if user._id not of @_user_id_map
+      @_user_id_map[user._id] = user.username
+      @players.push user.username
+
+  _remove_user: (user) ->
+    console.log('_remove_user', user) if @verbose
+    if user._id of @_user_id_map
+      delete @_user_id_map[user._id]
+      @players = (player for player in @players if player != user.username)

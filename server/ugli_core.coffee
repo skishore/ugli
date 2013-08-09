@@ -15,11 +15,13 @@ class @UGLICore
     users = Users.find(_id: $in: room.user_ids).fetch()
     if users.length != room.user_ids.length
       throw "Missing users w/ user_ids in #{room.user_ids}"
-    players = (user.username for user in users)
+    user_id_map = {}
+    for user in users
+      user_id_map[user._id] = user.username
     # Get the mutable game state and return it.
     game_state = GameStates.get_current_state room_id
     [
-      new UGLIContext players, game_state?.state
+      new UGLIContext user_id_map, game_state?.state
       if game_state? then game_state.index else -1
     ]
 

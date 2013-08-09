@@ -45,8 +45,7 @@ class @Rooms extends Collection
       if room.is_game
         UGLICore.call_state_mutator room_id, (context) ->
           if Common.ugli_server.join_game context, user.username
-            if user.username not in context.players
-              context.players.push user.username
+            context._add_user user
             Rooms.update({_id: room_id}, $addToSet: 'user_ids': user_id)
       else
         @update({_id: room_id}, $addToSet: 'user_ids': user_id)
@@ -61,10 +60,7 @@ class @Rooms extends Collection
       if room.is_game
         UGLICore.call_state_mutator room_id, (context) ->
           Common.ugli_server.leave_game context, user.username
-          context.players = (
-            player for player in context.players \
-            when player != user.username
-          )
+          context._remove_user user
       @update({_id: room_id}, $pull: 'user_ids': user_id)
 
   @boot_user = (user_id) ->

@@ -3,7 +3,7 @@
 #
 # This context stores the following data, all of which is read-only:
 #   players: list of users currently in the game
-#   state: partial client view of game state
+#   view: partial client view of game state
 #
 # In addition, the context provides these UGLI framework helper methods:
 #   send: (message) -> send EJSON-able message to server's handle_client_message
@@ -40,11 +40,11 @@ class @BabbleClient
     do @handle_update
 
   handle_update: ->
-    # called to notify client that ugli.state has changed.
-    @container.find('.babble-params').text JSON.stringify @ugli.state
+    # called to notify client that ugli has changed.
+    @container.find('.babble-params').text JSON.stringify @ugli.view
     @container.find('.babble-submissions').empty().append((
       $('<li/>').append(
         $('<span class="babble-submission"/>').text s
         $('<button/>').text 'vote'
-      ) for s in @ugli.state.sentences ? [])...
+      ) for s in @ugli.view.sentences ? [])...
     )
