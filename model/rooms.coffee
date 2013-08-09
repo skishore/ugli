@@ -80,7 +80,7 @@ class @Rooms extends Collection
     for user_id in user_ids
       @boot_user(user_id)
 
-  @mark_all_games_idle = ->
+  @cleanup_all_game_rooms = ->
     # Marks all game rooms inactive.
     #
     # If Common.keep_history is false, removes these rooms instead.
@@ -90,12 +90,12 @@ class @Rooms extends Collection
     else
       @remove clause
 
-  @mark_orphaned_games_idle = (idle_timeout) ->
+  @cleanup_orphaned_rooms = (idle_timeout) ->
     # Marks orphaned game rooms (that is, games that have existed for
     # idle_timeout ms without a game state) inactive.
     #
     # If Common.keep_history is false, removes these rooms instead.
-    game_states = GameStates.find(active: true).fetch()
+    game_states = GameStates.find({active: true}, fields: room_id: 1).fetch()
     active_room_ids = _.uniq(game_state.room_id for game_state in game_states)
     idle_time = new Date().getTime() - idle_timeout
     clause =

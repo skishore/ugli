@@ -20,20 +20,20 @@ class @Collection
         if key of @default_field_values
           schema[key] = do @default_field_values[key]
         else
-          console.log "Missing key: #{key}"
-          throw "Missing key: #{key}"
+          console.log "#{@collection._name}: missing key: #{key}"
+          throw "#{@collection._name}: missing key: #{key}"
 
   @check_fields_legal: (schema) ->
     for key of schema
       if key not in @fields and key != '_id'
-        console.log "Illegal key: #{key}"
-        throw "Illegal key: #{key}"
+        console.log "#{@collection._name}: illegal key: #{key}"
+        throw "#{@collection._name}: illegal key: #{key}"
 
   @check_update: (update) ->
     for key of update
       if key[0] != '$'
-        console.log "Illegal update: #{key}"
-        throw "Illegal update: #{key}"
+        console.log "#{@collection._name}: illegal update: #{key}"
+        throw "#{@collection._name}: illegal update: #{key}"
       @check_fields_legal update[key]
 
   @insert: (obj) ->
