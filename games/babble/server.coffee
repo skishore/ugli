@@ -3,56 +3,24 @@
 #   state: mutable game state (persisted after each call)
 #   setTimeout(callback, timeout):
 #     call callback(ugli) after <timeout> milliseconds.
-#     #TODO: returns a handle that supports .time_left() and .cancel()
 
-# helpers
 
-inv_map = (m) ->
-  r = {}
-  for k, v of m
-    (r[v] ?= []).push k
-  r
-
-wikipedia_query = (params) ->
-  #console.log "wikipedia_query", params
-  Meteor.http.get(
-    'http://en.wikipedia.org/w/api.php'
-    params: _.extend(
-      format: 'json'
-      action: 'query'
-      params
-    )
-  ).data.query
-
-wikipedia_random_titles = (n=5) ->
-  result = wikipedia_query
-    list: 'random'
-    rnnamespace: 0
-    rnlimit: n
-  page.title for page in result.random
-
-wikipedia_page_content = (title) ->
-  result = wikipedia_query
-    titles: title
-    prop: 'revisions'
-    rvprop: 'content'
-  for id, page of result.pages
-    return page.revisions[0]['*']
-
+Source = YahooAnswers
 generate_word_list = ->
-  for title in wikipedia_random_titles 5
-    content = wikipedia_page_content title
+  for key in Source.get_random_articles()
+    content = Source.get_article_content key
     words = (w.toLowerCase() for w in content.match /[A-Za-z]+/g)
     # TODO: stemming, punctuation, balanced parts of speech
     if words.length >= NUM_WORDS
       return _.take(_.shuffle(words), NUM_WORDS).sort()
-  throw "couldn't find a good wikipedia page"
+  throw "couldn't find a good word list"
 
 is_valid_sentence = (words, sentence) ->
   counts = _.countBy words
   for w in sentence.split /\s+/
     return false if not counts[w.toLowerCase()]--
   true
+
 
 # game flow logic
 
@@ -85,10 +53,10 @@ client_handlers.vote = (ugli, player, sentence) ->
     ugli.state.votes[player] = sentence
 
 end_voting = (ugli) ->
-  # scoring
   inv_subs = inv_map ugli.state.submissions
   inv_votes = inv_map ugli.state.votes
 
+  # find winning sentence(s)
   winning_sentences = []
   most_votes = 0
   for s, voters in inv_votes
@@ -98,12 +66,13 @@ end_voting = (ugli) ->
         most_votes = voters.length
       winning_sentences.push s
 
+  # award points for voting on the winning sentence
   if winning_sentences.length is 1
-    for uid in inv_votes[winning_sentences[0]]
+    for uid in inv_votes[winning_sentences[0]] ? []
       ugli.state.scores[uid] += 1
 
   for sentence, submitters of inv_subs
-    sentence_score = inv_votes[sentence].length
+    sentence_score = (inv_votes[sentence] ? []).length
     if sentence in winning_sentences
       sentence_score += Math.floor 3 / winning_sentences.length
     submitter_score = Math.floor sentence_score / submitters.length

@@ -52,7 +52,7 @@ class @BabbleClient
     @container.find('.params').text JSON.stringify @ugli.view, undefined, 2
 
     @container.find('.getready')
-      .text("GET READY FOR ROUND #{@ugli.view.round}")
+      .text("Get ready for round #{@ugli.view.round}!")
       .toggle(@ugli.view.phase is 'countdown')
 
     @container.find('.compose-cont').toggle @ugli.view.phase is 'compose'
