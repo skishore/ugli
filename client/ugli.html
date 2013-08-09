@@ -92,7 +92,11 @@
       {{#each games}}
         <div class="game">
           <div class="game-name">{{name}}</div>
-          <button class="join-button" data-room-id="{{_id}}">Join</button>
+          {{#if is_member}}
+            <button class="leave-button" data-room-id="{{_id}}">Leave</button>
+          {{else}}
+            <button class="join-button" data-room-id="{{_id}}">Join</button>
+          {{/if}}
           <div class="game-size">{{user_ids.length}} players</div>
         </div>
       {{/each}}

@@ -25,6 +25,10 @@ Meteor.methods
     if Rooms.get(room_id).is_game
       Rooms.join_room @userId, room_id
 
+  'leave_game': (room_id) ->
+    if Rooms.get(room_id).is_game
+      Rooms.leave_room @userId, room_id
+
   'send_chat': (room_id, message) ->
     Chats.send_chat @userId, room_id, message
 
@@ -42,4 +46,5 @@ Meteor.setInterval (->
 
 
 Meteor.startup ->
+  # TODO(skishore): Comment this out while we're testing.
   Rooms.cleanup_all_game_rooms()
