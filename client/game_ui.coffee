@@ -46,7 +46,7 @@ class GameUI
           @game_clients[key].ugli.update(
             game_state.index,
             game_state.players,
-            game_state.views,
+            game_state.views[user_id],
           )
           @game_clients[key].handle_update()
       @show_game_ui key
