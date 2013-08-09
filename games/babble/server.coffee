@@ -5,18 +5,56 @@
 #     call callback(ugli) after <timeout> milliseconds.
 #     #TODO: returns a handle that supports .time_left() and .cancel()
 
+# helpers
+
 inv_map = (m) ->
   r = {}
   for k, v of m
     (r[v] ?= []).push k
   r
 
-is_valid_sentence = (words, sentence) ->
-  true #TODO
+wikipedia_query = (params) ->
+  console.log "wikipedia_query", params
+  Meteor.http.get(
+    'http://en.wikipedia.org/w/api.php'
+    params: _.extend(
+      format: 'json'
+      action: 'query'
+      params
+    )
+  ).data.query
+
+wikipedia_random_titles = (n=5) ->
+  result = wikipedia_query
+    list: 'random'
+    rnnamespace: 0
+    rnlimit: n
+  page.title for page in result.random
+
+wikipedia_page_content = (title) ->
+  result = wikipedia_query
+    titles: title
+    prop: 'revisions'
+    rvprop: 'content'
+  for id, page of result.pages
+    return page.revisions[0]['*']
 
 generate_word_list = ->
-  ["foo", "bar"] #TODO
+  for title in wikipedia_random_titles 5
+    content = wikipedia_page_content title
+    words = (w.toLowerCase() for w in content.match /[A-Za-z]+/g)
+    # TODO: stemming, punctuation, balanced parts of speech
+    if words.length >= NUM_WORDS
+      return _.take(_.shuffle(words), NUM_WORDS).sort()
+  throw "couldn't find a good wikipedia page"
 
+is_valid_sentence = (words, sentence) ->
+  counts = _.countBy words
+  for w in sentence.split()
+    return false if not counts[w.toLowerCase()]--
+  true
+
+# game flow logic
 
 client_handlers = {}
 
