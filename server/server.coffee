@@ -18,6 +18,11 @@ Meteor.methods
   'heartbeat': ->
     Users.heartbeat @userId
 
+  'join_game': (room_id) ->
+    room = Rooms.findOne(_id: room_id)
+    if room.is_game
+      Rooms.join_room @userId, room_id
+
   'send_chat': (room_id, message) ->
     Chats.send_chat @userId, room_id, message
 
