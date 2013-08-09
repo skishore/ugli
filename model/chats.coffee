@@ -17,9 +17,8 @@ class @Chats extends Collection
 
   @publish: (user_id, room_ids) ->
     check user_id, String
-    check room_ids, [String]
-    # Restrict the user's view of chats to rooms that he is in.
-    rooms = Rooms.find(_id: {$in: room_ids}, user_ids: user_id).fetch()
+    # Drop the room_ids param and restrict the user's view to rooms he is in.
+    rooms = Rooms.get_user_rooms user_id
     legal_room_ids = (room._id for room in rooms)
     @find(room_id: $in: legal_room_ids)
 

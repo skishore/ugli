@@ -35,6 +35,10 @@ class @Rooms extends Collection
       lobby = @findOne(name: Common.lobby_name)
     lobby
 
+  @get_user_rooms = (user_id) ->
+    check user_id, String
+    @find(user_ids: user_id).fetch()
+
   @join_room = (user_id, room_id) ->
     # Have a user join a room. Notify the UGLI server if a game is being played.
     check user_id, String
@@ -64,7 +68,7 @@ class @Rooms extends Collection
       @update({_id: room_id}, $pull: 'user_ids': user_id)
 
   @boot_user = (user_id) ->
-    for room in Rooms.find({user_ids: user_id}, fields: _id: 1).fetch()
+    for room in @find({user_ids: user_id}, fields: _id: 1).fetch()
       @leave_room(user_id, room._id)
 
   @boot_users = (user_ids) ->

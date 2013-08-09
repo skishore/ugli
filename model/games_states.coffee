@@ -20,16 +20,15 @@ class @GameStates extends Collection
 
   @publish: (user_id, room_ids) ->
     check user_id, String
-    check room_ids, [String]
-    # Restrict the user's view of states to rooms that he is in.
-    rooms = Rooms.find(_id: {$in: room_ids}, user_ids: user_id).fetch()
+    # Drop the room_ids param and restrict the user's view to rooms he is in.
+    rooms = Rooms.get_user_rooms user_id
     legal_room_ids = (room._id for room in rooms)
     fields =
-      room_id: 1,
-      index: 1,
-      players: 1,
+      room_id: 1
+      index: 1
+      players: 1
     fields["views.#{user_id}"] = 1
-    @find({room_id: $in: room_ids}, fields: fields)
+    @find({room_id: $in: legal_room_ids}, fields: fields)
 
   @get_current_state: (room_id) ->
     @findOne({room_id: room_id}, sort: index: -1)
