@@ -21,6 +21,9 @@ Meteor.methods
   'send_chat': (room_id, message) ->
     Chats.send_chat @userId, room_id, message
 
+  'send_game_message': (room_id, message) ->
+    UGLICore.handle_client_message @userId, room_id, message
+
 
 Meteor.setInterval (->
   Users.mark_users_idle(Common.idle_timeout)

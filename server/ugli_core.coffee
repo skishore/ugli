@@ -43,8 +43,8 @@ class @UGLICore
       Common.ugli_server.initialize_state context, config
     Rooms.join_room user_id, room_id
 
-  @handle_client_message: (room_id, user_id, message) ->
-    console.log('handle_client_message', room_id, user_id, message) if @verbose
+  @handle_client_message: (user_id, room_id, message) ->
+    console.log('handle_client_message', user_id, room_id, message) if @verbose
     user = Users.findOne _id: user_id
     room = Rooms.findOne _id: room_id
     if user? and room? and user._id in room.user_ids

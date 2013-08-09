@@ -14,7 +14,7 @@ inv_map = (m) ->
   r
 
 wikipedia_query = (params) ->
-  console.log "wikipedia_query", params
+  #console.log "wikipedia_query", params
   Meteor.http.get(
     'http://en.wikipedia.org/w/api.php'
     params: _.extend(
@@ -50,7 +50,7 @@ generate_word_list = ->
 
 is_valid_sentence = (words, sentence) ->
   counts = _.countBy words
-  for w in sentence.split()
+  for w in sentence.split /\s+/
     return false if not counts[w.toLowerCase()]--
   true
 
@@ -136,7 +136,7 @@ class @BabbleServer
   @leave_game: (ugli, player) ->
     # A notification that a player has left the game. No response necessary.
 
-  @on_client_message: (ugli, player, message) ->
+  @handle_client_message: (ugli, player, message) ->
     # called when client calls ugli.send(message)
     [method, args...] = message
     client_handlers[method]?(ugli, player, args...)
