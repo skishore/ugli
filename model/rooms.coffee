@@ -41,7 +41,7 @@ class @Rooms extends Collection
     check room_id, String
     user = Users.findOne(_id: user_id)
     room = Rooms.findOne(_id: room_id)
-    if user? and room?
+    if user? and room? and user_id not in room.user_ids
       if room.is_game
         UGLICore.call_state_mutator room_id, (context) ->
           if Common.ugli_server.join_game context, user.username
@@ -56,7 +56,7 @@ class @Rooms extends Collection
     check room_id, String
     user = Users.findOne(_id: user_id)
     room = Rooms.findOne(_id: room_id)
-    if user? and room?
+    if user? and room? and user_id in room.user_ids
       if room.is_game
         UGLICore.call_state_mutator room_id, (context) ->
           Common.ugli_server.leave_game context, user.username
