@@ -3,7 +3,6 @@
 #   name: string
 #   user_ids: [user _ids]
 #   rules: dict or null (for lobbies)
-#   game_state_id: game_state _id or null (for lobbies)
 # privates and invites fields to come soon.
 
 class @Rooms extends Collection
@@ -12,7 +11,6 @@ class @Rooms extends Collection
     'name',
     'user_ids',
     'rules',
-    'game_state_id',
   ]
   if Meteor.isServer
     @collection._ensureIndex 'name', unique: true
@@ -30,7 +28,6 @@ class @Rooms extends Collection
       name: name,
       user_ids: user_ids,
       rules: rules,
-      game_state_id: null,
 
   @get_lobby = ->
     lobby = @findOne(name: Common.lobby_name)

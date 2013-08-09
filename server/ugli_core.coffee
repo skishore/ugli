@@ -1,3 +1,7 @@
+    #users = Users.find(_id: $in: room.user_ids)
+    #if users.length != room.user_ids.length
+    #  throw "Missing users w/ user_ids in #{room.user_ids}"
+
 class @UGLICore
   @verbose = false
 
@@ -6,16 +10,21 @@ class @UGLICore
     room = Rooms.findOne _id: room_id
     if not room?
       throw "Room #{room_id} is not ready"
-    game_state = GameStates.findOne _id: room?.game_state_id
-    new UGLIContext room.user_ids, room.rules, game_state?.state
+    game_state = GameStates.get_current_state room_id
+    new UGLIContext(
+      room.user_ids,
+      room.rules,
+      game_state?.index,
+      game_state?.state,
+    )
 
   @call_state_mutator = (room_id, callback) ->
     console.log('call_state_mutator', room_id) if @verbose
-    ctx = UGLICore.create_room_context room_id
-    callback ctx
-    views = ctx._get_views()
-    if GameStates.update_game_state room_id, ctx.state, views
-      ctx._after_save room_id
+    context = UGLICore.create_room_context room_id
+    callback context
+    views = context._get_views()
+    if GameStates.update_game_state room_id, context.index, context.state, views
+      context._after_save room_id
 
   @create_game: (user_id, rules) ->
     console.log('create_game', user_id, rules) if @verbose
