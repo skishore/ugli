@@ -18,6 +18,8 @@ Update propagation
 
 General refactoring
 
+Make it possible to run multiple game classes on the same server
+
 Tests!
 
 
@@ -27,7 +29,7 @@ General framework for waiting for players to join before starting
 
 General framework for dealing with drops/joins (only between rounds?)
 
-Callback on game completion that closes game
+Callback on game completion that closes game, add winning / losing, ELO
 
 Close game when all players leave?
 
