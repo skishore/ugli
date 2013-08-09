@@ -21,30 +21,30 @@ class @BabbleClient
         start_game num_rounds: parseInt container.find('input').val()
     )
 
-    constructor: (@ugli, @container) ->
-      # populate the provided jquery-wrapped div with the game ui.
-      @container.append(
-        $('<pre class="babble-params"/>')
-        'Submit sentence: '
-        $('<input class="babble-sentence"/>')
-        ' '
-        $('<button/>').text('submit').on 'click', =>
-          ugli.send ['submit_sentence',
-            @container.find('.babble-sentence').val()]
-        'Submissions: '
-        $('<ul class="babble-submissions"/>').on 'click', 'button', ->
-          ugli.send ['vote',
-            $(@).closest('li').find('.babble-submission').text()]
-      )
-      # TODO(skishore): Does this need to be async?
-      do @handle_update
+  constructor: (@ugli, @container) ->
+    # populate the provided jquery-wrapped div with the game ui.
+    @container.append(
+      $('<pre class="babble-params"/>')
+      'Submit sentence: '
+      $('<input class="babble-sentence"/>')
+      ' '
+      $('<button/>').text('submit').on 'click', =>
+        ugli.send ['submit_sentence',
+          @container.find('.babble-sentence').val()]
+      'Submissions: '
+      $('<ul class="babble-submissions"/>').on 'click', 'button', ->
+        ugli.send ['vote',
+          $(@).closest('li').find('.babble-submission').text()]
+    )
+    # TODO(skishore): Does this need to be async?
+    do @handle_update
 
-    handle_update: ->
-      # called to notify client that ugli.state has changed.
-      @container.find('.babble-params').text JSON.stringify @ugli.state
-      @container.find('.babble-submissions').empty().append((
-        $('<li/>').append(
-          $('<span class="babble-submission"/>').text s
-          $('<button/>').text 'vote'
-        ) for s in @ugli.state.sentences ? [])...
-      )
+  handle_update: ->
+    # called to notify client that ugli.state has changed.
+    @container.find('.babble-params').text JSON.stringify @ugli.state
+    @container.find('.babble-submissions').empty().append((
+      $('<li/>').append(
+        $('<span class="babble-submission"/>').text s
+        $('<button/>').text 'vote'
+      ) for s in @ugli.state.sentences ? [])...
+    )
