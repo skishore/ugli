@@ -28,8 +28,8 @@ class @Users extends Collection
     @update(
       {_id: user_id},
       $set:
-        'fields.heartbeat': new Date().getTime(),
-        'fields.active': true,
+        'fields.heartbeat': new Date().getTime()
+        'fields.active': true
     )
     Rooms.join_room user_id, Rooms.get_lobby()?._id
 
@@ -37,8 +37,8 @@ class @Users extends Collection
     check(idle_timeout, Number)
     idle_time = new Date().getTime() - idle_timeout
     users = @find(
-      'fields.active': true,
-      'fields.heartbeat': $lt: idle_time,
+      'fields.active': true
+      'fields.heartbeat': $lt: idle_time
     ).fetch()
     user_ids = (user._id for user in users)
     # Boot users from rooms first. If this step fails, they'll stay active.

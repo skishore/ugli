@@ -43,9 +43,9 @@ class @GameStates extends Collection
     check (user_id for user_id of views), [String]
     try
       return @insert
-        room_id: room_id,
-        index: cur_index + 1,
-        players: players,
-        state: state,
-        views: views,
+        room_id: room_id
+        index: cur_index + 1
+        players: players
+        state: state
+        views: views
     false

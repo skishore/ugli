@@ -24,9 +24,9 @@ class @Rooms extends Collection
     check name, String
     check is_game, Boolean
     @insert
-      name: name,
-      user_ids: [],
-      is_game: is_game,
+      name: name
+      user_ids: []
+      is_game: is_game
 
   @get_lobby = ->
     lobby = @findOne(name: Common.lobby_name)

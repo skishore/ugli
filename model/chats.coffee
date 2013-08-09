@@ -32,7 +32,7 @@ class @Chats extends Collection
       room = Rooms.get room_id
       if user? and room? and user._id in room.user_ids
         @insert
-          room_id: room_id,
-          sender: user.username,
-          message: message,
-          sent: new Date().getTime(),
+          room_id: room_id
+          sender: user.username
+          message: message
+          sent: new Date().getTime()
