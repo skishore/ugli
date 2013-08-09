@@ -13,6 +13,10 @@ Template.games_list.games = ->
 Template.games_list.is_member = ->
   Meteor.userId() in @user_ids
 
+Template.games_list.open = ->
+  game_state = GameStates.get_current_state @_id
+  if game_state?.public_view?.open? then '' else 'disabled="disabled"'
+
 Template.games_list.rendered = ->
   fix_games_list_height()
 
