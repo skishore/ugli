@@ -99,7 +99,12 @@ class @Rooms extends Collection
     # If Common.keep_history is false, removes these rooms instead.
     game_states = GameStates.find(active: true).fetch()
     active_room_ids = _.uniq(game_state.room_id for game_state in game_states)
-    clause = active: true, is_game: true, _id: $not: $in: active_room_ids
+    idle_time = new Date().getTime() - idle_timeout
+    clause =
+      active: true
+      is_game: true
+      _id: $not: $in: active_room_ids
+      created: $lt: idle_time
     if Common.keep_history
       @update clause, $set: $active: false
     else
