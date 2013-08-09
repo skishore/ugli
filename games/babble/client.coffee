@@ -24,6 +24,7 @@ class @BabbleClient
   constructor: (@ugli, @container) ->
     # populate the provided jquery-wrapped div with the game ui.
     @container.append(
+      $('<div class="time-bar"/>')
       $('<div class="inner-container"/>').append(
         $('<h1 class="getready"/>')
         $('<div class="compose-cont"/>').append(
@@ -67,28 +68,48 @@ class @BabbleClient
       @ugli.send ['submit_sentence', sentence]
 
   handle_update: ->
+    v = @ugli.view
+
     # called to notify client that ugli.state has changed.
-    @container.find('.params').text JSON.stringify @ugli.view, undefined, 3
+    @container.find('.params').text JSON.stringify v, undefined, 3
 
     @container.find('.getready')
-      .text("Get ready for round #{@ugli.view.round}!")
-      .toggle(@ugli.view.phase is 'countdown')
+      .text("Get ready for round #{v.round}!")
+      .toggle(v.phase is 'countdown')
 
-    @container.find('.compose-cont').toggle @ugli.view.phase is 'compose'
-    if @ugli.view.phase is 'compose'
-      words = @round_words_shuffled[@ugli.view.round] ?= _.shuffle @ugli.view.words
+    @container.find('.compose-cont').toggle v.phase is 'compose'
+    if v.phase is 'compose'
+      words = @round_words_shuffled[v.round] ?= _.shuffle v.words
       @container.find('.words').empty().append(
         ($('<div class="word">').text(w) for w in words)...
       )
-    @container.find('.your-submission').text(@ugli.view.submission ? '')
-      .closest('div').toggle @ugli.view.submission?
+    @container.find('.your-submission').text(v.submission ? '')
+      .closest('div').toggle v.submission?
 
-    @container.find('.submissions-cont').toggle @ugli.view.phase is 'voting'
+    @container.find('.submissions-cont').toggle v.phase is 'voting'
     @container.find('.submissions').empty().append((
       $('<li/>').append(
         $('<span class="submission"/>').text s
         $('<button/>').text 'vote'
-      ) for s in @ugli.view.sentences ? [])...
+      ) for s in v.sentences ? [])...
     )
+
+    msecs_left = v.target_time? - new Date().getTime()
+    $('.time-bar').toggle(msecs_left > 0)
+    if msecs_left > 0
+      phase_msecs = {
+        countdown: COUNTDOWN_TIME
+        compose: COMPOSE_TIME
+        voting: VOTING_TIME
+      }[v.phase]
+      $('.time-bar')
+        .css(width: "#{100 * msecs_left / phase_msecs}%")
+        .animate({
+          width: '0%'
+        }, {
+          duration: msecs_left
+          easing: 'linear'
+          queue: false
+        })
 
     @_check_input()

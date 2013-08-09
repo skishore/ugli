@@ -111,7 +111,7 @@ class @BabbleServer
   @get_player_view: (ugli, player) ->
     # generate what client sees as ugli.view
     v = {}
-    for prop in ['round', 'phase', 'words', 'scores']
+    for prop in ['num_rounds', 'round', 'phase', 'words', 'scores']
       v[prop] = ugli.state[prop] if prop of ugli.state
     if ugli.state.phase is "voting"
       v.sentences = (s for s of inv_map ugli.state.submissions)
@@ -120,6 +120,8 @@ class @BabbleServer
       v.submissions = ugli.state.submissions
     v.submission = ugli.state.submissions?[player]
     v.vote = ugli.state.votes?[player]
+    for key, target_time of ugli.state.ugli_timeouts ? {}
+      v.target_time = target_time
     v
 
   @get_public_view: (ugli) ->
