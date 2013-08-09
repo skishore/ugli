@@ -22,11 +22,12 @@ class @UGLICore
     ]
 
   @call_state_mutator = (room_id, callback) ->
+    # Call a function that updates context.state. Return true if the new state
+    # was successfully saved to the database.
     console.log('call_state_mutator', room_id) if @verbose
     [context, index] = UGLICore.create_room_context room_id
     callback context
-    if GameStates.save_context room_id, index, context
-      context._after_save room_id
+    GameStates.save_context room_id, index, context
 
   @create_game: (user_id, config) ->
     console.log('create_game', user_id, config) if @verbose
