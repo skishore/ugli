@@ -5,9 +5,8 @@
 #   any UGLI callback
 #
 # The context stores the following data, which is read-only except for state:
-#   usernames: list of users currently in the game
+#   players: list of players currently in the game
 #   rules: the game's rules dictionary
-#   index: the current game state index
 #   state: complete server view of game state
 #
 # In addition, the context provides these UGLI framework helper methods:
@@ -16,7 +15,7 @@
 class @UGLIContext
   @verbose = false
 
-  constructor: (@user_ids, @rules, @index=-1, @state=null) ->
+  constructor: (@user_ids, @rules, @state=null) ->
     @_timeouts = []
 
   setTimeout: (callback, delay) ->

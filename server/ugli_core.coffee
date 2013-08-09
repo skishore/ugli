@@ -14,24 +14,23 @@ class @UGLICore
   @verbose = false
 
   @create_room_context: (room_id) ->
+    # Return a [context, index] pair. The index is the current state index.
     console.log('create_room_context', room_id) if @verbose
     room = Rooms.findOne _id: room_id
     if not room?
       throw "Room #{room_id} is not ready"
     game_state = GameStates.get_current_state room_id
-    new UGLIContext(
-      room.user_ids,
-      room.rules,
-      game_state?.index,
-      game_state?.state,
-    )
+    [
+      new UGLIContext room.user_ids, room.rules, game_state?.state
+      if game_state? then game_state.index else -1
+    ]
 
   @call_state_mutator = (room_id, callback) ->
     console.log('call_state_mutator', room_id) if @verbose
-    context = UGLICore.create_room_context room_id
+    [context, index] = UGLICore.create_room_context room_id
     callback context
     views = context._get_views()
-    if GameStates.update_game_state room_id, context.index, context.state, views
+    if GameStates.update_game_state room_id, index, context.state, views
       context._after_save room_id
 
   @create_game: (user_id, rules) ->
