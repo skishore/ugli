@@ -47,3 +47,4 @@ UI layer
 - Keep lobby focused on initial page load
 - Show reason for being unable to join game in tooltip
 - Game-specific UI in the games list
+- Show games you're in / invited to at the top and in different colors
