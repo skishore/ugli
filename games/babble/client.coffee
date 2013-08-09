@@ -41,7 +41,7 @@ class @BabbleClient
 
   handle_update: ->
     # called to notify client that ugli has changed.
-    @container.find('.babble-params').text JSON.stringify @ugli.view
+    @container.find('.babble-params').text JSON.stringify @ugli.view, undefined, 2
     @container.find('.babble-submissions').empty().append((
       $('<li/>').append(
         $('<span class="babble-submission"/>').text s
