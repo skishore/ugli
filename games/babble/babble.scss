@@ -1,6 +1,10 @@
 .ugli-game-ui {
     background-color: #eee;
-    .getready {
+    .inner-container {
+        padding: 1em;
+    }
+    h1 {
+        margin: 0 0 10px 0;
         font-size: 200%;
     }
     .words {
@@ -12,9 +16,27 @@
             padding: 2px 4px;
             margin: 2px;
             cursor: default;
+            font-size: 120%;
             &.used {
                 visibility: hidden;
             }
+        }
+    }
+    input.sentence {
+        font-size: 120%;
+        padding: 2px;
+    }
+    .violations {
+        .violation {
+            color: #c00;
+        }
+    }
+    .your-submission {
+        font-weight: bold;
+    }
+    .submissions {
+        .submission {
+            font-size: 120%;
         }
     }
 }

@@ -6,7 +6,7 @@
 
 
 #TODO merge a wikipedia article with a yahoo answers thread
-Source = YahooAnswers
+Source = Wikipedia #YahooAnswers
 generate_word_list = ->
   for key in _.shuffle Source.get_random_articles()
     words = get_words_from_text Source.get_article_content key
@@ -114,7 +114,8 @@ class @BabbleServer
     if ugli.state.phase not in ["compose", "voting"]
       v.votes = inv_map ugli.state.votes
       v.submissions = ugli.state.submissions
-    #TODO include current phase remaining time?
+    v.submission = ugli.state.submissions?[player]
+    v.vote = ugli.state.votes?[player]
     v
 
   @get_public_view: (ugli) ->
