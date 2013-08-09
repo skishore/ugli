@@ -1,6 +1,14 @@
-    #users = Users.find(_id: $in: room.user_ids)
-    #if users.length != room.user_ids.length
-    #  throw "Missing users w/ user_ids in #{room.user_ids}"
+# TODO(skishore): The server should pass usernames to the context
+# instead of user_ids using something like this code:
+#
+#   users = Users.find(_id: $in: room.user_ids)
+#   if users.length != room.user_ids.length
+#     throw "Missing users w/ user_ids in #{room.user_ids}"
+#   players = (user.username for user in users)
+#
+# TODO(skishore): In addition, UGLICore should implement notifications for when
+# players join and leave a game, and it should also have fallback notifications
+# when a room context is created and these calls were missed.
 
 class @UGLICore
   @verbose = false
@@ -36,6 +44,6 @@ class @UGLICore
 
   @handle_client_message: (room_id, user_id, message) ->
     console.log('handle_client_message', room_id, user_id, message) if @verbose
-    # TODO(skishore): we should check if the user is in the room here...
+    # TODO(skishore): We should check if the user is in the room here...
     @call_state_mutator room_id, (context) ->
       Common.ugli_server.handle_client_message context, user_id, message
