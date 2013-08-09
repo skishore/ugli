@@ -131,7 +131,8 @@ class @BabbleServer
 
   @join_game: (ugli, player) ->
     # Return true if the player should be allowed to join the game.
-    true
+    # For this demo we restrict games to at most two players.
+    return ugli.players.length < 2
 
   @leave_game: (ugli, player) ->
     # A notification that a player has left the game. No response necessary.
