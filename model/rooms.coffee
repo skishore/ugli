@@ -3,6 +3,8 @@
 #   name: string
 #   user_ids: [user _ids]
 #   is_game: bool
+#   created: ts
+#   active: bool
 # privates and invites fields to come soon.
 
 class @Rooms extends Collection
@@ -11,13 +13,16 @@ class @Rooms extends Collection
     'name',
     'user_ids',
     'is_game',
+    'created',
+    'active',
   ]
   if Meteor.isServer
     @collection._ensureIndex 'name', unique: true
+    @collection._ensureIndex 'active'
 
   @publish: (user_id) ->
     check user_id, String
-    @find()
+    @find active: true
 
   @create_room: (name, is_game) ->
     # Create a new game room with no initial game state. Return its _id.
@@ -27,6 +32,8 @@ class @Rooms extends Collection
       name: name
       user_ids: []
       is_game: is_game
+      created: new Date().getTime()
+      active: true
 
   @get_lobby = ->
     lobby = @findOne(name: Common.lobby_name)
@@ -37,7 +44,7 @@ class @Rooms extends Collection
 
   @get_user_rooms = (user_id) ->
     check user_id, String
-    @find(user_ids: user_id).fetch()
+    @find(active: true, user_ids: user_id).fetch()
 
   @join_room = (user_id, room_id) ->
     # Have a user join a room. Notify the UGLI server if a game is being played.

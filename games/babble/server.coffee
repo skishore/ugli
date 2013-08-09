@@ -99,8 +99,8 @@ class @BabbleServer
     start_countdown ugli
 
   @join_game: (ugli, player) ->
-    # Return true if the player should be allowed to join the game.
-    # For this demo we restrict games to at most two players.
+    # A notification that a player wants to join the game. If this method
+    # returns false, the player will not be allowed to join.
     return ugli.players.length < 2
 
   @leave_game: (ugli, player) ->
@@ -123,3 +123,9 @@ class @BabbleServer
       v.submissions = ugli.state.submissions
     #TODO include current phase remaining time?
     v
+
+  @get_public_view: (ugli) ->
+    # Generate what all users can see about this game. Certain attributes of the
+    # resulting dict are handled specially:
+    #   open: bool - used to determine whether users can join this game
+    open: ugli.players.length < 2

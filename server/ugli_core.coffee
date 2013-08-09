@@ -1,7 +1,3 @@
-# TODO(skishore): UGLICore should implement notifications for when players join
-# and leave a game, and it should also have fallback notifications when a room
-# room context is created and these calls were missed.
-
 class @UGLICore
   @verbose = false
 
@@ -21,17 +17,16 @@ class @UGLICore
     # Get the mutable game state and return it.
     game_state = GameStates.get_current_state room_id
     [
-      new UGLIContext user_id_map, game_state?.state
+      new UGLIServerContext user_id_map, game_state?.state
       if game_state? then game_state.index else -1
     ]
 
   @call_state_mutator = (room_id, callback) ->
     console.log('call_state_mutator', room_id) if @verbose
-    [ctx, index] = UGLICore.create_room_context room_id
-    callback ctx
-    views = ctx._get_views()
-    if GameStates.save_game_state room_id, index, ctx.players, ctx.state, views
-      ctx._after_save room_id
+    [context, index] = UGLICore.create_room_context room_id
+    callback context
+    if GameStates.save_context room_id, index, context
+      context._after_save room_id
 
   @create_game: (user_id, config) ->
     console.log('create_game', user_id, config) if @verbose

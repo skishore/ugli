@@ -11,7 +11,7 @@
 # In addition, the context provides these UGLI framework helper methods:
 #   setTimeout: (callback, delay) -> call callback after delay ms
 
-class @UGLIContext
+class @UGLIServerContext
   @verbose = false
 
   constructor: (@_user_id_map, @state=null) ->
@@ -21,21 +21,36 @@ class @UGLIContext
   setTimeout: (callback, delay) ->
     @_timeouts.push [callback, delay]
 
-  # TODO(karl): maybe just move _get_views and _after_save logic
-  # into UGLICore.call_state_mutator, since that's the only thing
-  # that should be calling these (i think)
-
   _get_views: ->
-    # Called by the framework after the game's server code mutates this
-    # context's state. Returns the player-visible views of the state.
+    # This method is called by the framework after the game's server code
+    # mutates this context state, but before this context is saved.
+    #
+    # Return a pair [user_views, public_view] of views. The user_views is a dict
+    # mapping user_ids to their views, while the public view is totally visible.
     console.log('_get_views') if @verbose
-    views = {}
+    user_views = {}
     for user_id, player of @_user_id_map
-      views[user_id] = Common.ugli_server.get_player_view @, player
-    views
+      user_views[user_id] = Common.ugli_server.get_player_view @, player
+    public_view = Common.ugli_server.get_public_view @
+    [user_views, public_view]
+
+  _add_user: (user) ->
+    # Used to add users to a context if they successfully join a game.
+    console.log('_add_user', user) if @verbose
+    if user._id not of @_user_id_map
+      @_user_id_map[user._id] = user.username
+      @players.push user.username
+
+  _remove_user: (user) ->
+    # Used to remove users from a context if they leave a game.
+    console.log('_remove_user', user) if @verbose
+    if user._id of @_user_id_map
+      delete @_user_id_map[user._id]
+      @players = (player for player in @players if player != user.username)
 
   _after_save: (room_id) ->
-    # Called by the framework after this context is successfully saved.
+    # This method is called by the framework after this context is successfully
+    # saved. It launches any timeouts requested by the UGLI server.
     console.log('_after_save', room_id) if @verbose
     for [callback, delay] in @_timeouts
       Meteor.setTimeout (->
@@ -43,15 +58,3 @@ class @UGLIContext
       ), delay
     @_after_save = ->
       throw '_after_save called twice'
-
-  _add_user: (user) ->
-    console.log('_add_user', user) if @verbose
-    if user._id not of @_user_id_map
-      @_user_id_map[user._id] = user.username
-      @players.push user.username
-
-  _remove_user: (user) ->
-    console.log('_remove_user', user) if @verbose
-    if user._id of @_user_id_map
-      delete @_user_id_map[user._id]
-      @players = (player for player in @players if player != user.username)

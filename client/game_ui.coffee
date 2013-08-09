@@ -30,7 +30,7 @@ class GameUI
     room = Rooms.get(Session.get 'room_id')
     if user? and room?.is_game
       game_state = GameStates.get_current_state room._id
-      if user._id of (game_state?.views or {})
+      if user._id of (game_state?.user_views or {})
         key = @get_game_ui_key user._id, room._id
         if key not of @game_clients
           context = new UGLIClientContext(
@@ -38,7 +38,7 @@ class GameUI
             room._id,
             game_state.index,
             game_state.players,
-            game_state.views[user._id]
+            game_state.user_views[user._id]
           )
           container = @create_game_ui key
           @game_clients[key] = new Common.ugli_client context, container
@@ -46,7 +46,7 @@ class GameUI
           @game_clients[key].ugli.update(
             game_state.index,
             game_state.players,
-            game_state.views[user._id],
+            game_state.user_views[user._id],
           )
           @game_clients[key].handle_update()
       @show_game_ui key

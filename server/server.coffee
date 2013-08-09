@@ -4,6 +4,9 @@ Meteor.publish 'users', ->
 Meteor.publish 'rooms', ->
   Rooms.publish @userId
 
+Meteor.publish 'public_game_views', ->
+  GameStates.publish_public_views @userId
+
 Meteor.publish 'chats', (room_ids) ->
   Chats.publish @userId, room_ids
 

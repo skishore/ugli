@@ -8,6 +8,7 @@ Meteor.startup ->
     if Meteor.userId()?
       Meteor.subscribe 'users'
       Meteor.subscribe 'rooms'
+      Meteor.subscribe 'public_game_views'
 
   Deps.autorun ->
     Rooms.find(user_ids: Meteor.userId()).observe
