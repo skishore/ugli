@@ -41,7 +41,6 @@ class @Users extends Collection
       'fields.heartbeat': $lt: idle_time,
     ).fetch()
     user_ids = (user._id for user in users)
-    if user_ids.length
-      # Boot users from rooms first. If this step fails, they'll stay active.
-      Rooms.boot_users user_ids
-      Users.update({_id: $in: user_ids}, $set: 'fields.active': false)
+    # Boot users from rooms first. If this step fails, they'll stay active.
+    Rooms.boot_users user_ids
+    Users.update({_id: $in: user_ids}, $set: 'fields.active': false)

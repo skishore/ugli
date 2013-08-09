@@ -39,6 +39,7 @@ class @UGLICore
     # TODO(skishore): We should destroy rooms when this call fails for them.
     @call_state_mutator room_id, (context) ->
       Common.ugli_server.initialize_state context, config
+    Rooms.join_room user_id, room_id
 
   @handle_client_message: (room_id, user_id, message) ->
     console.log('handle_client_message', room_id, user_id, message) if @verbose

@@ -36,20 +36,41 @@ class @Rooms extends Collection
     lobby
 
   @join_room = (user_id, room_id) ->
-    # TODO(skishore): This call should notify the UGLI server for this room.
+    # Have a user join a room. Notify the UGLI server if a game is being played.
     check user_id, String
     check room_id, String
-    @update({_id: room_id}, $addToSet: 'user_ids': user_id)
+    user = Users.findOne(_id: user_id)
+    room = Rooms.findOne(_id: room_id)
+    if user? and room?
+      if room.is_game
+        UGLICore.call_state_mutator room_id, (context) ->
+          if Common.ugli_server.join_game context, user.username
+            if user.username not in context.players
+              context.players.push user.username
+            Rooms.update({_id: room_id}, $addToSet: 'user_ids': user_id)
+      else
+        @update({_id: room_id}, $addToSet: 'user_ids': user_id)
 
   @leave_room = (user_id, room_id) ->
-    # TODO(skishore): This call should notify the UGLI server for this room.
-    # We may also want to destroy empty game rooms.
+    # Have a user leave a room. Notify the UGLI server if a game is being played.
     check user_id, String
     check room_id, String
-    @update({_id: room_id}, $pull: 'user_ids': user_id)
+    user = Users.findOne(_id: user_id)
+    room = Rooms.findOne(_id: room_id)
+    if user? and room?
+      if room.is_game
+        UGLICore.call_state_mutator room_id, (context) ->
+          Common.ugli_server.leave_game context, user.username
+          context.players = (
+            player for player in context.players \
+            when player != user.username
+          )
+      @update({_id: room_id}, $pull: 'user_ids': user_id)
+
+  @boot_user = (user_id) ->
+    for room in Rooms.find({user_ids: user_id}, fields: _id: 1).fetch()
+      @leave_room(user_id, room._id)
 
   @boot_users = (user_ids) ->
-    # TODO(skishore): This call should notify the UGLI server for this room.
-    # We may also want to destroy empty game rooms.
-    check user_ids, [String]
-    @update({}, $pull: 'user_ids': $in: user_ids)
+    for user_id in user_ids
+      @boot_user(user_id)

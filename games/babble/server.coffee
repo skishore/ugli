@@ -91,6 +91,13 @@ class @BabbleServer
       scores: {}
     start_countdown ugli
 
+  @join_game: (ugli, player) ->
+    # Return true if the player should be allowed to join the game.
+    true
+
+  @leave_game: (ugli, player) ->
+    # A notification that a player has left the game. No response necessary.
+
   @on_client_message: (ugli, player, message) ->
     # called when client calls ugli.send(message)
     [method, args...] = message
@@ -108,4 +115,3 @@ class @BabbleServer
       s.submissions = ugli.state.submissions
     #TODO include current phase remaining time?
     s
-

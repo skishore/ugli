@@ -30,7 +30,7 @@ class @UGLIContext
     console.log('_get_views') if @verbose
     views = {}
     for player in @players
-      game_state.views[player] = Common.ugli_server.get_player_view @, player
+      views[player] = Common.ugli_server.get_player_view @, player
     views
 
   _after_save: (room_id) ->
