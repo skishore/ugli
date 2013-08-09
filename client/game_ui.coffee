@@ -26,19 +26,19 @@ class GameUI
 
   @update_game_ui = ->
     @hide_game_ui()
-    user_id = Meteor.userId()
+    user = Meteor.user()
     room = Rooms.findOne(_id: Session.get 'room_id')
-    if Meteor.userId()? and room?.is_game
+    if user? and room?.is_game
       game_state = GameStates.get_current_state room._id
-      if user_id of (game_state?.views or {})
-        key = @get_game_ui_key user_id, room._id
+      if user._id of (game_state?.views or {})
+        key = @get_game_ui_key user._id, room._id
         if key not of @game_clients
           context = new UGLIClientContext(
-            user_id,
+            user,
             room._id,
             game_state.index,
             game_state.players,
-            game_state.views[user_id]
+            game_state.views[user._id]
           )
           container = @create_game_ui key
           @game_clients[key] = new Common.ugli_client context, container
@@ -46,7 +46,7 @@ class GameUI
           @game_clients[key].ugli.update(
             game_state.index,
             game_state.players,
-            game_state.views[user_id],
+            game_state.views[user._id],
           )
           @game_clients[key].handle_update()
       @show_game_ui key
