@@ -46,6 +46,10 @@ client_handlers.vote = (ugli, player, sentence) ->
     ugli.state.votes[player] = sentence
 
 end_voting = (ugli) ->
+  add_score = (player, points) ->
+    ugli.state.scores[player] ?= 0
+    ugli.state.scores[player] += points
+
   inv_subs = inv_map ugli.state.submissions
   inv_votes = inv_map ugli.state.votes
 
@@ -62,7 +66,7 @@ end_voting = (ugli) ->
   # award points for voting on the winning sentence
   if winning_sentences.length is 1
     for uid in inv_votes[winning_sentences[0]] ? []
-      ugli.state.scores[uid] += 1
+      add_score uid, 1
 
   for sentence, submitters of inv_subs
     sentence_score = (inv_votes[sentence] ? []).length
@@ -70,7 +74,7 @@ end_voting = (ugli) ->
       sentence_score += Math.floor 3 / winning_sentences.length
     submitter_score = Math.floor sentence_score / submitters.length
     for uid in submitters
-      ugli.state.scores[uid] += submitter_score
+      add_score uid, submitter_score
   # end scoring
 
   if ugli.state.round isnt ugli.state.num_rounds
