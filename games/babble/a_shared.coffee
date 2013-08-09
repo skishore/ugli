@@ -12,10 +12,10 @@
   r
 
 @get_words_from_text = (text) ->
-  (w.toLowerCase() for w in text.match /[A-Za-z']+/g)
+  (w.toLowerCase() for w in text.match /\b[A-Za-z\-]+('[st])?\b/g)
 
 @words_from_sentence = (sentence) ->
-  (w.match(/^"?([A-Za-z']+)[";:.,?!]*$/)?[1] ? w for w in sentence.toLowerCase().split /\s+/ when w)
+  (w.match(/^"?(\S+?)[";:.,?!]*$/)?[1] ? w for w in sentence.toLowerCase().split /\s+/ when w)
 
 @validate_sentence = (words, sentence) ->
   allowed = _.countBy words
