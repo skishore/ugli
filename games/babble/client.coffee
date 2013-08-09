@@ -56,10 +56,11 @@ class @BabbleClient
       .toggle(@ugli.view.phase is 'countdown')
 
     @container.find('.compose-cont').toggle @ugli.view.phase is 'compose'
-    words = @round_words_shuffled[@ugli.view.round] ?= _.shuffle @ugli.view.words
-    @container.find('.words').empty().append(
-      ($('<div class="word">').text(w) for w in words)...
-    )
+    if @ugli.view.phase is 'compose'
+      words = @round_words_shuffled[@ugli.view.round] ?= _.shuffle @ugli.view.words
+      @container.find('.words').empty().append(
+        ($('<div class="word">').text(w) for w in words)...
+      )
 
     @container.find('.submissions-cont').toggle @ugli.view is 'voting'
     @container.find('.submissions').empty().append((

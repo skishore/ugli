@@ -144,13 +144,13 @@ class @BabbleServer
 
   @get_player_view: (ugli, player) ->
     # generate what client sees as ugli.view
-    s = {}
+    v = {}
     for prop in ['round', 'phase', 'words', 'scores']
-      s[prop] = ugli.state[prop] if prop of ugli.state
+      v[prop] = ugli.state[prop] if prop of ugli.state
     if ugli.state.phase is "voting"
-      s.sentences = (s for s of inv_map ugli.state.submissions)
+      v.sentences = (s for s of inv_map ugli.state.submissions)
     if ugli.state.phase not in ["compose", "voting"]
-      s.votes = inv_map ugli.state.votes
-      s.submissions = ugli.state.submissions
+      v.votes = inv_map ugli.state.votes
+      v.submissions = ugli.state.submissions
     #TODO include current phase remaining time?
-    s
+    v
