@@ -1,0 +1,49 @@
+Core server-side functionality
+==============================
+Timeouts
+- Rethink timeouts API
+- Add ability to cancel timeout
+- Improve semantics (deal with concurrent update) in callback
+
+Joining/leaving
+- Add fallback notifications in case of db failure
+
+Exceptions
+- Add UGLI-specific exception for canceling state updates
+
+Update propagation
+- Minimize or squash trivial/spammy updates
+- Only send updates to players when their view changes
+- Keep only a single snapshot of each state around?
+
+General refactoring
+
+Tests!
+
+
+Room/game layer
+===============
+General framework for waiting for players to join before starting
+
+General framework for dealing with drops/joins (only between rounds?)
+
+Callback on game completion that closes game
+
+Close game when all players leave?
+
+Private rooms / invites
+
+Rating system
+
+Matchmaking
+
+More games (ntris, Tichu, grabble)
+
+
+UI layer
+========
+- x buttons for leaving games
+- Fixed-size for all main-content UI elements
+- Keep lobby focused on initial page load
+- Show reason for being unable to join game in tooltip
+- Game-specific UI in the games list
