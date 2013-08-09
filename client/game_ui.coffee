@@ -1,6 +1,7 @@
 class GameUI
   @game_ui_class = 'ugli-game-ui'
   @game_clients = {}
+  @last_key = null
 
   @get_game_ui_key = (user_id, room_id) ->
     "#{user_id}-#{room_id}"
@@ -25,13 +26,19 @@ class GameUI
     game_ui.css 'height', $('#main-content').height() - 2
 
   @update_game_ui = ->
-    @hide_game_ui()
     user = Meteor.user()
     room = Rooms.get(Session.get 'room_id')
+    key = @get_game_ui_key user?._id, room?._id
+
+    # Optimization: do not hide the game UI if we're still in the same game as
+    # we were during the last update. This prevents a lot of flickering.
+    if key != @last_key
+      @hide_game_ui()
+    @last_key = key
+
     if user? and room?.is_game
       game_state = GameStates.get_current_state room._id
       if user._id of (game_state?.user_views or {})
-        key = @get_game_ui_key user._id, room._id
         if key not of @game_clients
           context = new UGLIClientContext(
             user,
