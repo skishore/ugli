@@ -13,7 +13,7 @@ scroll_chats = ->
 
 
 Template.side_bar.logged_in = ->
-  Meteor.user()
+  Meteor.user()?
 
 Template.user_list.num_users = ->
   room = Rooms.findOne(_id: Session.get 'room_id')
