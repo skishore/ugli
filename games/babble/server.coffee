@@ -5,21 +5,14 @@
 #     call callback(ugli) after <timeout> milliseconds.
 
 
+#TODO merge a wikipedia article with a yahoo answers thread
 Source = YahooAnswers
 generate_word_list = ->
-  for key in Source.get_random_articles()
-    content = Source.get_article_content key
-    words = (w.toLowerCase() for w in content.match /[A-Za-z]+/g)
-    # TODO: stemming, punctuation, balanced parts of speech
+  for key in _.shuffle Source.get_random_articles()
+    words = get_words_from_text Source.get_article_content key
     if words.length >= NUM_WORDS
       return _.take(_.shuffle(words), NUM_WORDS).sort()
   throw "couldn't find a good word list"
-
-is_valid_sentence = (words, sentence) ->
-  counts = _.countBy words
-  for w in sentence.split /\s+/
-    return false if not counts[w.toLowerCase()]--
-  true
 
 
 # game flow logic
@@ -38,7 +31,7 @@ start_compose = (ugli) ->
 
 client_handlers.submit_sentence = (ugli, player, sentence) ->
   if ugli.state.phase is "compose" and
-      is_valid_sentence ugli.state.words, sentence
+      validate_sentence(ugli.state.words, sentence)[0]
     ugli.state.submissions[player] = sentence
 
 start_voting = (ugli) ->

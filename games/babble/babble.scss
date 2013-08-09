@@ -1,5 +1,8 @@
 .ugli-game-ui {
     background-color: #eee;
+    .getready {
+        font-size: 200%;
+    }
     .words {
         padding: 5px;
         .word {
@@ -8,6 +11,10 @@
             border: 1px solid #ccc;
             padding: 2px 4px;
             margin: 2px;
+            cursor: default;
+            &.used {
+                visibility: hidden;
+            }
         }
     }
 }

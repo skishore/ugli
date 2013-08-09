@@ -29,23 +29,37 @@ class @BabbleClient
         $('<div class="words"/>')
         $('<div style="clear:both"/>').append(
           'Compose a sentence! Your sentence: '
-          $('<input class="sentence"/>')
+          $('<input class="sentence" size="100"/>')
+            .on('input', => @_check_input())
+            .on('keyup', (e) => @container.find('.submit').click() if e.keyCode is 13)
           ' '
-          $('<button/>').text('submit').on 'click', =>
-            ugli.send ['submit_sentence',
-              @container.find('.sentence').val()]
+          $('<button class="submit"/>').text('Submit').on 'click', (e) =>
+            e.preventDefault()
+            ugli.send ['submit_sentence', @container.find('.sentence').val()]
+          $('<div class="violations"/>')
         )
       ).hide()
       $('<div class="submissions-cont"/>').append(
         'Time up! Vote on the submissions: '
         $('<ul class="submissions"/>').on 'click', 'button', ->
-          ugli.send ['vote',
-            $(@).closest('li').find('.babble-submission').text()]
+          ugli.send ['vote', $(@).closest('li').find('.babble-submission').text()]
       ).hide()
-      $('<pre class="params" style="font-size:90%;max-height:200px;overflow:auto"/>')
+      $('<pre class="params" style="font-size:90%"/>')
     )
     @round_words_shuffled = {}
     @handle_update()
+
+  _check_input: ->
+    [valid, used_word_counts, messages] =
+        validate_sentence @ugli.view.words, @container.find('.sentence').val()
+    @container.find('.submit').toggle valid
+    @container.find('.violations')
+      .empty()
+      .append(($('<div>').text m for m in messages)...)
+      .toggle(not valid)
+    @container.find('.word').each ->
+      e = $(@)
+      e.toggleClass 'used', used_word_counts[e.text()]-- > 0
 
   handle_update: ->
     # called to notify client that ugli.state has changed.
@@ -62,10 +76,12 @@ class @BabbleClient
         ($('<div class="word">').text(w) for w in words)...
       )
 
-    @container.find('.submissions-cont').toggle @ugli.view is 'voting'
+    @container.find('.submissions-cont').toggle @ugli.view.phase is 'voting'
     @container.find('.submissions').empty().append((
       $('<li/>').append(
         $('<span class="submission"/>').text s
         $('<button/>').text 'vote'
       ) for s in @ugli.view.sentences ? [])...
     )
+
+    @_check_input()
