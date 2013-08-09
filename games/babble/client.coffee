@@ -94,15 +94,15 @@ class @BabbleClient
       ) for s in v.sentences ? [])...
     )
 
-    msecs_left = v.target_time? - new Date().getTime()
-    $('.time-bar').toggle(msecs_left > 0)
+    msecs_left = v.target_time - new Date().getTime()
+    @container.find('.time-bar').toggle(msecs_left > 0)
     if msecs_left > 0
       phase_msecs = {
         countdown: COUNTDOWN_TIME
         compose: COMPOSE_TIME
         voting: VOTING_TIME
       }[v.phase]
-      $('.time-bar')
+      @container.find('.time-bar')
         .css(width: "#{100 * msecs_left / phase_msecs}%")
         .animate({
           width: '0%'
