@@ -13,6 +13,5 @@ class @UGLIClientContext
     false
 
   send: (message) ->
-    console.log "#{@_user_id}-#{@_room_id} sent #{message}"
     Meteor.call 'send_game_message', @_room_id, message, (err, result) ->
       console.log err if err
