@@ -35,9 +35,11 @@ Meteor.methods
 Meteor.setInterval (->
   Users.mark_users_idle Common.idle_timeout
   Rooms.cleanup_orphaned_rooms Common.idle_timeout
-  do Chats.cleanup_orphaned_chats
+  Chats.cleanup_orphaned_chats()
+  GameStates.cleanup_orphaned_states()
+  GameStates.cleanup_old_states()
 ), Common.idle_timeout
 
 
 Meteor.startup ->
-  do Rooms.cleanup_all_game_rooms
+  Rooms.cleanup_all_game_rooms()

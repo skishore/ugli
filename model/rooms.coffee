@@ -81,20 +81,12 @@ class @Rooms extends Collection
       @boot_user(user_id)
 
   @cleanup_all_game_rooms = ->
-    # Marks all game rooms inactive.
-    #
-    # If Common.keep_history is false, removes these rooms instead.
-    clause = active: true, is_game: true
-    if Common.keep_history
-      @update clause, $set: $active: false
-    else
-      @remove clause
+    # Clean up all game rooms inactive. This method is called on server startup.
+    @cleanup active: true, is_game: true
 
   @cleanup_orphaned_rooms = (idle_timeout) ->
-    # Marks orphaned game rooms (that is, games that have existed for
+    # Cleans up orphaned game rooms (that is, games that have existed for
     # idle_timeout ms without a game state) inactive.
-    #
-    # If Common.keep_history is false, removes these rooms instead.
     game_states = GameStates.find({active: true}, fields: room_id: 1).fetch()
     active_room_ids = _.uniq(game_state.room_id for game_state in game_states)
     idle_time = new Date().getTime() - idle_timeout
@@ -103,7 +95,4 @@ class @Rooms extends Collection
       is_game: true
       _id: $not: $in: active_room_ids
       created: $lt: idle_time
-    if Common.keep_history
-      @update clause, $set: $active: false
-    else
-      @remove clause
+    @cleanup clause

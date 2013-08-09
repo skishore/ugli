@@ -41,8 +41,4 @@ class @Chats extends Collection
   @cleanup_orphaned_chats: ->
     rooms = Rooms.find({active: true}, fields: _id: 1).fetch()
     active_room_ids = (room._id for room in rooms)
-    clause = active: true, room_id: $not: $in: active_room_ids
-    if Common.keep_history
-      @update clause, $set: active: false
-    else
-      @remove clause
+    @cleanup active: true, room_id: $not: $in: active_room_ids

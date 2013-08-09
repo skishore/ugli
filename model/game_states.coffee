@@ -66,3 +66,25 @@ class @GameStates extends Collection
         user_views: user_views
         public_view: public_view
     false
+
+  @cleanup_old_states: ->
+    game_states = GameStates.find(active: true).fetch()
+    indexes = {}
+    for game_state in game_states
+      indexes[game_state.room_id] = Math.max(
+        game_state.index,
+        (indexes[game_state.room_id] or 0)
+      )
+    old_state_ids = (
+      game_state._id for game_state in game_states \
+      when game_state.index < indexes[game_state.room_id]
+    )
+    clause = _id: $in: old_state_ids
+    @cleanup clause
+
+
+  @cleanup_orphaned_states: ->
+    rooms = Rooms.find({active: true}, fields: _id: 1).fetch()
+    active_room_ids = (room._id for room in rooms)
+    clause = active: true, room_id: $not: $in: active_room_ids
+    @cleanup clause

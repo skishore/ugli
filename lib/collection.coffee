@@ -72,3 +72,9 @@ class @Collection
     @check_fields_legal selector
     console.log(@collection, selector) if @verbose
     @collection.remove selector
+
+  @cleanup: (clause) ->
+    if Common.keep_history
+      @update clause, $set: $active: false
+    else
+      @remove clause
