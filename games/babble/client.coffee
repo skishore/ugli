@@ -24,27 +24,47 @@ class @BabbleClient
   constructor: (@ugli, @container) ->
     # populate the provided jquery-wrapped div with the game ui.
     @container.append(
-      $('<pre class="babble-params"/>')
-      'Submit sentence: '
-      $('<input class="babble-sentence"/>')
-      ' '
-      $('<button/>').text('submit').on 'click', =>
-        ugli.send ['submit_sentence',
-          @container.find('.babble-sentence').val()]
-      'Submissions: '
-      $('<ul class="babble-submissions"/>').on 'click', 'button', ->
-        ugli.send ['vote',
-          $(@).closest('li').find('.babble-submission').text()]
+      $('<div class="getready"/>')
+      $('<div class="compose-cont"/>').append(
+        $('<div class="words"/>')
+        $('<div style="clear:both"/>').append(
+          'Compose a sentence! Your sentence: '
+          $('<input class="sentence"/>')
+          ' '
+          $('<button/>').text('submit').on 'click', =>
+            ugli.send ['submit_sentence',
+              @container.find('.sentence').val()]
+        )
+      ).hide()
+      $('<div class="submissions-cont"/>').append(
+        'Time up! Vote on the submissions: '
+        $('<ul class="submissions"/>').on 'click', 'button', ->
+          ugli.send ['vote',
+            $(@).closest('li').find('.babble-submission').text()]
+      ).hide()
+      $('<pre class="params" style="font-size:90%;max-height:200px;overflow:auto"/>')
     )
-    # TODO(skishore): Does this need to be async?
-    do @handle_update
+    @round_words_shuffled = {}
+    @handle_update()
 
   handle_update: ->
-    # called to notify client that ugli has changed.
-    @container.find('.babble-params').text JSON.stringify @ugli.view, undefined, 2
-    @container.find('.babble-submissions').empty().append((
+    # called to notify client that ugli.state has changed.
+    @container.find('.params').text JSON.stringify @ugli.view, undefined, 2
+
+    @container.find('.getready')
+      .text("GET READY FOR ROUND #{@ugli.view.round}")
+      .toggle(@ugli.view.phase is 'countdown')
+
+    @container.find('.compose-cont').toggle @ugli.view.phase is 'compose'
+    words = @round_words_shuffled[@ugli.view.round] ?= _.shuffle @ugli.view.words
+    @container.find('.words').empty().append(
+      ($('<div class="word">').text(w) for w in words)...
+    )
+
+    @container.find('.submissions-cont').toggle @ugli.view is 'voting'
+    @container.find('.submissions').empty().append((
       $('<li/>').append(
-        $('<span class="babble-submission"/>').text s
+        $('<span class="submission"/>').text s
         $('<button/>').text 'vote'
       ) for s in @ugli.view.sentences ? [])...
     )
