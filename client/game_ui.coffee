@@ -27,7 +27,7 @@ class GameUI
   @update_game_ui = ->
     @hide_game_ui()
     user = Meteor.user()
-    room = Rooms.findOne(_id: Session.get 'room_id')
+    room = Rooms.get(Session.get 'room_id')
     if user? and room?.is_game
       game_state = GameStates.get_current_state room._id
       if user._id of (game_state?.views or {})

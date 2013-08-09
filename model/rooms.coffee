@@ -39,8 +39,8 @@ class @Rooms extends Collection
     # Have a user join a room. Notify the UGLI server if a game is being played.
     check user_id, String
     check room_id, String
-    user = Users.findOne(_id: user_id)
-    room = Rooms.findOne(_id: room_id)
+    user = Users.get user_id
+    room = Rooms.get room_id
     if user? and room? and user_id not in room.user_ids
       if room.is_game
         UGLICore.call_state_mutator room_id, (context) ->
@@ -54,8 +54,8 @@ class @Rooms extends Collection
     # Have a user leave a room. Notify the UGLI server if a game is being played.
     check user_id, String
     check room_id, String
-    user = Users.findOne(_id: user_id)
-    room = Rooms.findOne(_id: room_id)
+    user = Users.get user_id
+    room = Rooms.get room_id
     if user? and room? and user_id in room.user_ids
       if room.is_game
         UGLICore.call_state_mutator room_id, (context) ->

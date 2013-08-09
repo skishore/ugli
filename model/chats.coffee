@@ -29,8 +29,8 @@ class @Chats extends Collection
     check message, String
     message = message.strip()
     if message
-      user = Users.findOne(_id: user_id)
-      room = Rooms.findOne(_id: room_id)
+      user = Users.get user_id
+      room = Rooms.get room_id
       if user? and room? and user._id in room.user_ids
         @insert
           room_id: room_id,

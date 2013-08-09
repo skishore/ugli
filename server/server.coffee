@@ -19,8 +19,7 @@ Meteor.methods
     Users.heartbeat @userId
 
   'join_game': (room_id) ->
-    room = Rooms.findOne(_id: room_id)
-    if room.is_game
+    if Rooms.get(room_id).is_game
       Rooms.join_room @userId, room_id
 
   'send_chat': (room_id, message) ->

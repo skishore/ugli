@@ -15,7 +15,7 @@ Meteor.startup ->
         Session.set 'room_id', document._id
 
   Deps.autorun ->
-    if not Rooms.findOne(_id: Session.get 'room_id')?
+    if not Rooms.get(Session.get 'room_id')?
       Session.set 'room_id', Rooms.get_lobby()?._id
 
   Deps.autorun ->

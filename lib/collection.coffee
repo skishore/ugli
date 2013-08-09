@@ -33,6 +33,9 @@ class @Collection
     @check_fields_legal obj
     @collection.insert obj
 
+  @get: (_id) ->
+    @collection.findOne _id: _id
+
   @find: (selector, options) ->
     if selector?
       console.log(@collection, selector) if @verbose

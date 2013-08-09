@@ -9,7 +9,7 @@ class @UGLICore
     # Return a [context, index] pair. The index is the current state index.
     console.log('create_room_context', room_id) if @verbose
     # Check that the room exists and get the list of players.
-    room = Rooms.findOne _id: room_id
+    room = Rooms.get room_id
     if not room?
       throw "Room #{room_id} is not ready"
     users = Users.find(_id: $in: room.user_ids).fetch()
@@ -35,7 +35,7 @@ class @UGLICore
 
   @create_game: (user_id, config) ->
     console.log('create_game', user_id, config) if @verbose
-    user = Users.findOne(_id: user_id)
+    user = Users.get user_id
     name = "#{user.username}'s game ##{Common.get_uid()}"
     room_id = Rooms.create_room name, true
     # TODO(skishore): We should destroy rooms when this call fails for them.
@@ -45,8 +45,8 @@ class @UGLICore
 
   @handle_client_message: (user_id, room_id, message) ->
     console.log('handle_client_message', user_id, room_id, message) if @verbose
-    user = Users.findOne _id: user_id
-    room = Rooms.findOne _id: room_id
+    user = Users.get user_id
+    room = Rooms.get room_id
     if user? and room? and user._id in room.user_ids
       @call_state_mutator room_id, (context) ->
         Common.ugli_server.handle_client_message context, user.username, message
