@@ -26,7 +26,7 @@ Template.user_list.users = ->
 Template.chat_box.chats = ->
   # Scroll chats when this template is created anew, on login or room change.
   scroll_chats_on_render = true
-  Chats.find({room_id: Session.get 'room_id'}, sort: sent: 1)
+  Chats.find({room_id: Session.get 'room_id'}, sort: created: 1)
 
 Template.chat_box.rendered = ->
   if scroll_chats_on_render

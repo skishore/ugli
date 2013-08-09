@@ -7,6 +7,7 @@
 #   user_views: dict mapping user_id -> user's view of state
 #   public_view: public view of game state
 #   active: bool
+#   created: ts
 
 class @GameStates extends Collection
   @collection = new Meteor.Collection 'game_states'
@@ -18,6 +19,7 @@ class @GameStates extends Collection
     'user_views',
     'public_view',
     'active',
+    'created',
   ]
   if Meteor.isServer
     @collection._ensureIndex {room_id: 1, index: -1}, unique: true
@@ -63,5 +65,4 @@ class @GameStates extends Collection
         state: context.state
         user_views: user_views
         public_view: public_view
-        active: true
     false

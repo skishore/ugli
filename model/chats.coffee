@@ -2,7 +2,8 @@
 #   room_id: room _id
 #   sender: string
 #   message: string
-#   sent: ts
+#   active: bool
+#   created: ts
 
 class @Chats extends Collection
   @collection = new Meteor.Collection 'chats'
@@ -10,17 +11,18 @@ class @Chats extends Collection
     'room_id',
     'sender',
     'message',
-    'sent',
+    'active'
+    'created',
   ]
   if Meteor.isServer
-    @collection._ensureIndex 'room_id'
+    @collection._ensureIndex active: 1, room_id: 1
 
   @publish: (user_id, room_ids) ->
     check user_id, String
     # Drop the room_ids param and restrict the user's view to rooms he is in.
     rooms = Rooms.get_user_rooms user_id
     legal_room_ids = (room._id for room in rooms)
-    @find(room_id: $in: legal_room_ids)
+    @find(active: true, room_id: $in: legal_room_ids)
 
   @send_chat: (user_id, room_id, message) ->
     check user_id, String
@@ -35,4 +37,3 @@ class @Chats extends Collection
           room_id: room_id
           sender: user.username
           message: message
-          sent: new Date().getTime()

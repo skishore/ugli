@@ -9,11 +9,19 @@ class @Collection
   @fields = null
   @verbose = false
 
+  # Some fields will automatically be populated on inserts.
+  @default_field_values =
+    active: -> true
+    created: -> new Date().getTime()
+
   @check_fields_exist: (schema) ->
     for key in @fields
       if key not of schema
-        console.log "Missing key: #{key}"
-        throw "Missing key: #{key}"
+        if key of @default_field_values
+          schema[key] = do @default_field_values[key]
+        else
+          console.log "Missing key: #{key}"
+          throw "Missing key: #{key}"
 
   @check_fields_legal: (schema) ->
     for key of schema

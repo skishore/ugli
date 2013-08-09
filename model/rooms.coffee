@@ -3,8 +3,8 @@
 #   name: string
 #   user_ids: [user _ids]
 #   is_game: bool
-#   created: ts
 #   active: bool
+#   created: ts
 # privates and invites fields to come soon.
 
 class @Rooms extends Collection
@@ -13,8 +13,8 @@ class @Rooms extends Collection
     'name',
     'user_ids',
     'is_game',
-    'created',
     'active',
+    'created',
   ]
   if Meteor.isServer
     @collection._ensureIndex 'name', unique: true
@@ -32,8 +32,6 @@ class @Rooms extends Collection
       name: name
       user_ids: []
       is_game: is_game
-      created: new Date().getTime()
-      active: true
 
   @get_lobby = ->
     lobby = @findOne(name: Common.lobby_name)
