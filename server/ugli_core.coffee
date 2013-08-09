@@ -17,7 +17,7 @@ class @UGLICore
     # Get the mutable game state and return it.
     game_state = GameStates.get_current_state room_id
     [
-      new UGLIServerContext user_id_map, game_state?.state
+      new UGLIServerContext user_id_map, game_state?.state ? {}
       if game_state? then game_state.index else -1
     ]
 

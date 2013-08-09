@@ -5,7 +5,7 @@
 #   any UGLI callback
 #
 # The context stores the following data:
-#   players: read-only mapping from user_id -> player currently in the game
+#   players: list of players currently in the game.
 #   state: mutable view of game state
 #
 # In addition, the context provides these UGLI framework helper methods:
@@ -14,12 +14,23 @@
 class @UGLIServerContext
   @verbose = false
 
-  constructor: (@_user_id_map, @state=null) ->
+  constructor: (@_user_id_map, @state) ->
     @players = (player for user_id, player of @_user_id_map)
     @_timeouts = []
 
   setTimeout: (callback, delay) ->
-    @_timeouts.push [callback, delay]
+    timeout = Meteor.setTimeout (->
+      UGLICore.call_state_mutator room_id, (context) ->
+        # Need to check if this timeout was actually committed to the game state.
+        if timeout of context.state.ugli_timeouts ? {}
+          delete context.state.ugli_timeouts[timeout]
+          callback context
+    ), delay
+    (@state.ugli_timeouts ?= {})[timeout] = new Date().getTime() + delay
+    timeout
+
+  clearTimeout: (timeout) ->
+    delete (@state.ugli_timeouts ?= {})[timeout]
 
   _get_views: ->
     # This method is called by the framework after the game's server code
@@ -47,14 +58,3 @@ class @UGLIServerContext
     if user._id of @_user_id_map
       delete @_user_id_map[user._id]
       @players = (player for player in @players if player != user.username)
-
-  _after_save: (room_id) ->
-    # This method is called by the framework after this context is successfully
-    # saved. It launches any timeouts requested by the UGLI server.
-    console.log('_after_save', room_id) if @verbose
-    for [callback, delay] in @_timeouts
-      Meteor.setTimeout (->
-        UGLICore.call_state_mutator room_id, callback
-      ), delay
-    @_after_save = ->
-      throw '_after_save called twice'
