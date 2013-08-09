@@ -8,7 +8,7 @@ fix_games_list_height = ->
 
 
 Template.games_list.games = ->
-  Rooms.find(_id: $ne: Rooms.get_lobby()?._id)
+  Rooms.find(is_game: true)
 
 Template.games_list.rendered = ->
   fix_games_list_height()

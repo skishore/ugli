@@ -2,14 +2,16 @@
 # The state with the latest index is the current state for the room.
 #   room_id: room _id
 #   index: int
+#   players: [String] snapshot of usernames at time of computation
 #   state: arbitrary JSON-able state
-#   views: dict mapping user_id -> view of state
+#   views: dict mapping user_id -> user's view of state
 
 class @GameStates extends Collection
   @collection = new Meteor.Collection 'game_states'
   @fields = [
     'room_id',
     'index',
+    'players',
     'state',
     'views',
   ]
@@ -22,24 +24,29 @@ class @GameStates extends Collection
     # Restrict the user's view of states to rooms that he is in.
     rooms = Rooms.find(_id: {$in: room_ids}, user_ids: user_id).fetch()
     legal_room_ids = (room._id for room in rooms)
-    fields = index: 1, room_id: 1
+    fields =
+      room_id: 1,
+      index: 1,
+      players: 1,
     fields["views.#{user_id}"] = 1
     @find({room_id: $in: room_ids}, fields: fields)
 
   @get_current_state: (room_id) ->
     @findOne({room_id: room_id}, sort: index: -1)
 
-  @update_game_state: (room_id, cur_index, new_state, new_views) ->
+  @save_game_state: (room_id, cur_index, players, state, views) ->
     # Update the state of a room that is currently at state cur_index.
     # Return the new state _id on success and false on failure.
     check room_id, String
     check cur_index, Number
-    check new_state, Object
-    check (user_id for user_id of new_views), [String]
+    check players, [String]
+    check state, Object
+    check (user_id for user_id of views), [String]
     try
       return @insert
         room_id: room_id,
         index: cur_index + 1,
-        state: new_state,
-        views: new_views,
+        players: players,
+        state: state,
+        views: views,
     false

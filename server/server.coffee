@@ -12,8 +12,8 @@ Meteor.publish 'game_states', (room_ids) ->
 
 
 Meteor.methods
-  'create_game': (rules) ->
-    UGLICore.create_game @userId, rules
+  'create_game': (config) ->
+    UGLICore.create_game @userId, config
 
   'heartbeat': ->
     Users.heartbeat @userId

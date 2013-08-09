@@ -4,10 +4,9 @@
 #   handle_client_message
 #   any UGLI callback
 #
-# The context stores the following data, which is read-only except for state:
-#   players: list of players currently in the game
-#   rules: the game's rules dictionary
-#   state: complete server view of game state
+# The context stores the following data:
+#   players: read-only list of players currently in the game
+#   state: mutable view of game state
 #
 # In addition, the context provides these UGLI framework helper methods:
 #   setTimeout: (callback, delay) -> call callback after delay ms
@@ -15,7 +14,7 @@
 class @UGLIContext
   @verbose = false
 
-  constructor: (@user_ids, @rules, @state=null) ->
+  constructor: (@players, @state=null) ->
     @_timeouts = []
 
   setTimeout: (callback, delay) ->
@@ -27,11 +26,11 @@ class @UGLIContext
 
   _get_views: ->
     # Called by the framework after the game's server code mutates this
-    # context's state.
+    # context's state. Returns the player-visible views of the state.
     console.log('_get_views') if @verbose
     views = {}
-    for user_id in @user_ids
-      views[user_id] = Common.ugli_server.get_user_view @, user_id
+    for player in @players
+      game_state.views[player] = Common.ugli_server.get_player_view @, player
     views
 
   _after_save: (room_id) ->

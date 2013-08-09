@@ -1,6 +1,5 @@
 # server-side ugli context object:
-#   user_ids: read-only list of user_ids currently in the game
-#   rules: read-only client-supplied game rules
+#   players: list of player names
 #   state: mutable game state (persisted after each call)
 #   setTimeout(callback, timeout):
 #     call callback(ugli) after <timeout> milliseconds.
@@ -31,21 +30,21 @@ start_compose = (ugli) ->
   ugli.state.words = generate_word_list()
   ugli.setTimeout start_voting, COMPOSE_TIME
 
-client_handlers.submit_sentence = (ugli, user_id, sentence) ->
+client_handlers.submit_sentence = (ugli, player, sentence) ->
   if ugli.state.phase is "compose" and
       is_valid_sentence ugli.state.words, sentence
-    ugli.state.submissions[user_id] = sentence
+    ugli.state.submissions[player] = sentence
 
 start_voting = (ugli) ->
   ugli.state.phase = "voting"
   ugli.state.votes = {}
   ugli.setTimeout end_voting, VOTING_TIME
 
-client_handlers.vote = (ugli, user_id, sentence) ->
+client_handlers.vote = (ugli, player, sentence) ->
   if ugli.state.phase is "voting" and
       (sentence of inv_map ugli.state.submissions) and
-      (ugli.state.submissions[user_id] isnt sentence)
-    ugli.state.votes[user_id] = sentence
+      (ugli.state.submissions[player] isnt sentence)
+    ugli.state.votes[player] = sentence
 
 end_voting = (ugli) ->
   # scoring
@@ -74,27 +73,31 @@ end_voting = (ugli) ->
       ugli.state.scores[uid] += submitter_score
   # end scoring
 
-  if ugli.state.round isnt ugli.rules.num_rounds
+  if ugli.state.round isnt ugli.state.num_rounds
     ugli.state.round += 1
     start_countdown ugli
   else
     ugli.state.round = ugli.state.phase = null
 
 class @BabbleServer
-  @initialize_state: (ugli) ->
-    # initialize ugli.state based on ugli.rules or throw if config is invalid.
+  @initialize_state: (ugli, config) ->
+    # initialize ugli.state based on config or throw if it is invalid.
+    check config.num_rounds, Number
+    if config.num_rounds <= 0 or config.num_rounds > 5
+      throw "Invalid number of rounds: #{config.num_rounds}"
     ugli.state =
+      num_rounds: config.num_rounds
       round: 1
       scores: {}
     start_countdown ugli
 
-  @on_client_message: (ugli, user_id, message) ->
+  @on_client_message: (ugli, player, message) ->
     # called when client calls ugli.send(message)
     [method, args...] = message
-    client_handlers[method]?(ugli, user_id, args...)
+    client_handlers[method]?(ugli, player, args...)
 
-  @get_user_view: (ugli, user_id) ->
-    # generate what client sees as ugli.state
+  @get_player_view: (ugli, player) ->
+    # generate what client sees as ugli.view
     s = {}
     for prop in ['round', 'phase', 'words', 'scores']
       s[prop] = ugli.state[prop] if prop of ugli.state

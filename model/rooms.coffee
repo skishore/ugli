@@ -2,7 +2,7 @@
 # singleplayer games, or multiplayer games.
 #   name: string
 #   user_ids: [user _ids]
-#   rules: dict or null (for lobbies)
+#   is_game: bool
 # privates and invites fields to come soon.
 
 class @Rooms extends Collection
@@ -10,7 +10,7 @@ class @Rooms extends Collection
   @fields = [
     'name',
     'user_ids',
-    'rules',
+    'is_game',
   ]
   if Meteor.isServer
     @collection._ensureIndex 'name', unique: true
@@ -19,20 +19,19 @@ class @Rooms extends Collection
     check user_id, String
     @find()
 
-  @create_room: (name, user_ids, rules) ->
+  @create_room: (name, is_game) ->
     # Create a new game room with no initial game state. Return its _id.
     check name, String
-    check user_ids, [String]
-    check rules, Match.OneOf(Object, null)
+    check is_game, Boolean
     @insert
       name: name,
-      user_ids: user_ids,
-      rules: rules,
+      user_ids: [],
+      is_game: is_game,
 
   @get_lobby = ->
     lobby = @findOne(name: Common.lobby_name)
     if not lobby? and Meteor.isServer
-      @create_room Common.lobby_name, [], null
+      @create_room Common.lobby_name, false
       lobby = @findOne(name: Common.lobby_name)
     lobby
 

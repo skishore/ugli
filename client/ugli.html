@@ -71,19 +71,19 @@
 <template name="main_content">
   <div id="main-content">
     {{#if logged_in}}
-      {{#if in_lobby}}
-        {{> rules_box}}
+      {{#unless in_game}}
+        {{> config_box}}
         {{> games_list}}
-      {{/if}}
+      {{/unless}}
     {{else}}
       Sign in using the buttons in the top right.
     {{/if}}
   </div>
 </template>
 
-<template name="rules_box">
+<template name="config_box">
   <!-- This box will be populated on render by an UGLI client. -->
-  <div id="rules-box"></div>
+  <div id="config-box"></div>
 </template>
 
 <template name="games_list">
