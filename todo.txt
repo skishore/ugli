@@ -29,6 +29,8 @@ General framework for waiting for players to join before starting
 
 General framework for dealing with drops/joins (only between rounds?)
 
+Mark room tabs when those games are waiting for input on the user
+
 Callback on game completion that closes game, add winning / losing, ELO
 
 Close game when all players leave?
