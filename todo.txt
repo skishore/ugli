@@ -12,6 +12,7 @@ Exceptions
 - Add UGLI-specific exception for canceling state updates
 
 Update propagation
+- Give clients a guarantee that they will go through each intermediate state
 - Minimize or squash trivial/spammy updates
 - Only send updates to players when their view changes
 - Keep only a single snapshot of each state around?
