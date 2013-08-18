@@ -39,23 +39,12 @@ class GameUI
     if user? and room?.is_game
       game_state = GameStates.get_current_state room._id
       if user._id of (game_state?.user_views or {})
+        context = new UGLIClientContext user, room, game_state
         if key not of @game_clients
-          context = new UGLIClientContext(
-            user,
-            room._id,
-            game_state.index,
-            game_state.players,
-            game_state.user_views[user._id]
-          )
           container = @create_game_ui key
-          @game_clients[key] = new Common.ugli_client context, container
-        else
-          @game_clients[key].ugli.update(
-            game_state.index,
-            game_state.players,
-            game_state.user_views[user._id],
-          )
-          @game_clients[key].handle_update()
+          @game_clients[key] = Common.create_ugli_client context, container
+        else if context._index > @game_clients[key].ugli._index
+          @game_clients[key]._handle_update context
       @show_game_ui key
 
 

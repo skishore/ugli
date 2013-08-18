@@ -1,21 +1,19 @@
-@Common = do ->
-  # Top-level constants.
-  idle_timeout = 10*1000
-  keep_history = false
-  lobby_name = 'Lobby'
+class @Common
+  @idle_timeout =  10*1000
+  @keep_history = false
+  @lobby_name = 'Lobby'
 
-  # Prototype overrides.
-  if not String.prototype.strip?
-    String.prototype.strip = ->
-      String(this).replace /^\s+|\s+$/g, ''
+  @ugli_client = (game_type) ->
+    # TODO(skishore): Multiplex between different game clients here.
+    UGLIClient
 
-  # Helper methods.
-  get_uid = ->
-    num = '' + Math.floor 1000000000*Math.random()
-    num + (0 for i in [0...(6 - num.length)]).join ''
+  @ugli_server = (game_type) ->
+    # TODO(skishore): Multiplex between different game clients here.
+    UGLIServer
 
-  # These are the members of Common that are actually exported.
-  get_uid: get_uid
-  idle_timeout: idle_timeout
-  keep_history: keep_history
-  lobby_name: lobby_name
+  @get_random_id = ->
+    # These ids are NOT necessarily unique! They're only used for naming rooms.
+    uid = '' + Math.floor 1000000*Math.random()
+    while uid.length < 6
+      uid = '0' + uid
+    uid

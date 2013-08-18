@@ -1,47 +1,31 @@
 class @UGLICore
-  @verbose = false
-
-  @create_room_context: (room_id) ->
-    # Return a [context, index] pair. The index is the current state index.
-    console.log('create_room_context', room_id) if @verbose
-    # Check that the room exists and get the list of players.
-    room = Rooms.get room_id
-    if not room?
-      throw "Room #{room_id} is not ready"
-    users = Users.find(_id: $in: room.user_ids).fetch()
-    if users.length != room.user_ids.length
-      throw "Missing users w/ user_ids in #{room.user_ids}"
-    user_id_map = {}
-    for user in users
-      user_id_map[user._id] = user.username
-    # Get the mutable game state and return it.
-    game_state = GameStates.get_current_state room_id
-    [
-      new UGLIServerContext room_id, user_id_map, game_state?.state ? {}
-      if game_state? then game_state.index else -1
-    ]
+  # A dict mapping room_id -> game server instances. Updated in-memory.
+  @games = {}
 
   @call_state_mutator = (room_id, callback) ->
     # Call a function that updates context.state. Return true if the new state
     # was successfully saved to the database.
-    console.log('call_state_mutator', room_id) if @verbose
     [context, index] = UGLICore.create_room_context room_id
     callback context
     GameStates.save_context room_id, index, context
 
   @create_game: (user_id, config) ->
-    console.log('create_game', user_id, config) if @verbose
     user = Users.get user_id
-    name = "#{user.username}'s game ##{Common.get_uid()}"
+    if not user?
+      throw UGLIPermissionsError "Logged-out users can't create games."
+    # Initialize a game server with the given config, or throw if it invalid.
+    game = new Common.ugli_server() config
+    # Create a room to run the new game in and have the user join it.
+    name = "#{user.username}'s game ##{Common.get_random_id()}"
     room_id = Rooms.create_room name, true
-    @call_state_mutator room_id, (context) ->
-      Common.ugli_server.initialize_state context, config
+    @games[room_id] = game
     Rooms.join_room user_id, room_id
 
-  @handle_client_message: (user_id, room_id, message) ->
-    console.log('handle_client_message', user_id, room_id, message) if @verbose
+  @handle_message: (user_id, room_id, message) ->
     user = Users.get user_id
-    room = Rooms.get room_id
+    game = @games[room_id]
+    if not game? or user?.username not of game.ugli.players
     if user? and room? and user._id in room.user_ids
+      # TODO(skishore): Damn it, this shit is totally wrong
       @call_state_mutator room_id, (context) ->
-        Common.ugli_server.handle_client_message context, user.username, message
+        #Common.ugli_server.handle_message context, user.username, message

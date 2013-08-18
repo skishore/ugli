@@ -33,7 +33,7 @@ Meteor.methods
     Chats.send_chat @userId, room_id, message
 
   'send_game_message': (room_id, message) ->
-    UGLICore.handle_client_message @userId, room_id, message
+    UGLICore.handle_message @userId, room_id, message
 
 
 Meteor.setInterval (->
@@ -46,5 +46,5 @@ Meteor.setInterval (->
 
 
 Meteor.startup ->
-  # TODO(skishore): Comment this out while we're testing.
+  # TODO(skishore): Change this to pull games back into memory in startup.
   Rooms.cleanup_all_game_rooms()
