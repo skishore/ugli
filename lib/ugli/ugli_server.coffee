@@ -1,3 +1,7 @@
+# An instance of UGLIServer stores the following data about the game:
+#   @players: map from current player names -> _ids
+#   @state: fully-specified mutable game state
+#
 # An implementation of UGLIServer should override the following methods:
 #   initialize_state: (config) ->
 #   get_player_view: (config) -> view
@@ -8,10 +12,9 @@
 # See below for detailed specifications for these methods.
 
 class @UGLIServer
-  constructor: (config) ->
-    @players = {}
-    @state = {}
-    @initialize_state config
+  constructor: (players, state) ->
+    @players = players or {}
+    @state = state or {}
 
   setTimeout: (callback, delay) ->
     throw NotImplementedError 'UGLIServer.setTimeout'
@@ -37,7 +40,7 @@ class @UGLIServer
     delete @players[user.username]
 
   '''
-  Interface methods follow. To write a new game, override these methods.
+  Server interface methods follow. To write a new game, override these methods.
   '''
 
   initialize_state: (config) ->

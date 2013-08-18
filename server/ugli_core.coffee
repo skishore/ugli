@@ -14,10 +14,12 @@ class @UGLICore
     if not user?
       throw UGLIPermissionsError "Logged-out users can't create games."
     # Initialize a game server with the given config, or throw if it invalid.
-    game = new Common.ugli_server() config
+    game = new Common.ugli_server()()
+    game.initialize_state config
     # Create a room to run the new game in and have the user join it.
     name = "#{user.username}'s game ##{Common.get_random_id()}"
     room_id = Rooms.create_room name, true
+    # TODO(skishore): Need to push notifications here, probably in join_room.
     @games[room_id] = game
     Rooms.join_room user_id, room_id
 
@@ -25,7 +27,6 @@ class @UGLICore
     user = Users.get user_id
     game = @games[room_id]
     if not game? or user?.username not of game.ugli.players
-    if user? and room? and user._id in room.user_ids
-      # TODO(skishore): Damn it, this shit is totally wrong
-      @call_state_mutator room_id, (context) ->
-        #Common.ugli_server.handle_message context, user.username, message
+      throw UGLIPermissionsError "User #{user_id} is not in game #{room_id}."
+    game.handle_update user.username, message
+    # TODO(skishore): Need to push notifications here.

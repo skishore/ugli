@@ -50,6 +50,7 @@ class @Rooms extends Collection
     check room_id, String
     user = Users.get user_id
     room = Rooms.get room_id
+    # TODO(skishore): This stuff is completely broken.
     if user? and room? and user_id not in room.user_ids
       if room.is_game
         UGLICore.call_state_mutator room_id, (context) ->
@@ -65,6 +66,7 @@ class @Rooms extends Collection
     check room_id, String
     user = Users.get user_id
     room = Rooms.get room_id
+    # TODO(skishore): This stuff is completely broken.
     if user? and room? and user_id in room.user_ids
       if room.is_game
         UGLICore.call_state_mutator room_id, (context) ->
