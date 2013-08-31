@@ -8,3 +8,5 @@ accounts-password
 accounts-ui
 coffeescript
 http
+standard-app-packages
+scss

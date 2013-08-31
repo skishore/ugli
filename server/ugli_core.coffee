@@ -14,7 +14,7 @@ class @UGLICore
     if not user?
       throw UGLIPermissionsError "Logged-out users can't create games."
     # Initialize a game server with the given config, or throw if it invalid.
-    game = new Common.ugli_server()()
+    game = new (Common.ugli_server())()
     game.initialize_state config
     # Create a room to run the new game in and have the user join it.
     name = "#{user.username}'s game ##{Common.get_random_id()}"

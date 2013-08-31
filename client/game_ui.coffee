@@ -41,7 +41,7 @@ class GameUI
       if user._id of (game_state?.user_views or {})
         if key not of @game_clients
           container = @create_game_ui key
-          @game_clients[key] = new Common.ugli_client()(
+          @game_clients[key] = new (Common.ugli_client())(
             user, room, game_state, container,
           )
           @game_clients[key].make_game_ui()
