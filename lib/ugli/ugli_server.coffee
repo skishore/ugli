@@ -12,7 +12,8 @@
 # See below for detailed specifications for these methods.
 
 class @UGLIServer
-  constructor: (players, state) ->
+  constructor: (_index, players, state) ->
+    @_index = index or -1
     @players = players or {}
     @state = state or {}
 
@@ -23,7 +24,7 @@ class @UGLIServer
     throw new NotImplementedError 'UGLIServer.clearTimeout'
 
   _get_views: ->
-    # Returns a pair [user_views, public_view] of views. user_views is a dict
+    # Return a pair [user_views, public_view] of views. user_views is a dict
     # mapping user_ids to their views while public_view is visible to all.
     user_views = {}
     for player, user_id of @ugli.players
@@ -33,10 +34,12 @@ class @UGLIServer
 
   _add_user: (user) ->
     # Called by the framework to add a user if he is accepted by join_game.
+    @join_game user.username
     @players[user.username] = user._id
 
   _remove_user: (user) ->
     # Called by the framework to remove a user if they leave the game's room.
+    @leave_game user.username
     delete @players[user.username]
 
   '''
@@ -44,7 +47,8 @@ class @UGLIServer
   '''
 
   initialize_state: (config) ->
-    # Initialize @state based on config, or throw an UGLIClientError if it is invalid.
+    # Initialize @state based on config, or throw an UGLIClientError if config
+    # is invalid.
     console.log 'UGLIServer.constructor has not been implemented.'
 
   get_player_view: (player) ->
@@ -66,12 +70,13 @@ class @UGLIServer
     console.log 'UGLIServer.handle_message has not been implemented.'
 
   join_game: (player) ->
-    # Called when a new player wants to join the game. Returns true if the
-    # player should be allowed to join.
+    # Called when a new player wants to join this game. This method should
+    # throw an UGLIClientError if the player is not allowed to join.
     #
     # By default, all requests to join are accepted.
-    return true
+    console.log 'UGLIServer.join_game has not been implemented.'
 
   leave_game: (player) ->
-    # Called when a player leaves a game. The leave cannot be canceled.
+    # Called when a player leaves this game. The leave cannot be canceled,
+    # so this method should never throw an exception.
     console.log 'UGLIServer.leave_game has not been implemented.'

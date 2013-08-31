@@ -2,31 +2,34 @@ class @UGLICore
   # A dict mapping room_id -> game server instances. Updated in-memory.
   @games = {}
 
-  @call_state_mutator = (room_id, callback) ->
-    # Call a function that updates context.state. Return true if the new state
-    # was successfully saved to the database.
-    [context, index] = UGLICore.create_room_context room_id
-    callback context
-    GameStates.save_context room_id, index, context
+  @call_state_mutator = (room_id, callback, post_callback) ->
+    # Call a function that updates the state of the game in room room_id.
+    # This callback should NEVER yield.
+    #
+    # The caller may optionally specify a post_callback that will be called
+    # after the atomic state update is made but before the state is saved.
+    Meteor._noYieldsAllowed ->
+      game = @games[room_id]
+      callback game
+      game._index += 1
+    post_callback() if post_callback
+    @GameStates.update_game_state room_id, game
 
   @create_game: (user_id, config) ->
     user = Users.get user_id
     if not user?
       throw new UGLIPermissionsError "Logged-out users can't create games."
-    # Initialize a game server with the given config, or throw if it invalid.
     game = new (Common.ugli_server())()
     game.initialize_state config
     # Create a room to run the new game in and have the user join it.
     name = "#{user.username}'s game ##{Common.get_random_id()}"
     room_id = Rooms.create_room name, true
-    # TODO(skishore): Need to push notifications here, probably in join_room.
     @games[room_id] = game
     Rooms.join_room user_id, room_id
 
   @handle_message: (user_id, room_id, message) ->
     user = Users.get user_id
-    game = @games[room_id]
-    if not game? or user?.username not of game.ugli.players
-      throw new UGLIPermissionsError "User #{user_id} is not in game #{room_id}."
-    game.handle_update user.username, message
-    # TODO(skishore): Need to push notifications here.
+    @call_state_mutator room_id, (game) ->
+      if not game? or user?.username not of game.ugli.players
+        throw new UGLIPermissionsError "User #{user_id} not in game #{room_id}."
+      game.handle_update user.username, message

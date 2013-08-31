@@ -50,19 +50,15 @@ class @GameStates extends Collection
   @get_current_state: (room_id) ->
     @findOne({room_id: room_id}, sort: index: -1)
 
-  @save_context: (room_id, cur_index, context) ->
-    # Update the state of a room that is currently at state cur_index.
-    # Return the new state _id on success and false on failure.
+  @save_state: (room_id, game) ->
     check room_id, String
-    check cur_index, Number
-    check context, UGLIServerContext
-    [user_views, public_view] = context._get_views()
+    [user_views, public_view] = game._get_views()
     try
       return @insert
         room_id: room_id
-        index: cur_index + 1
-        players: context.players
-        state: context.state
+        index: game._index
+        players: game.players
+        state: game.state
         user_views: user_views
         public_view: public_view
     false

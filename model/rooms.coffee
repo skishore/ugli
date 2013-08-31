@@ -50,15 +50,14 @@ class @Rooms extends Collection
     check room_id, String
     user = Users.get user_id
     room = Rooms.get room_id
-    # TODO(skishore): This stuff is completely broken.
     if user? and room? and user_id not in room.user_ids
       if room.is_game
-        UGLICore.call_state_mutator room_id, (context) ->
-          if Common.ugli_server.join_game context, user.username
-            context._add_user user
-            Rooms.update({_id: room_id}, $addToSet: 'user_ids': user_id)
+        UGLICore.call_state_mutator room_id, ((game) ->
+          if game? and user.username not of game.players
+            game._add_user user
+        ), -> @update {_id: room_id}, $addToSet: 'user_ids': user_id
       else
-        @update({_id: room_id}, $addToSet: 'user_ids': user_id)
+        @update {_id: room_id}, $addToSet: 'user_ids': user_id
 
   @leave_room = (user_id, room_id) ->
     # Have a user leave a room. Notify the UGLI server if a game is being played.
@@ -66,13 +65,14 @@ class @Rooms extends Collection
     check room_id, String
     user = Users.get user_id
     room = Rooms.get room_id
-    # TODO(skishore): This stuff is completely broken.
     if user? and room? and user_id in room.user_ids
       if room.is_game
-        UGLICore.call_state_mutator room_id, (context) ->
-          Common.ugli_server.leave_game context, user.username
-          context._remove_user user
-      @update({_id: room_id}, $pull: 'user_ids': user_id)
+        UGLICore.call_state_mutator room_id, ((game) ->
+          if game? and user.username of game.players
+            game._remove_user user
+        ), -> @update {_id: room_id}, $pull: 'user_ids': user_id
+      else
+        @update {_id: room_id}, $pull: 'user_ids': user_id
 
   @boot_user = (user_id) ->
     for room in @find({user_ids: user_id}, fields: _id: 1).fetch()
@@ -87,7 +87,7 @@ class @Rooms extends Collection
     @cleanup active: true, is_game: true
 
   @cleanup_orphaned_rooms = (idle_timeout) ->
-    # Cleans up orphaned game rooms (that is, games that have existed for
+    # Clean up orphaned game rooms (that is, games that have existed for
     # idle_timeout ms without a game state) inactive.
     game_states = GameStates.find({active: true}, fields: room_id: 1).fetch()
     active_room_ids = _.uniq(game_state.room_id for game_state in game_states)
