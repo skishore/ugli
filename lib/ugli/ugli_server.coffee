@@ -13,7 +13,7 @@
 
 class @UGLIServer
   constructor: (_index, players, state) ->
-    @_index = index or -1
+    @_index = index or 0
     @players = players or {}
     @state = state or {}
 

@@ -50,6 +50,14 @@ class @GameStates extends Collection
   @get_current_state: (room_id) ->
     @findOne({room_id: room_id}, sort: index: -1)
 
+  @get_current_states: ->
+    game_states = @find(active: true).fetch()
+    current_states = {}
+    for game_state in game_states
+      if (current_states[game_states.room_id]?.index or 0) < game_state.index
+        current_states[game_states.room_id] = game_state
+    current_states
+
   @save_state: (room_id, game) ->
     check room_id, String
     [user_views, public_view] = game._get_views()
@@ -64,23 +72,18 @@ class @GameStates extends Collection
     false
 
   @cleanup_old_states: ->
-    game_states = GameStates.find(active: true).fetch()
-    indexes = {}
-    for game_state in game_states
-      indexes[game_state.room_id] = Math.max(
-        game_state.index,
-        (indexes[game_state.room_id] or 0)
-      )
+    game_states = @find(active: true).fetch()
+    current_states = @get_current_states()
     old_state_ids = (
       game_state._id for game_state in game_states \
-      when game_state.index < indexes[game_state.room_id]
+      when game_state.index < current_states[game_state.room_id].index
     )
-    clause = _id: $in: old_state_ids
-    @cleanup clause
-
+    @cleanup active: true, _id: $in: old_state_ids
 
   @cleanup_orphaned_states: ->
+    # There are two conditions for a game state to be active:
+    #   - It has to be part of an active room.
+    #   - It has to be in the UGLICore in-memory list of games.
     rooms = Rooms.find({active: true}, fields: _id: 1).fetch()
-    active_room_ids = (room._id for room in rooms)
-    clause = active: true, room_id: $not: $in: active_room_ids
-    @cleanup clause
+    room_ids = (room._id for room in rooms when room._id of UGLICore.games)
+    @cleanup active: true, room_id: $not: $in: room_ids

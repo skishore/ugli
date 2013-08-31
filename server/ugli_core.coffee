@@ -13,7 +13,7 @@ class @UGLICore
       callback game
       game._index += 1
     post_callback() if post_callback
-    @GameStates.update_game_state room_id, game
+    @GameStates.save_state room_id, game
 
   @create_game: (user_id, config) ->
     user = Users.get user_id
@@ -33,3 +33,10 @@ class @UGLICore
       if not game? or user?.username not of game.ugli.players
         throw new UGLIPermissionsError "User #{user_id} not in game #{room_id}."
       game.handle_update user.username, message
+
+  @save_latest_states: ->
+    current_states = GameStates.get_current_states
+    for room_id, game_state in current_states
+      if game_state.index < @games[room_id]?.index
+        console.log "Got lagging game state: #{room_id}: #{game_state}"
+        GameStates.save_state room_id, @games[room_id]

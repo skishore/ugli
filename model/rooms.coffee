@@ -87,8 +87,8 @@ class @Rooms extends Collection
     @cleanup active: true, is_game: true
 
   @cleanup_orphaned_rooms = (idle_timeout) ->
-    # Clean up orphaned game rooms (that is, games that have existed for
-    # idle_timeout ms without a game state) inactive.
+    # Clean up orphaned game rooms, that is, games that have existed for
+    # idle_timeout ms without an active game state.
     game_states = GameStates.find({active: true}, fields: room_id: 1).fetch()
     active_room_ids = _.uniq(game_state.room_id for game_state in game_states)
     idle_time = new Date().getTime() - idle_timeout
