@@ -33,7 +33,7 @@ class @Users extends Collection
     )
     Rooms.join_room user_id, Rooms.get_lobby()?._id
 
-  @mark_users_idle = (idle_timeout) ->
+  @mark_idle_users = (idle_timeout) ->
     check(idle_timeout, Number)
     idle_time = new Date().getTime() - idle_timeout
     users = @find(

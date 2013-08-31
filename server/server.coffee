@@ -37,7 +37,7 @@ Meteor.methods
 
 
 Meteor.setInterval (->
-  Users.mark_users_idle Common.idle_timeout
+  Users.mark_idle_users Common.idle_timeout
   Rooms.cleanup_orphaned_rooms Common.idle_timeout
   Chats.cleanup_orphaned_chats()
   GameStates.cleanup_orphaned_states()

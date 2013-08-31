@@ -83,7 +83,7 @@ class @Rooms extends Collection
       @boot_user(user_id)
 
   @cleanup_all_game_rooms = ->
-    # Clean up all game rooms inactive. This method is called on server startup.
+    # Clean up all game rooms. This method is called on server startup.
     @cleanup active: true, is_game: true
 
   @cleanup_orphaned_rooms = (idle_timeout) ->
