@@ -54,21 +54,23 @@ class @GameStates extends Collection
     game_states = @find(active: true).fetch()
     current_states = {}
     for game_state in game_states
-      if (current_states[game_states.room_id]?.index or 0) < game_state.index
-        current_states[game_states.room_id] = game_state
+      if (current_states[game_state.room_id]?.index or 0) < game_state.index
+        current_states[game_state.room_id] = game_state
     current_states
 
   @save_state: (room_id, game) ->
     check room_id, String
     [user_views, public_view] = game._get_views()
     try
-      return @insert
+      result = @insert
         room_id: room_id
         index: game._index
         players: game.players
         state: game.state
         user_views: user_views
         public_view: public_view
+      @cleanup active: true, room_id: room_id, index: $lt: game._index
+      return result
     false
 
   @cleanup_old_states: ->
@@ -81,9 +83,9 @@ class @GameStates extends Collection
     @cleanup active: true, _id: $in: old_state_ids
 
   @cleanup_orphaned_states: ->
-    # There are two conditions for a game state to be active:
-    #   - It has to be part of an active room.
-    #   - It has to be in the UGLICore in-memory list of games.
+    # There are two conditions by which a game state can be orphaned:
+    #   - Its room is not active.
+    #   - It is not in the UGLICore in-memory list of games.
     rooms = Rooms.find({active: true}, fields: _id: 1).fetch()
     room_ids = (room._id for room in rooms when room._id of UGLICore.games)
     @cleanup active: true, room_id: $not: $in: room_ids

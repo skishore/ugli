@@ -55,7 +55,7 @@ class @Rooms extends Collection
         UGLICore.call_state_mutator room_id, ((game) ->
           if game? and user.username not of game.players
             game._add_user user
-        ), -> @update {_id: room_id}, $addToSet: 'user_ids': user_id
+        ), => @update {_id: room_id}, $addToSet: 'user_ids': user_id
       else
         @update {_id: room_id}, $addToSet: 'user_ids': user_id
 
@@ -70,7 +70,7 @@ class @Rooms extends Collection
         UGLICore.call_state_mutator room_id, ((game) ->
           if game? and user.username of game.players
             game._remove_user user
-        ), -> @update {_id: room_id}, $pull: 'user_ids': user_id
+        ), => @update {_id: room_id}, $pull: 'user_ids': user_id
       else
         @update {_id: room_id}, $pull: 'user_ids': user_id
 

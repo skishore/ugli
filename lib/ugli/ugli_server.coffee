@@ -13,7 +13,7 @@
 
 class @UGLIServer
   constructor: (_index, players, state) ->
-    @_index = index or 0
+    @_index = _index or 0
     @players = players or {}
     @state = state or {}
 
@@ -27,9 +27,9 @@ class @UGLIServer
     # Return a pair [user_views, public_view] of views. user_views is a dict
     # mapping user_ids to their views while public_view is visible to all.
     user_views = {}
-    for player, user_id of @ugli.players
+    for player, user_id of @players
       user_views[user_id] = @get_player_view player
-    public_view @get_public_view()
+    public_view = @get_public_view()
     [user_views, public_view]
 
   _add_user: (user) ->
@@ -55,7 +55,7 @@ class @UGLIServer
     # Return the view of the game that the given player should see right now.
     #
     # The default implementation makes the entire state visible.
-    return @ugli.state
+    return @state
 
   get_public_view: ->
     # Return the view of the game that users in the lobby should see. Certain

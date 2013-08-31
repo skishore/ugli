@@ -8,12 +8,13 @@ class @UGLICore
     #
     # The caller may optionally specify a post_callback that will be called
     # after the atomic state update is made but before the state is saved.
-    Meteor._noYieldsAllowed ->
-      game = @games[room_id]
+    game = @games[room_id]
+    Meteor._noYieldsAllowed =>
       callback game
       game._index += 1
     post_callback() if post_callback
-    @GameStates.save_state room_id, game
+    if game?
+      GameStates.save_state room_id, game
 
   @create_game: (user_id, config) ->
     user = Users.get user_id
