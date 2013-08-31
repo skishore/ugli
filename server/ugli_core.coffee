@@ -12,7 +12,7 @@ class @UGLICore
   @create_game: (user_id, config) ->
     user = Users.get user_id
     if not user?
-      throw UGLIPermissionsError "Logged-out users can't create games."
+      throw new UGLIPermissionsError "Logged-out users can't create games."
     # Initialize a game server with the given config, or throw if it invalid.
     game = new (Common.ugli_server())()
     game.initialize_state config
@@ -27,6 +27,6 @@ class @UGLICore
     user = Users.get user_id
     game = @games[room_id]
     if not game? or user?.username not of game.ugli.players
-      throw UGLIPermissionsError "User #{user_id} is not in game #{room_id}."
+      throw new UGLIPermissionsError "User #{user_id} is not in game #{room_id}."
     game.handle_update user.username, message
     # TODO(skishore): Need to push notifications here.

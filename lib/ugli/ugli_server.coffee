@@ -17,10 +17,10 @@ class @UGLIServer
     @state = state or {}
 
   setTimeout: (callback, delay) ->
-    throw NotImplementedError 'UGLIServer.setTimeout'
+    throw new NotImplementedError 'UGLIServer.setTimeout'
 
   clearTimeout: (timeout) ->
-    throw NotImplementedError 'UGLIServer.clearTimeout'
+    throw new NotImplementedError 'UGLIServer.clearTimeout'
 
   _get_views: ->
     # Returns a pair [user_views, public_view] of views. user_views is a dict
@@ -44,7 +44,7 @@ class @UGLIServer
   '''
 
   initialize_state: (config) ->
-    # Initialize @state based on config, or throw if it is invalid.
+    # Initialize @state based on config, or throw an UGLIClientError if it is invalid.
     console.log 'UGLIServer.constructor has not been implemented.'
 
   get_player_view: (player) ->

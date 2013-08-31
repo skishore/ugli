@@ -19,17 +19,17 @@ class @Collection
         if key of @default_field_values
           schema[key] = do @default_field_values[key]
         else
-          throw UGLIModelError "#{@collection._name}: missing key: #{key}"
+          throw new UGLIModelError "#{@collection._name}: missing key: #{key}"
 
   @_check_fields_legal: (schema) ->
     for key of schema
       if key not in @fields and key != '_id'
-        throw UGLIModelError "#{@collection._name}: illegal key: #{key}"
+        throw new UGLIModelError "#{@collection._name}: illegal key: #{key}"
 
   @_check_update: (update) ->
     for key of update
       if key[0] != '$'
-        throw UGLIModelError "#{@collection._name}: illegal update: #{key}"
+        throw new UGLIModelError "#{@collection._name}: illegal update: #{key}"
       @_check_fields_legal update[key]
 
   @get: (_id) ->
@@ -54,14 +54,14 @@ class @Collection
 
   @update: (selector, update) ->
     if not selector?
-      throw UGLIModelError 'update called with no selector!'
+      throw new UGLIModelError 'update called with no selector!'
     @_check_fields_legal selector
     @_check_update update
     @collection.update selector, update, multi: true
 
   @remove: (selector) ->
     if not selector?
-      throw UGLIModelError 'remove called with no selector!'
+      throw new UGLIModelError 'remove called with no selector!'
     @_check_fields_legal selector
     @collection.remove selector
 
