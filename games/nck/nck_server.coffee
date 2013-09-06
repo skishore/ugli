@@ -71,12 +71,11 @@ class @nCkServer extends UGLIServer
         throw new UGLIClientError 'Unexpected message type #{message.type}'
       @state.ready[player] = true
 
-      for ready in @state.ready
-        if ready == false
+      for player, ready of @state.ready
+        if not ready
           return
       # everyone is ready, start new round!
-      delete @state.ready
-      delete @state.picks
+      @start_round (player for player of players)
     else
       throw new UGLIClientError 'Invalid game state #{@state.state}'
 
@@ -102,6 +101,7 @@ class @nCkServer extends UGLIServer
     @state.round += 1
     @state.cards = {}
     @state.picks = {}
+    delete @state.ready
 
     ncards = 0
     cards_list = []
