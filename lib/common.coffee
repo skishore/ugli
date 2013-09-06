@@ -5,11 +5,11 @@ class @Common
 
   @ugli_client = (game_type) ->
     # TODO(skishore): Multiplex between different game clients here.
-    UGLIClient
+    GhostClient
 
   @ugli_server = (game_type) ->
     # TODO(skishore): Multiplex between different game clients here.
-    UGLIServer
+    GhostServer
 
   @get_random_id = ->
     # These ids are NOT necessarily unique! They're only used for naming rooms.
