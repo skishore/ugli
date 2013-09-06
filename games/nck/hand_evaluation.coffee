@@ -94,12 +94,13 @@
 #    rank_count_sets[x] = {}
 #  for i in [2..14]
 #    count = rank_counts[i]
-#    if count in rank_count_sets
+#    if count of rank_count_sets
 #      rank_count_sets[count][i] = true
 #    else
 #      assert count==0, 'count was non-zero #{count}'
 #
 #  # CHECK FOR A STRAIGHT FLUSH
+#  console.log hand
 #
 #  max_straight_flush = 0
 #  for suit in suit_hands

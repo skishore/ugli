@@ -28,6 +28,7 @@ class @nCkServer extends UGLIServer
       player_view.picks = @state.picks
       player_view.cards = @state.cards
       player_view.my_pick = @state.picks[player]
+      player_view.ready = @state.ready
     else if @state.state == GAME_UNSTARTED
       # do nothing
     else
