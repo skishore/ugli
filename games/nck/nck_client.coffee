@@ -49,7 +49,7 @@ class @nCkClient extends UGLIClient
         else
           message += "Waiting on #{opponent}'s pass..."
       else
-        message += "Showing results! skishore fixme..."
+        message = "Showing results! skishore fixme..."
       @status_message.text message
       if view.round > @cards_round
         @cards_round = view.round
