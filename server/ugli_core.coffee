@@ -33,7 +33,7 @@ class @UGLICore
     @call_state_mutator room_id, (game) ->
       if not game? or user?.username not of game.players
         throw new UGLIPermissionsError "User #{user_id} not in game #{room_id}."
-      game.handle_update user.username, message
+      game.handle_message user.username, message
 
   @save_latest_states: ->
     current_states = GameStates.get_current_states
