@@ -31,7 +31,7 @@ class @UGLICore
   @handle_message: (user_id, room_id, message) ->
     user = Users.get user_id
     @call_state_mutator room_id, (game) ->
-      if not game? or user?.username not of game.ugli.players
+      if not game? or user?.username not of game.players
         throw new UGLIPermissionsError "User #{user_id} not in game #{room_id}."
       game.handle_update user.username, message
 
