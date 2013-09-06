@@ -13,16 +13,16 @@ class @nCkClient extends UGLIClient
     @handle_update @players, @view
 
   handle_update: (players, view) ->
-    if @view.state == GAME_UNSTARTED
+    if view.state == GAME_UNSTARTED
       @status_message.text 'Waiting for an opponent...'
       @my_cards.html ''
       @their_cards.html ''
     else
-      opponent = @opponent()
-      assert opponent of @players, "Missing opponent #{opponent}"
+      opponent = @opponent players
+      assert opponent? of players, "Missing opponent #{opponent}"
       @status_message.text "Playing against #{opponent}"
-      @my_cards.text @view.cards[@me]
-      @my_cards.text @view.cards[opponent]
+      @my_cards.text view.cards[@me]
+      @my_cards.text view.cards[opponent]
 
   opponent: (players) ->
     (player for player of players when player != @me)[0]
