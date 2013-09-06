@@ -1,10 +1,19 @@
+$height: 600px;
+$margin: 16px;
+$padding: 8px;
+
+$main-content-width: 720px;
+$config-box-height: 200px;
+$game-list-margin: 20px;
+$user-list-width: 140px;
+$chat-width: 260px;
+
 body {
   margin: 0px;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 
 #top-bar-wrapper {
-  position: fixed;
   top: 0;
   width: 100%;
 
@@ -41,8 +50,6 @@ body {
     border-width: 0px 0px 1px;
     height: 22px;
     padding: 4px 0px 0px;
-    position: absolute;
-    top: 23px;
     width: 100%;
 
     .room-tab {
@@ -70,34 +77,27 @@ body {
 }
 
 #remainder-wrapper {
-  bottom: 0px;
-  left: 0px;
-  position: fixed;
-  right: 0px;
-  /* The height of the top bar and tab bar. */
-  top: 46px;
+  /* The height of the top bar and tab bar plus the margin. */
+  margin-top: $margin;
+  text-align: center;
   /* Needed to keep the main content underneath the login buttons. */
   z-index: -1;
 
   #remainder {
-    height: 100%;
+    display: inline-block;
+    text-align: left;
 
-    #main-content, #side-bar {
-      bottom: 0;
-      margin: 2%;
-      position: absolute;
-      top: 0;
+    #main-content, #side-bar, #user-wrapper, #chat-wrapper {
+      float: left;
+      height: $height;
     }
 
     #main-content {
-      left: 0;
-      width: 62%;
+      margin-right: $margin;
+      width: $main-content-width;
     }
 
     #side-bar {
-      right: 0;
-      width: 32%;
-
       &.logged-in {
         border: 1px solid black;
       }
@@ -107,18 +107,14 @@ body {
       }
     }
   }
-
-  .full-height {
-    height: 100%;
-  }
 }
 
 #user-wrapper {
   background-color: #EEE;
-  left: 0px;
+  float: left;
   overflow-x: hidden;
   overflow-y: scroll;
-  width: 140px;
+  width: $user-list-width;
 
   #user-list {
     margin: 0px;
@@ -141,15 +137,11 @@ body {
 #chat-wrapper {
   border: solid black;
   border-width: 0px 0px 0px 1px;
-  /* This bottom is the height of the chat input. */
-  bottom: 28px;
-  /* This left is the width of the user list. */
-  left: 140px;
-  position: absolute;
-  right: 0px;
-  top: 0px;
+  width: $chat-width;
 
   #message-list {
+    /* The main content height minus 28px, the chat input height. */
+    height: $height - 28px;
     margin: 0px;
     overflow-y: scroll;
     padding: 0px;
@@ -171,7 +163,7 @@ body {
     bottom: 0px;
     height: 22px;
     margin-left: -1px;
-    padding: 2px 8px 3px;
+    padding: 2px 0px 3px 8px;
 
     #chat-message {
       float: left;
@@ -182,17 +174,18 @@ body {
 
     input {
       /* This left is the width of the chat-message. */
+      /* The width is the width of the chat box minus the left. */
       left: 54px;
-      position: absolute;
-      right: 0px;
+      width: 196px;
     }
   }
 }
 
 #config-box {
   border: 1px solid black;
-  height: 36%;
-  padding: 8px;
+  height: $config-box-height;
+  margin-bottom: $margin;
+  padding: $padding;
 
   .create-button {
     padding: 8px;
@@ -201,10 +194,9 @@ body {
 
 #games-list-wrapper {
   border: 1px solid black;
-  margin-top: 3.226%;
+  height: $height - $margin - $config-box-height - 19px;
   overflow-y: scroll;
   padding-bottom: 1px;
-  padding-right: 14px;
 
   #games-list {
     .game {
@@ -213,9 +205,9 @@ body {
       border-radius: 4px;
       float: left;
       font-size: 14px;
-      margin: 1% 0% 0% 3%;
-      padding: 2px 8px;
-      width: 43%;
+      margin: $padding 0% 0% $game-list-margin;
+      padding: 2px $padding;
+      width: $main-content-width/2 - 3*$game-list-margin/2 - 2*$padding - 11;
 
       .game-name {
         float: left;
@@ -237,6 +229,9 @@ body {
 #game-ui-container {
   .ugli-game-ui {
     border: 1px solid black;
+    height: $height - 2*$padding;
+    padding: $padding;
     position: absolute;
+    width: $main-content-width - 2*$padding - 2;
   }
 }

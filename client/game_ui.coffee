@@ -7,8 +7,7 @@ class GameUI
     "#{user_id}-#{room_id}"
 
   @create_game_ui = (key) ->
-    elt = $('<div>').addClass("#{@game_ui_class} #{key}")
-                    .css('position', 'absolute')
+    elt = $('<div>').attr('id', key).addClass("#{@game_ui_class}")
     $('#game-ui-container').append elt
     elt
 
@@ -17,13 +16,10 @@ class GameUI
     $(".#{@game_ui_class}").css 'top', -10000
 
   @show_game_ui = (key) ->
-    game_ui = $(".#{@game_ui_class}.#{key}")
+    game_ui = $("##{key}.#{@game_ui_class}")
     offset = $('#main-content').offset()
     game_ui.css 'left', offset.left
     game_ui.css 'top', offset.top
-    # Account for 1px borders.
-    game_ui.css 'width', $('#main-content').width() - 2
-    game_ui.css 'height', $('#main-content').height() - 2
 
   @update_game_ui = ->
     user = Meteor.user()
@@ -48,7 +44,6 @@ class GameUI
         else
           @game_clients[key]._handle_update game_state
       @show_game_ui key
-
 
 $(window).on 'resize', -> GameUI.update_game_ui()
 
