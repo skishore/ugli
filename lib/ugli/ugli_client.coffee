@@ -26,7 +26,7 @@ class @UGLIClient
   _handle_update: (game_state) ->
     # Framework's wrapper method around implemenations of handle_update.
     if game_state.index > @_index
-      @handle_update game_state.players, game_state.view
+      @handle_update game_state.players, game_state.user_views[@_user_id]
       @_set_game_state game_state
 
   send: (message) ->
