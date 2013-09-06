@@ -42,26 +42,38 @@ class @nCkServer extends UGLIServer
     if @state.state == GAME_SHOWING_CARDS
       if message.type != 'pick'
         throw new UGLIClientError 'Unexpected message type #{message.type}'
+
+      assert @state.pick[player] == false, 'Player has already picked'
       assert message.picked.length == NUM_PASS, 'Passed incorrect number of cards'
       # check that all the indices are sorted and between 0 and NUM_CARDS - 1
       for i, index of message.picked
-        assert 0 < index < NUM_CARDS, 'Invalid index #{index}'
+        assert @state.cards[player][index]?, 'Invalid index #{index}'
         if i > 0
           assert message.picked[i] > message.picked[i-1], 'Picked indices not in sorted order'
       @state.pick[player] = message.picked
 
-      for pick in @state.pick
-        if pick == false
+      for player, pick of @state.pick
+        if not pick
           return
       # both players have picked
       @state.state = GAME_SHOWING_RESULT
       @state.ready = {}
 
+      for player of @players
+        @state.ready[player] = false
+
       # UPDATE PICKED CARDS AND POTENTIALLY CHANGE GAME STATE
     else if @state.state == GAME_SHOWING_RESULT
       if message.type != 'ready'
         throw new UGLIClientError 'Unexpected message type #{message.type}'
+      @state.ready[player] = true
 
+      for ready in @state.ready
+        if ready == false
+          return
+      # everyone is ready, start new round!
+      delete @state.ready
+      delete @state.pick
     else
       throw new UGLIClientError 'Invalid game state #{@state.state}'
 
@@ -75,9 +87,10 @@ class @nCkServer extends UGLIServer
       @start_round players
 
   leave_game: (player) ->
-    @state.state = GAME_UNSTARTED
-    # TODO: delete other existent state
-    delete @state.cards
+    new_state = {}
+    new_state.round = @state.round
+    new_state.state = GAME_UNSTARTED
+    @state = new_state
 
   start_round: (players) ->
     if players.length != 2
