@@ -1,0 +1,46 @@
+.nck-row {
+  clear: both;
+  float: left;
+  margin: 8px 8px 56px;
+
+  .nck-row-prefix {
+    margin: 2px 4px 0px 0px;
+  }
+
+  .nck-row-prefix, .nck-my-cards, .nck-their-cards {
+    display: inline-block; 
+    float: left;
+  } 
+
+  .nck-card {
+    border: solid 1px;
+    border-radius: 3px;
+    cursor: pointer;
+    float: left;
+    margin: 0px 2px;
+    padding: 1px 0px 0px;
+    text-align: center;
+    width: 30px;
+
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+
+  .nck-pass-button {
+    margin: -4px 4px 0px;
+    padding: 8px;
+  }
+
+  .nck-card.selected {
+    background-color: #FF8;
+  }
+}
+
+.nck-error-message {
+  clear: both;
+  color: red;
+  float: left;
+  height: 18px;
+  margin: -48px 8px 40px;
+}
