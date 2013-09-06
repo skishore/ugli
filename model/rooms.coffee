@@ -84,7 +84,7 @@ class @Rooms extends Collection
 
   @cleanup_all_game_rooms = ->
     # Clean up all game rooms. This method is called on server startup.
-    @cleanup active: true, is_game: true
+    @cleanup is_game: true
 
   @cleanup_orphaned_rooms = (idle_timeout) ->
     # Clean up orphaned game rooms, that is, games that have existed for
@@ -92,9 +92,7 @@ class @Rooms extends Collection
     game_states = GameStates.find({active: true}, fields: room_id: 1).fetch()
     active_room_ids = _.uniq(game_state.room_id for game_state in game_states)
     idle_time = new Date().getTime() - idle_timeout
-    clause =
-      active: true
+    @cleanup
       is_game: true
       _id: $not: $in: active_room_ids
       created: $lt: idle_time
-    @cleanup clause

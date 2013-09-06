@@ -66,6 +66,7 @@ class @Collection
     @collection.remove selector
 
   @cleanup: (clause) ->
+    clause.active = true
     if Common.keep_history
       @update clause, $set: $active: false
     else

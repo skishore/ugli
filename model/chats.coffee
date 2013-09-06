@@ -41,4 +41,4 @@ class @Chats extends Collection
   @cleanup_orphaned_chats: ->
     rooms = Rooms.find({active: true}, fields: _id: 1).fetch()
     active_room_ids = (room._id for room in rooms)
-    @cleanup active: true, room_id: $not: $in: active_room_ids
+    @cleanup room_id: $not: $in: active_room_ids

@@ -69,7 +69,7 @@ class @GameStates extends Collection
         state: game.state
         user_views: user_views
         public_view: public_view
-      @cleanup active: true, room_id: room_id, index: $lt: game._index
+      @cleanup room_id: room_id, index: $lt: game._index
       return result
     false
 
@@ -80,7 +80,7 @@ class @GameStates extends Collection
       game_state._id for game_state in game_states \
       when game_state.index < current_states[game_state.room_id].index
     )
-    @cleanup active: true, _id: $in: old_state_ids
+    @cleanup _id: $in: old_state_ids
 
   @cleanup_orphaned_states: ->
     # There are two conditions by which a game state can be orphaned:
@@ -88,4 +88,4 @@ class @GameStates extends Collection
     #   - It is not in the UGLICore in-memory list of games.
     rooms = Rooms.find({active: true}, fields: _id: 1).fetch()
     room_ids = (room._id for room in rooms when room._id of UGLICore.games)
-    @cleanup active: true, room_id: $not: $in: room_ids
+    @cleanup room_id: $not: $in: room_ids

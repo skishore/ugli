@@ -47,5 +47,5 @@ Meteor.setInterval (->
 ), Common.idle_timeout
 
 Meteor.startup ->
-  # TODO(skishore): Change this to pull games back into memory in startup.
   Rooms.cleanup_all_game_rooms()
+  Chats.cleanup {}
