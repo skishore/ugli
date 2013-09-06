@@ -27,13 +27,17 @@
     -ms-user-select: none;
   }
 
-  .nck-pass-button {
+  .nck-pass-button, .nck-next-button {
     margin: -4px 4px 0px;
     padding: 8px;
   }
 
   .nck-card.selected {
     background-color: #FF8;
+  }
+
+  .nck-card.picked {
+    background-color: #CFC;
   }
 }
 

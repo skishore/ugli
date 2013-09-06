@@ -45,12 +45,19 @@ class @nCkClient extends UGLIClient
         if not view.picked[@me]
           message = "Choose four cards to pass to #{opponent}."
           if view.picked[opponent]
-            message += " Your opponent has chosen!"
+            message += " They have picked!"
         else
-          message += "Waiting on #{opponent}'s pass..."
+          message = "Waiting on #{opponent}'s pass..."
       else
-        message = "Showing results! skishore fixme..."
+        assert view.state == GAME_SHOWING_RESULT, "Invalid state: #{view.state}"
+        message = "Showing results skishore fixme!"
+        if view.ready[@me]
+          message += " Waiting on #{opponent}..."
+        else if view.ready[opponent]
+          message += " Click 'Next round' to move on."
       @status_message.text message
+
+      # Construct the cards if they have not been constructed for this round.
       if view.round > @cards_round
         @cards_round = view.round
         @draw_cards @my_cards, view.cards[@me]
@@ -59,15 +66,34 @@ class @nCkClient extends UGLIClient
         @my_cards.find('.nck-card').click do (that=@) -> (e) ->
           if that.view.state == GAME_SHOWING_CARDS and not that.view.my_pick
             $(@).toggleClass 'selected'
-        @my_cards.append $('<button>').addClass('nck-pass-button')
-                                      .text('Pass').click @pass_cards
+
+      # Create pass button and card selection UI.
       if view.my_pick
-        @my_cards.find('nck-pass-button').attr('disabled', true)
+        @my_cards.find('.nck-pass-button').remove()
+        @my_cards.find('.nck-card').removeClass 'selected'
+        for card in @my_cards.find('.nck-card')
+          if $(card).data('index') in view.my_pick
+            $(card).addClass 'picked'
+        if view.state == GAME_SHOWING_RESULT
+          for card in @their_cards.find('.nck-card')
+            if $(card).data('index') in view.picks[opponent]
+              $(card).addClass 'picked'
+      else if not @my_cards.find('.nck-pass-button').length
+        @my_cards.append $('<button>').addClass('nck-pass-button')
+                                      .text('Pass cards').click @pass_cards
+
+      # Create ready button to move to next round.
+      if view.state != GAME_SHOWING_RESULT or view.ready[@me]
+        @my_cards.find('.nck-next-button').remove()
+      else if not @my_cards.find('.nck-next-button').length
+        @my_cards.append $('<button>').addClass('nck-next-button')
+                                      .text('Next round').click @next_round
 
   opponent: (players) ->
     (player for player of players when player != @me)[0]
 
   draw_cards: (cards_elt, cards) ->
+    cards_elt.html ''
     for i, card of cards
       cards_elt.append @draw_card i, card
 
@@ -92,3 +118,7 @@ class @nCkClient extends UGLIClient
         @send type: 'pick', picked: indices
       else
         @error_message.html 'You must select exactly 4 cards to pass.'
+
+  next_round: =>
+    if @view.state == GAME_SHOWING_RESULT
+      @send type: 'ready'
