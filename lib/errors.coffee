@@ -12,6 +12,7 @@ register_error = (type) ->
     constructor: (message) ->
       @stack = "#{type}: #{message}\n#{stack()}"
 
+register_error 'AssertionError'
 register_error 'NotImplementedError'
 register_error 'UGLIClientError'
 register_error 'UGLIConfigurationError'
