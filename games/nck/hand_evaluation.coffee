@@ -10,7 +10,7 @@
 #HIGH           = 1
 #
 #pow_base = 100
-#pows = [Math.pow(pow_base,i) for i in [0...5]]
+#pows = (Math.pow(pow_base,i) for i in [0...5])
 #
 ## returns < 0 if hand a < hand b
 ## returns 0 if hand a ties hand b
@@ -70,7 +70,7 @@
 #  # ORGANIZE BY SUITS
 #  #####################
 #
-#  suits = [card[1] for card in hand]
+#  suits = (card[1] for card in hand)
 #  # put into buckets
 #  suit_hands = {}
 #  for x in SUITS
@@ -82,22 +82,24 @@
 #  # ORGANIZE BY RANKS
 #  #####################
 #
-#  ranks = [card[0] for card in hand]
+#  ranks = (card[0] for card in hand)
 #  ranks.sort()
 #  # put into buckets
 #
-#  rank_counts = [0 for i in [0...15]]
+#  rank_counts = (0 for i in [0...15])
 #  for x in ranks
 #    rank_counts[x] += 1
+#  console.log hand
+#  console.log rank_counts
 #  rank_count_sets = {}
 #  for x in [1..4]
 #    rank_count_sets[x] = {}
 #  for i in [2..14]
 #    count = rank_counts[i]
 #    if count in rank_count_sets
-#      rank_count_sets[count].add(i)
+#      rank_count_sets[count][i] = true
 #    else
-#      assert count == 0
+#      assert count==0, 'count was non-zero #{count}'
 #
 #  # CHECK FOR A STRAIGHT FLUSH
 #
@@ -216,12 +218,12 @@
 #}
 #
 #string_to_card = (string) ->
-#  num = string[0:-1]
-#  suit = string[-1]
+#  num = string.slice(0,-1)
+#  suit = string[string.length-1]
 #  if isNaN(parseInt(num))
 #    num = string_to_number_mapping[num]
 #  else
-#    num = pasreInt(num)
+#    num = parseInt(num)
 #  return [num, suit]
 #
 #card_to_string = (card) ->
@@ -229,15 +231,9 @@
 #
 #
 #
-#
-#
-#
-#
-#
-#
 #compare_hands = (handA, handB)->
-#  handA = [string_to_card(x) for x in handA]
-#  handB = [string_to_card(x) for x in handB]
+#  handA = (string_to_card(x) for x in handA)
+#  handB = (string_to_card(x) for x in handB)
 #  return poker_hand_comparator(handA, handB)
 #
 #assert_correct = (hand_1, hand_2, value) ->
@@ -245,9 +241,9 @@
 #  if actual_value != value
 #    console.log 'Test failed!'
 #    console.log '  Hand 1: ', hand_1
-#    console.log '    classification: ', classify_hand([string_to_card(x) for x in hand_1])
+#    console.log '    classification: ', classify_hand((string_to_card(x) for x in hand_1))
 #    console.log '  Hand 2: ', hand_2
-#    console.log '    classification: ', classify_hand([string_to_card(x) for x in hand_2])
+#    console.log '    classification: ', classify_hand((string_to_card(x) for x in hand_2))
 #    console.log '  Should have been: ' , value
 #    console.log '  Instead was     : ' , actual_value
 #
