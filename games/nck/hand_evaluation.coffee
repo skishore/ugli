@@ -34,10 +34,12 @@
 #
 ## set of numbers
 #get_straight = (ranks) ->
-#  rank_order = [14] + [2..14]
+#  rank_order = [1..14]
+#  rank_order[0] = 14
+#
 #  streak = 0
 #  for i in [13...-1]
-#    if rank_order[i] in ranks
+#    if rank_order[i] of ranks
 #      streak += 1
 #      if streak == 5
 #        return rank_order[i + 4]
@@ -101,13 +103,14 @@
 #
 #  # CHECK FOR A STRAIGHT FLUSH
 #  console.log hand
+#  console.log suit_hands
 #
 #  max_straight_flush = 0
-#  for suit in suit_hands
-#    if suit_hands[suit].length >= 5
-#      straight_num = get_straight(suit_hands[suit])
-#      if straight_num > max_straight_flush
-#        max_straight_flush = straight_num
+#  for suit of suit_hands
+#    straight_num = get_straight(suit_hands[suit])
+#    if straight_num > max_straight_flush
+#      max_straight_flush = straight_num
+#    console.log 'suit', suit, suit_hands[suit], max_straight_flush
 #  if max_straight_flush > 0
 #    # tiebreak by high card
 #    return [STRAIGHT_FLUSH, max_straight_flush]
