@@ -16,8 +16,7 @@ class @nCkServer extends UGLIServer
     @state.round = 0
 
   get_player_view: (player) ->
-    player_view = state: @state.state
-                  round: @state.round
+    player_view = state: @state.state, round: @state.round
 
     if @state.state == GAME_SHOWING_CARDS
       player_view.cards = @state.cards
