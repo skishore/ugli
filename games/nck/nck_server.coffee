@@ -76,7 +76,8 @@ class @nCkServer extends UGLIServer
           return
       # everyone is ready, start new round!
       delete @state.ready
-      delete @state.picks
+      players = (other for other of @players)
+      @start_round players
     else
       throw new UGLIClientError 'Invalid game state #{@state.state}'
 
