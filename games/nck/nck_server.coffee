@@ -75,7 +75,7 @@ class @nCkServer extends UGLIServer
         if not ready
           return
       # everyone is ready, start new round!
-      @start_round (player for player of players)
+      @start_round (player for player of @players)
     else
       throw new UGLIClientError 'Invalid game state #{@state.state}'
 
