@@ -89,8 +89,6 @@
 #  rank_counts = (0 for i in [0...15])
 #  for x in ranks
 #    rank_counts[x] += 1
-#  console.log hand
-#  console.log rank_counts
 #  rank_count_sets = {}
 #  for x in [1..4]
 #    rank_count_sets[x] = {}

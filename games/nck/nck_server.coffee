@@ -21,12 +21,13 @@ class @nCkServer extends UGLIServer
     if @state.state == GAME_SHOWING_CARDS
       player_view.cards = @state.cards
       player_view.picked = {}
-      for other, value of @state.pick
+      for other, value of @state.picks
         player_view.picked[other] = Boolean value
-      player_view.my_pick = @state.pick[player]
+      player_view.my_pick = @state.picks[player]
     else if @state.state == GAME_SHOWING_RESULT
-      player_view = @state
-      player_view.my_pick = @state.pick[player]
+      player_view.picks = @state.picks
+      player_view.cards = @state.cards
+      player_view.my_pick = @state.picks[player]
     else if @state.state == GAME_UNSTARTED
       # do nothing
     else
@@ -44,16 +45,16 @@ class @nCkServer extends UGLIServer
       if message.type != 'pick'
         throw new UGLIClientError 'Unexpected message type #{message.type}'
 
-      assert @state.pick[player] == false, 'Player has already picked'
+      assert @state.picks[player] == false, 'Player has already picked'
       assert message.picked.length == NUM_PASS, 'Passed incorrect number of cards'
       # check that all the indices are sorted and between 0 and NUM_CARDS - 1
       for i, index of message.picked
         assert @state.cards[player][index]?, 'Invalid index #{index}'
         if i > 0
           assert message.picked[i] > message.picked[i-1], 'Picked indices not in sorted order'
-      @state.pick[player] = message.picked
+      @state.picks[player] = message.picked
 
-      for player, pick of @state.pick
+      for player, pick of @state.picks
         if not pick
           return
       # both players have picked
@@ -74,7 +75,7 @@ class @nCkServer extends UGLIServer
           return
       # everyone is ready, start new round!
       delete @state.ready
-      delete @state.pick
+      delete @state.picks
     else
       throw new UGLIClientError 'Invalid game state #{@state.state}'
 
@@ -99,7 +100,7 @@ class @nCkServer extends UGLIServer
     @state.state = GAME_SHOWING_CARDS
     @state.round += 1
     @state.cards = {}
-    @state.pick = {}
+    @state.picks = {}
 
     ncards = 0
     cards_list = []
@@ -115,7 +116,7 @@ class @nCkServer extends UGLIServer
 
     dealt = 0
     for player in players
-      @state.pick[player] = false
+      @state.picks[player] = false
       @state.cards[player] = []
       for k in [0...NUM_CARDS]
         @state.cards[player].push cards_list[dealt]
