@@ -3,8 +3,7 @@ GAME_STARTED = 'started'
 SUITS = [0...4]
 VALUES = [0...13]
 
-class @8c4Server extends UGLIServer
-
+class @nCkServer extends UGLIServer
   initialize_state: (config) ->
     # Initialize @state based on config, or throw an UGLIClientError if config
     # is invalid.

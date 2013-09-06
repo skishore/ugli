@@ -1,4 +1,4 @@
-class @8c4Client extends UGLIClient
+class @nCkClient extends UGLIClient
   @make_config_ui: (container, start_game) ->
     # Constructs config UI inside the given jQuery-wrapped container.
     #
