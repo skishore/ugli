@@ -49,7 +49,12 @@ class @nCkClient extends UGLIClient
         else
           message = "Waiting on #{opponent}'s pass..."
       else
-        message = "Showing results! skishore fixme..."
+        assert view.state == GAME_SHOWING_RESULT, "Invalid state: #{view.state}"
+        message = "Showing results skishore fixme!"
+        if view.ready[@me]
+          message += " Waiting on #{opponent}..."
+        else if view.ready[opponent]
+          message += " Click 'Next round' to move on."
       @status_message.text message
 
       # Construct the cards if they have not been constructed for this round.
@@ -88,6 +93,7 @@ class @nCkClient extends UGLIClient
     (player for player of players when player != @me)[0]
 
   draw_cards: (cards_elt, cards) ->
+    cards_elt.html ''
     for i, card of cards
       cards_elt.append @draw_card i, card
 
