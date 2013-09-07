@@ -5,11 +5,11 @@ class @Common
 
   @ugli_client = (game_type) ->
     # TODO(skishore): Multiplex between different game clients here.
-    nCkClient
+    HanabiClient
 
   @ugli_server = (game_type) ->
     # TODO(skishore): Multiplex between different game clients here.
-    nCkServer
+    HanabiServer
 
   @get_random_id = ->
     # These ids are NOT necessarily unique! They're only used for naming rooms.
