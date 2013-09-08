@@ -4,15 +4,12 @@ UNKNOWN = '?'
 SUITS = [0...5]
 VALUES = [0...5]
 COUNTS = 0: 3, 1: 2, 2: 2, 3: 2, 4: 1
-DECK = []
 
 BURNS = 2
 HINTS = 10
 HAND_SIZE = 4
 
-LOST = 'lost'
-WON = 'won'
-
+DECK = []
 do ->
   for suit in SUITS
     for value in VALUES
@@ -22,7 +19,7 @@ do ->
 class @HanabiServer extends UGLIServer
   initialize_state: (config) ->
     @state.deck = _.shuffle DECK
-    @state.discard = []
+    @state.discards = []
     @state.stacks = (-1 for suit in SUITS)
     # Set up seats and deal hands to each seat.
     @state.seats = (false for i in [0...PLAYERS])
@@ -51,7 +48,7 @@ class @HanabiServer extends UGLIServer
     )
 
     deck_size: @state.deck.length
-    discard: @state.discard
+    discards: @state.discards
     stacks: @state.stacks
     seats: @state.seats
     hands: hands_view
@@ -97,7 +94,7 @@ class @HanabiServer extends UGLIServer
   discard_card: (seat, i) ->
     if @state.hints >= HINTS
       throw new UGLIClientError "#{seat} tried to discard with #{HINTS} hints"
-    @state.discard.push @drop_card seat, i
+    @state.discards.push @drop_card seat, i
     @state.hints += 1
 
   play_card: (seat, i) ->
@@ -107,34 +104,38 @@ class @HanabiServer extends UGLIServer
       if card[1] == VALUES.length - 1 and @state.hints < HINTS
         @state.hints += 1
     else if @state.burns > 0
-      @state.discard.push @card
+      @state.discards.push @card
       @state.burns -= 1
     else
-      @state.final_result = LOST
+      @state.final_result = 'You FAILED! Your team burned too many cards.'
 
   check_hint_target: (seat, target) ->
-    if parseInt(seat) == parseInt(target) or not @seat.hands[target]?
+    if parseInt(seat) == parseInt(target) or not @state.hands[target]?
       throw new UGLIClientError "Invalid hint target: (#{seat}, #{target})"
+    if @state.hints <= 0
+      throw new UGLICLientError "Ran out of hints: (#{seat}, #{target})"
 
   give_suit_hint: (seat, target, suit) ->
     @check_hint_target seat, target
     if suit not in SUITS
       throw new UGLIClientError "Invalid suit #{suit}"
-    if suit not in (card[0] for card in @seat.hands[target])
+    if suit not in (card[0] for card in @state.hands[target])
       throw new UGLIClientError "Empty suit hint #{suit}"
-    for i of @seat.hands[target]
-      if @seat.hands[target][i][0] == suit
-        @seat.knowledge[target][i][0] == suit
+    for i of @state.hands[target]
+      if @state.hands[target][i][0] == suit
+        @state.knowledge[target][i][0] = suit
+    @state.hints -= 1
 
   give_value_hint: (seat, target, value) ->
     @check_hint_target seat, target
     if value not in VALUES
       throw new UGLIClientError "Invalid value #{value}"
-    if value not in (card[1] for card in @seat.hands[target])
+    if value not in (card[1] for card in @state.hands[target])
       throw new UGLIClientError "Empty value hint #{value}"
-    for i of @seat.hands[target]
-      if @seat.hands[target][i][1] == value
-        @seat.knowledge[target][i][1] == value
+    for i of @state.hands[target]
+      if @state.hands[target][i][1] == value
+        @state.knowledge[target][i][1] = value
+    @state.hints -= 1
 
   join_game: (player) ->
     if (other for other of @players).length >= 5

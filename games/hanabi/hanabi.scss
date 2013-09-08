@@ -1,0 +1,85 @@
+.hanabi-status-message {
+  float: left;
+  margin-bottom: 40px;
+}
+
+.hanabi-counters {
+  float: right;
+}
+
+.hanabi-seat-row {
+  clear: both;
+  height: 40px;
+  margin-bottom: 20px;
+
+  .hanabi-player-col, .hanabi-cards-col, .hanabi-moves-col {
+    float: left;
+  }
+
+  .hanabi-player-col {
+    line-height: 40px;
+    width: 120px;
+
+    &.hanabi-cur-seat {
+      font-weight: bold;
+    }
+  }
+
+  .hanabi-cards-col {
+    width: 200px;
+
+    .hanabi-card {
+      border: 1px solid black;
+      border-radius: 2px;
+      cursor: pointer;
+      float: left;
+      font-size: 30px;
+      margin: 0px 15px 15px 0px;
+      padding: 1px;
+      text-align: center;
+      width: 30px;
+
+      &.hanabi-red, &.hanabi-green, &.hanabi-blue, &.hanabi-black {
+        color: white;
+      }
+
+      &.hanabi-red {
+        background-color: red;
+      }
+
+      &.hanabi-yellow {
+        background-color: yellow;
+      }
+
+      &.hanabi-green {
+        background-color: green;
+      }
+
+      &.hanabi-blue {
+        background-color: blue;
+      }
+
+      &.hanabi-black {
+        background-color: black;
+      }
+    }
+
+    &.hanabi-status-cards {
+      width: 500px;
+    }
+  }
+
+  .hanabi-moves-col {
+    font-size: 10px;
+    line-height: 15px;
+    width: 376px;
+    
+    button {
+      width: 94px;
+    }
+  }
+}
+
+.hanabi-stacks-row {
+  margin-top: 40px;
+}
