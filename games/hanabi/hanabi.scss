@@ -1,6 +1,6 @@
 .hanabi-status-message {
   float: left;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .hanabi-counters {
@@ -9,7 +9,7 @@
 
 .hanabi-seat-row {
   clear: both;
-  height: 30px;
+  height: 32px;
   margin-bottom: 20px;
 
   .hanabi-player-col, .hanabi-cards-col, .hanabi-moves-col {
@@ -17,7 +17,7 @@
   }
 
   .hanabi-player-col {
-    line-height: 30px;
+    line-height: 32px;
     width: 120px;
 
     &.hanabi-cur-seat {
@@ -26,27 +26,22 @@
   }
 
   .hanabi-cards-col {
-    width: 140px;
+    width: 160px;
 
     .hanabi-card {
       border: 1px solid black;
       border-radius: 2px;
-      cursor: pointer;
       float: left;
-      font-size: 20px;
+      font-size: 24px;
       margin: 0px 10px 10px 0px;
       padding: 1px;
       text-align: center;
-      width: 20px;
-    }
-
-    &.hanabi-status-cards {
-      width: 510px;
+      width: 24px;
     }
   }
 
   .hanabi-moves-col {
-    line-height: 30px;
+    line-height: 32px;
     width: 420px;
 
     button {
@@ -57,13 +52,23 @@
       }
     }
   }
+
+  &.hanabi-status-row {
+    .hanabi-player-col {
+      width: 83px;
+    }
+
+    .hanabi-cards-col {
+      width: 570px;
+    }
+  }
 }
 
 .hanabi-stacks-row {
-  margin-top: 40px;
+  margin-top: 48px;
 }
 
-.hanabi-red, .hanabi-green, .hanabi-blue, .hanabi-black {
+.hanabi-red, .hanabi-green, .hanabi-blue, .hanabi-purple {
   color: white;
 }
 
@@ -76,13 +81,13 @@
 }
 
 .hanabi-green {
-  background-color: green;
+  background-color: #4A4;
 }
 
 .hanabi-blue {
-  background-color: blue;
+  background-color: #48F;
 }
 
-.hanabi-black {
-  background-color: black;
+.hanabi-purple {
+  background-color: #80A;
 }

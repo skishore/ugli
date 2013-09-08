@@ -14,7 +14,7 @@ SUIT_CLASSES =
   1: 'hanabi-yellow'
   2: 'hanabi-green'
   3: 'hanabi-blue'
-  4: 'hanabi-black'
+  4: 'hanabi-purple'
   '?': 'hanabi-unknown'
 
 class @HanabiClient extends UGLIClient
@@ -30,8 +30,7 @@ class @HanabiClient extends UGLIClient
 
     @stacks = @make_status_row('Stacks:').addClass 'hanabi-stacks-row'
     @discards = @make_status_row 'Discards:'
-    @game_log = $('<div>').addClass('hanabi-game-log')
-    @container.append @stacks, @discards, @game_log
+    @container.append @stacks, @discards
 
     window.client = @
     @handle_update @players, @view
@@ -50,8 +49,8 @@ class @HanabiClient extends UGLIClient
 
   make_status_row: (title) ->
     row = @make_seat_row()
+    row.addClass 'hanabi-status-row'
     row.player_col.text title
-    row.cards_col.addClass 'hanabi-status-cards'
     row.moves_col.remove()
     row
 
@@ -107,19 +106,17 @@ class @HanabiClient extends UGLIClient
 
   draw_moves: (seat, player, cards, hints, moves_col) ->
     if player == @me
-      if hints < HINTS
-        moves_col.append $('<span>').text 'Discard: '
-        for i, card of cards
-          button = $('<button>').text(parseInt(i) + 1).click do (i) =>
-            => @send type: 'discard_card', i: parseInt(i)
-          moves_col.append button
-        moves_col.append $('<span>').text ', or play: '
-      else
-        moves_col.append $('<span>').text 'Play: '
+      moves_col.append $('<span>').text 'Play: '
       for i, card of cards
         button = $('<button>').text(parseInt(i) + 1).click do (i) =>
           => @send type: 'play_card', i: parseInt(i)
         moves_col.append button
+      if hints < HINTS
+        moves_col.append $('<span>').text ', or discard: '
+        for i, card of cards
+          button = $('<button>').text(parseInt(i) + 1).click do (i) =>
+            => @send type: 'discard_card', i: parseInt(i)
+          moves_col.append button
     else if hints > 0
       moves_col.append $('<span>').text 'Reveal: '
       for suit in SUITS
