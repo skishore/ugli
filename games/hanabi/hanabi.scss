@@ -38,30 +38,6 @@
       padding: 1px;
       text-align: center;
       width: 20px;
-
-      &.hanabi-red, &.hanabi-green, &.hanabi-blue, &.hanabi-black {
-        color: white;
-      }
-
-      &.hanabi-red {
-        background-color: red;
-      }
-
-      &.hanabi-yellow {
-        background-color: yellow;
-      }
-
-      &.hanabi-green {
-        background-color: green;
-      }
-
-      &.hanabi-blue {
-        background-color: blue;
-      }
-
-      &.hanabi-black {
-        background-color: black;
-      }
     }
 
     &.hanabi-status-cards {
@@ -72,9 +48,41 @@
   .hanabi-moves-col {
     line-height: 30px;
     width: 420px;
+
+    button {
+      padding: 5px;
+
+      &.hanabi-no-padding {
+        padding: 3px 6px;
+      }
+    }
   }
 }
 
 .hanabi-stacks-row {
   margin-top: 40px;
+}
+
+.hanabi-red, .hanabi-green, .hanabi-blue, .hanabi-black {
+  color: white;
+}
+
+.hanabi-red {
+  background-color: red;
+}
+
+.hanabi-yellow {
+  background-color: yellow;
+}
+
+.hanabi-green {
+  background-color: green;
+}
+
+.hanabi-blue {
+  background-color: blue;
+}
+
+.hanabi-black {
+  background-color: black;
 }

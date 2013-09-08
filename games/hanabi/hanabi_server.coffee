@@ -99,12 +99,12 @@ class @HanabiServer extends UGLIServer
 
   play_card: (seat, i) ->
     card = @drop_card seat, i
-    if card[1] = @state.stacks[card[0]] + 1
+    if card[1] == @state.stacks[card[0]] + 1
       @state.stacks[card[0]] += 1
       if card[1] == VALUES.length - 1 and @state.hints < HINTS
         @state.hints += 1
     else if @state.burns > 0
-      @state.discards.push @card
+      @state.discards.push card
       @state.burns -= 1
     else
       @state.final_result = 'You FAILED! Your team burned too many cards.'

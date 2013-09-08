@@ -86,11 +86,11 @@ class @HanabiClient extends UGLIClient
         @draw_moves seat, player, view.hands[seat], view.hints, seat_row.moves_col
 
     # Draw the stacks and discards.
-    @stacks.cards_col.html = ''
+    @stacks.cards_col.html ''
     for suit, value of view.stacks
       if value >= 0
         @stacks.cards_col.append @draw_card [suit, value]
-    @discards.cards_col.html = ''
+    @discards.cards_col.html ''
     for card in view.discards
       @discards.cards_col.append @draw_card card
 
@@ -118,8 +118,10 @@ class @HanabiClient extends UGLIClient
       moves_col.append $('<span>').text 'Reveal: '
       for suit in SUITS
         if (card for card in cards when card[0] == suit).length
-          suit_str = "#{SUIT_CLASSES[suit].substr 7}s"
-          button = $('<button>').text(suit_str).click do (suit) =>
+          button = $(
+              "<button class='#{SUIT_CLASSES[suit]} hanabi-no-padding'>" +
+              "&nbsp;&nbsp;</button>"
+          ).click do (suit) =>
             => @send type: 'give_suit_hint', target: seat, suit: suit
           moves_col.append button
       moves_col.append $('<span>').text ', or: '
