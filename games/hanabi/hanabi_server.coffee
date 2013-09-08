@@ -103,6 +103,9 @@ class @HanabiServer extends UGLIServer
       @state.stacks[card[0]] += 1
       if card[1] == VALUES.length - 1 and @state.hints < HINTS
         @state.hints += 1
+      for suit in SUITS
+        if @state.stacks[suit] == VALUES.length - 1
+          @state.final_result = 'You won! All stacks are complete.'
     else if @state.burns > 0
       @state.discards.push card
       @state.burns -= 1
