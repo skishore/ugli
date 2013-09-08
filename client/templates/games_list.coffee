@@ -7,7 +7,7 @@ Template.games_list.is_member = ->
 Template.games_list.open = ->
   game_state = GameStates.get_current_state @_id
   # TODO(skishore): Show some information about why the game is closed here.
-  if game_state?.public_view?.open? then '' else 'disabled="disabled"'
+  if game_state?.public_view?.open then '' else 'disabled="disabled"'
 
 Template.games_list.events
   'click .join-button': (e) ->
