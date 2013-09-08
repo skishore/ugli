@@ -30,7 +30,8 @@ class @HanabiClient extends UGLIClient
 
     @stacks = @make_status_row('Stacks:').addClass 'hanabi-stacks-row'
     @discards = @make_status_row 'Discards:'
-    @container.append @stacks, @discards
+    @game_log = $('<div>').addClass('hanabi-game-log')
+    @container.append @stacks, @discards, @game_log
 
     window.client = @
     @handle_update @players, @view
