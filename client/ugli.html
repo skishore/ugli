@@ -19,7 +19,9 @@
   <div id="top-bar-wrapper">
     <div id="top-bar">
       <span id="nav-title">UGLI</span>
-      {{loginButtons}}
+      {{#if logged_in}}
+        {{loginButtons}}
+      {{/if}}
     </div>
     <div id="tab-bar">
       {{#each rooms}}
@@ -76,7 +78,7 @@
         {{> games_list}}
       {{/unless}}
     {{else}}
-      Sign in using the buttons in the top right.
+      {{> signed_out_message}}
     {{/if}}
   </div>
 </template>
@@ -103,5 +105,11 @@
         </div>
       {{/each}}
     </div>
+  </div>
+</template>
+
+<template name="signed_out_message">
+  <div class="signed-out-message">
+    {{loginButtons}} to play a game on UGLI.
   </div>
 </template>

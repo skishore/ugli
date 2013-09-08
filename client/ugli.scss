@@ -95,6 +95,24 @@ body {
     #main-content {
       margin-right: $margin;
       width: $main-content-width;
+
+      .signed-out-message {
+        text-align: center;
+      }
+
+      #login-buttons {
+        #login-dropdown-list {
+          border: none;
+          box-shadow: none;
+          -webkit-box-shadow: none;
+          left: 12px;
+          top: 28px;
+
+          .loading, .login-close-text {
+            display: none;
+          }
+        }
+      }
     }
 
     #side-bar {
