@@ -82,8 +82,8 @@ class @HanabiClient extends UGLIClient
         seat_row.cards_col.append @draw_card card
       # Draw the move options, if it is our turn.
       seat_row.moves_col.html ''
-      if cur_player == @me
-        @draw_moves seat, player, view.hands[seat], seat_row.moves_col
+      if cur_player == @me and not view.final_result
+        @draw_moves seat, player, view.hands[seat], view.hints, seat_row.moves_col
 
     # Draw the stacks and discards.
     @stacks.cards_col.html = ''
@@ -99,34 +99,33 @@ class @HanabiClient extends UGLIClient
     value_str = if card[1] == UNKNOWN then card[1] else '' + (card[1] + 1)
     $('<div>').addClass("hanabi-card #{suit_class}").text value_str
 
-  draw_moves: (seat, player, cards, moves_col) ->
+  draw_moves: (seat, player, cards, hints, moves_col) ->
     if player == @me
-      for i, card of cards
-        button = $('<button>').text("Discard #{parseInt(i) + 1}").click(
-          do (i) =>
+      if hints < HINTS
+        moves_col.append $('<span>').text 'Discard: '
+        for i, card of cards
+          button = $('<button>').text(parseInt(i) + 1).click do (i) =>
             => @send type: 'discard_card', i: parseInt(i)
-        )
-        moves_col.append button
+          moves_col.append button
+        moves_col.append $('<span>').text ', or play: '
+      else
+        moves_col.append $('<span>').text 'Play: '
       for i, card of cards
-        button = $('<button>').text("Play #{parseInt(i) + 1}").click(
-          do (i) =>
-            => @send type: 'play_card', i: parseInt(i)
-        )
+        button = $('<button>').text(parseInt(i) + 1).click do (i) =>
+          => @send type: 'play_card', i: parseInt(i)
         moves_col.append button
-    else
+    else if hints > 0
+      moves_col.append $('<span>').text 'Reveal: '
       for suit in SUITS
         if (card for card in cards when card[0] == suit).length
-          suit_str = SUIT_CLASSES[suit].substr 7
-          button = $('<button>').text("Reveal #{suit_str}s").click(
-            do (suit) =>
-              => @send type: 'give_suit_hint', target: seat, suit: suit
-          )
+          suit_str = "#{SUIT_CLASSES[suit].substr 7}s"
+          button = $('<button>').text(suit_str).click do (suit) =>
+            => @send type: 'give_suit_hint', target: seat, suit: suit
           moves_col.append button
+      moves_col.append $('<span>').text ', or: '
       for value in VALUES
         if (card for card in cards when card[1] == value).length
-          value_str = parseInt(value) + 1
-          button = $('<button>').text("Reveal #{value_str}s").click(
-            do (value) =>
-              => @send type: 'give_value_hint', target: seat, value: value
-          )
+          value_str = "#{parseInt(value) + 1}s"
+          button = $('<button>').text(value_str).click do (value) =>
+            => @send type: 'give_value_hint', target: seat, value: value
           moves_col.append button

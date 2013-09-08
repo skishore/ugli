@@ -9,7 +9,7 @@
 
 .hanabi-seat-row {
   clear: both;
-  height: 40px;
+  height: 30px;
   margin-bottom: 20px;
 
   .hanabi-player-col, .hanabi-cards-col, .hanabi-moves-col {
@@ -17,7 +17,7 @@
   }
 
   .hanabi-player-col {
-    line-height: 40px;
+    line-height: 30px;
     width: 120px;
 
     &.hanabi-cur-seat {
@@ -26,18 +26,18 @@
   }
 
   .hanabi-cards-col {
-    width: 200px;
+    width: 140px;
 
     .hanabi-card {
       border: 1px solid black;
       border-radius: 2px;
       cursor: pointer;
       float: left;
-      font-size: 30px;
-      margin: 0px 15px 15px 0px;
+      font-size: 20px;
+      margin: 0px 10px 10px 0px;
       padding: 1px;
       text-align: center;
-      width: 30px;
+      width: 20px;
 
       &.hanabi-red, &.hanabi-green, &.hanabi-blue, &.hanabi-black {
         color: white;
@@ -70,13 +70,8 @@
   }
 
   .hanabi-moves-col {
-    font-size: 10px;
-    line-height: 15px;
-    width: 376px;
-    
-    button {
-      width: 94px;
-    }
+    line-height: 30px;
+    width: 420px;
   }
 }
 
