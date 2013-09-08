@@ -61,17 +61,14 @@ class @GameStates extends Collection
   @save_state: (room_id, game) ->
     check room_id, String
     [user_views, public_view] = game._get_views()
-    try
-      result = @insert
-        room_id: room_id
-        index: game._index
-        players: game.players
-        state: game.state
-        user_views: user_views
-        public_view: public_view
-      @cleanup room_id: room_id, index: $lt: game._index
-      return result
-    false
+    @insert
+      room_id: room_id
+      index: game._index
+      players: game.players
+      state: game.state
+      user_views: user_views
+      public_view: public_view
+    @cleanup room_id: room_id, index: $lt: game._index
 
   @cleanup_old_states: ->
     game_states = @find(active: true).fetch()
