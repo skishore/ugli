@@ -11,10 +11,10 @@ HAND_SIZE = 4
 
 SUIT_CLASSES =
   0: 'hanabi-red'
-  1: 'hanabi-yellow'
-  2: 'hanabi-green'
-  3: 'hanabi-blue'
-  4: 'hanabi-purple'
+  1: 'hanabi-orange'
+  2: 'hanabi-yellow'
+  3: 'hanabi-green'
+  4: 'hanabi-blue'
   '?': 'hanabi-unknown'
 
 class @HanabiClient extends UGLIClient
@@ -61,7 +61,7 @@ class @HanabiClient extends UGLIClient
     if view.final_result
       @status_message.text view.final_result
     else if not cur_player
-      @status_message.text 'Waiting a player to join...'
+      @status_message.text 'Waiting for a player to join...'
     else
       player_str = if cur_player == @me then "your" else "#{cur_player}'s"
       @status_message.text (
@@ -83,8 +83,9 @@ class @HanabiClient extends UGLIClient
       else
         seat_row.player_col.removeClass('hanabi-cur-seat')
       seat_row.cards_col.html ''
-      for card in view.hands[seat]
-        seat_row.cards_col.append @draw_card card
+      for i, card of view.hands[seat]
+        knowledge = if player == @me then undefined else view.knowledge[seat][i]
+        seat_row.cards_col.append @draw_card card, knowledge
       # Draw the move options, if it is our turn.
       seat_row.moves_col.html ''
       if cur_player == @me and not view.final_result
@@ -99,10 +100,16 @@ class @HanabiClient extends UGLIClient
     for card in view.discards
       @discards.cards_col.append @draw_card card
 
-  draw_card: (card) ->
+  draw_card: (card, knowledge) ->
     suit_class = SUIT_CLASSES[card[0]]
     value_str = if card[1] == UNKNOWN then card[1] else '' + (card[1] + 1)
-    $('<div>').addClass("hanabi-card #{suit_class}").text value_str
+    card = $('<div>').addClass("hanabi-card #{suit_class}").text value_str
+    if knowledge
+      if knowledge[0] != UNKNOWN
+        card.addClass('hanabi-suit-known')
+      if knowledge[1] != UNKNOWN
+        card.addClass('hanabi-value-known')
+    card
 
   draw_moves: (seat, player, cards, hints, moves_col) ->
     if player == @me

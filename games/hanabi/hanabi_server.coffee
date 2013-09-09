@@ -52,6 +52,7 @@ class @HanabiServer extends UGLIServer
     stacks: @state.stacks
     seats: @state.seats
     hands: hands_view
+    knowledge: @state.knowledge
     # Return some public counters and auxilary state.
     cur_seat: @state.cur_seat
     burns: @state.burns
