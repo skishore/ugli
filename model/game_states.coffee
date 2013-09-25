@@ -10,20 +10,23 @@
 #   created: ts
 
 class @GameStates extends Collection
-  @collection = new Meteor.Collection 'game_states'
-  @fields = [
-    'room_id',
-    'index',
-    'players',
-    'state',
-    'user_views',
-    'public_view',
-    'active',
-    'created',
-  ]
-  if Meteor.isServer
-    @collection._ensureIndex {room_id: 1, index: -1}, unique: true
-    @collection._ensureIndex 'active'
+  @set_schema
+    name: 'game_states'
+    durable: Common.durable
+    fields: [
+      'room_id',
+      'index',
+      'players',
+      'state',
+      'user_views',
+      'public_view',
+      'active',
+      'created',
+    ]
+    indices: [
+      {columns: {room_id: 1, index: -1}, options: unique: true}
+      {columns: 'active'}
+    ]
 
   @publish: (user_id, room_ids) ->
     check user_id, String

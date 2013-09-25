@@ -6,16 +6,19 @@
 #   created: ts
 
 class @Chats extends Collection
-  @collection = new Meteor.Collection 'chats'
-  @fields = [
-    'room_id',
-    'sender',
-    'message',
-    'active'
-    'created',
-  ]
-  if Meteor.isServer
-    @collection._ensureIndex active: 1, room_id: 1
+  @set_schema
+    name: 'chats'
+    durable: Common.durable
+    fields: [
+      'room_id',
+      'sender',
+      'message',
+      'active'
+      'created',
+    ]
+    indices: [
+      {columns: {active: 1, room_id: 1}}
+    ]
 
   @publish: (user_id, room_ids) ->
     check user_id, String

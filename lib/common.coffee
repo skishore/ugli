@@ -1,4 +1,5 @@
 class @Common
+  @durable = true
   @idle_timeout =  10*1000
   @keep_history = false
   @lobby_name = 'Lobby'

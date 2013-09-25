@@ -8,17 +8,20 @@
 # privates and invites fields to come soon.
 
 class @Rooms extends Collection
-  @collection = new Meteor.Collection 'rooms'
-  @fields = [
-    'name',
-    'user_ids',
-    'is_game',
-    'active',
-    'created',
-  ]
-  if Meteor.isServer
-    @collection._ensureIndex 'name', unique: true
-    @collection._ensureIndex 'active'
+  @set_schema
+    name: 'rooms'
+    durable: Common.durable
+    fields: [
+      'name',
+      'user_ids',
+      'is_game',
+      'active',
+      'created',
+    ]
+    indices: [
+      {columns: 'name', options: unique: true}
+      {columns: 'active'}
+    ]
 
   @publish: (user_id) ->
     check user_id, String

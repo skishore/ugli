@@ -1,12 +1,33 @@
 # A class that wraps a collection with some basic schema checking.
 # To use this class:
 #   1. Create a subclass for the collection you want to wrap.
-#   2. Add @collection and @fields static properties to the subclass.
-#   3. Optionally add ensureIndex calls and other model calls.
+#   2. Call the set_schema method with a schema object:
+#       collection OR name: a collection to wrap, or the name of a new one
+#       durable (optional): defaults to true, backed by minimongo if false
+#       fields: a list of column-name strings
+#       indices (optional): a list of index specs:
+#         columns: a Mongo index column spec
+#         options (optional): a list of options for the index
 
 class @Collection
-  @collection = null
-  @fields = null
+  @set_schema: (schema) ->
+    if schema.collection?
+      @collection = schema.collection
+    else
+      check schema.name, String
+      @durable = if 'durable' of schema then schema.durable else true
+      check @durable, Boolean
+      options = if Meteor.isClient or @durable then {} else connection: null
+      @collection = new Meteor.Collection schema.name, options
+    check schema.fields, [String]
+    @fields = schema.fields
+    if Meteor.isServer and @durable
+      for index in (if schema.indices? then schema.indices else [])
+        if not 'columns' of index
+          throw Error "Illegal index: #{index}"
+        if (key for key of index).length > 1 and not 'options' of index
+          throw Error "Illegal index: #{index}"
+        @collection._ensureIndex index.columns, index.options
 
   # Some fields will automatically be populated on inserts.
   @default_field_values =
