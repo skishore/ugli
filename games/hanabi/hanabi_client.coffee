@@ -70,12 +70,8 @@ class @HanabiClient extends UGLIClient
       )
     @counters.text "burns: #{view.burns}, hints: #{view.hints}"
 
-    my_seat = view.seats.indexOf @me
-    assert my_seat >= 0, "Missing seat: #{view}"
-
-    for i, player of view.seats
-      seat = parseInt i
-      seat_row = @seat_rows[(PLAYERS - my_seat + seat) % PLAYERS]
+    for seat, player of view.seats
+      seat_row = @seat_rows[seat]
 
       seat_row.player_col.text player or '<empty seat>'
       if parseInt(seat) == view.cur_seat
