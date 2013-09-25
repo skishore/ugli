@@ -1,13 +1,10 @@
-PLAYERS = 5
 UNKNOWN = '?'
 
 SUITS = [0...5]
 VALUES = [0...5]
 COUNTS = 0: 3, 1: 2, 2: 2, 3: 2, 4: 1
 
-BURNS = 2
 HINTS = 10
-HAND_SIZE = 4
 
 SUIT_CLASSES =
   0: 'hanabi-red'
@@ -18,14 +15,23 @@ SUIT_CLASSES =
   '?': 'hanabi-unknown'
 
 class @HanabiClient extends UGLIClient
+  @make_config_ui: (container, start_game) ->
+    container.append(
+      $('<span>').text('Play Hanabi with ')
+      $('<input type="number" min="2" max="5" value="2">')
+      $('<span>').text(' players:')
+      $('<button>').addClass('hanabi-start-game-button').text('Go!').click ->
+        start_game num_players: container.find('input').val()
+    )
+
   make_game_ui: ->
     @status_message = $('<div>').addClass 'hanabi-status-message'
     @counters = $('<div>').addClass 'hanabi-counters'
     @container.append @status_message, @counters
 
     @seat_rows = []
-    for i in [0...PLAYERS]
-      @seat_rows.push @make_seat_row()
+    for i in [0...@view.num_players]
+      @seat_rows.push @make_seat_row(@view.hand_size)
       @container.append @seat_rows[@seat_rows.length - 1]
 
     @stacks = @make_status_row('Stacks:').addClass 'hanabi-stacks-row'
@@ -35,11 +41,15 @@ class @HanabiClient extends UGLIClient
     window.client = @
     @handle_update @players, @view
 
-  make_seat_row: ->
+  make_seat_row: (hand_size) ->
     seat_row = $('<div>').addClass('hanabi-seat-row')
     player_col = $('<div>').addClass('hanabi-player-col')
     cards_col = $('<div>').addClass('hanabi-cards-col')
     moves_col = $('<div>').addClass('hanabi-moves-col')
+    # HACK: Deal with the fifth card taking up extra space.
+    if hand_size == 5
+      cards_col.addClass 'hanabi-five-card-hand'
+      moves_col.addClass 'hanabi-five-card-hand'
     # Store elements in internal state.
     seat_row.player_col = player_col
     seat_row.cards_col = cards_col

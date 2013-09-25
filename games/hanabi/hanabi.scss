@@ -1,3 +1,8 @@
+.hanabi-start-game-button {
+  margin-left: 8px;
+  padding: 5px;
+}
+
 .hanabi-status-message {
   float: left;
   margin-bottom: 48px;
@@ -28,6 +33,10 @@
   .hanabi-cards-col {
     width: 160px;
 
+    &.hanabi-five-card-hand {
+      width: 200px;
+    }
+
     .hanabi-card {
       border: 2px solid black;
       border-radius: 2px;
@@ -51,6 +60,10 @@
   .hanabi-moves-col {
     line-height: 34px;
     width: 420px;
+
+    &.hanabi-five-card-hand {
+      width: 380px;
+    }
 
     button {
       padding: 5px;

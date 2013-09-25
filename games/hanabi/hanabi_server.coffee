@@ -1,4 +1,3 @@
-PLAYERS = 5
 UNKNOWN = '?'
 
 SUITS = [0...5]
@@ -7,7 +6,7 @@ COUNTS = 0: 3, 1: 2, 2: 2, 3: 2, 4: 1
 
 BURNS = 2
 HINTS = 10
-HAND_SIZE = 4
+HAND_SIZES = 2: 5, 3: 5, 4: 4, 5: 4
 
 DECK = []
 do ->
@@ -18,15 +17,23 @@ do ->
 
 class @HanabiServer extends UGLIServer
   initialize_state: (config) ->
+    num_players = parseInt config.num_players
+    check num_players, Number
+    if num_players not of HAND_SIZES
+      throw new UGLIClientError "Invalid num_players: #{num_players}"
+    hand_size = HAND_SIZES[num_players]
+
+    @state.num_players = num_players
+    @state.hand_size = hand_size
     @state.deck = _.shuffle DECK
     @state.discards = []
     @state.stacks = (-1 for suit in SUITS)
     # Set up seats and deal hands to each seat.
-    @state.seats = (false for i in [0...PLAYERS])
-    @state.hands = ([] for i in [0...PLAYERS])
-    @state.knowledge = ([] for i in [0...PLAYERS])
-    for i in [0...PLAYERS]
-      for j in [0...HAND_SIZE]
+    @state.seats = (false for i in [0...num_players])
+    @state.hands = ([] for i in [0...num_players])
+    @state.knowledge = ([] for i in [0...num_players])
+    for i in [0...num_players]
+      for j in [0...hand_size]
         @deal_card i
     # Set up some counters and auxilary state.
     @state.cur_seat = 0
@@ -47,6 +54,10 @@ class @HanabiServer extends UGLIServer
       for i, hand of @state.hands
     )
 
+    # Game constants.
+    num_players: @state.num_players
+    hand_size: @state.hand_size
+    # Basic game state attributes.
     deck_size: @state.deck.length
     discards: @state.discards
     stacks: @state.stacks
@@ -76,11 +87,11 @@ class @HanabiServer extends UGLIServer
       @give_value_hint seat, message.target, message.value
     else
       throw new UGLIClientError "#{player} sent invalid message #{message.type}"
-    @state.cur_seat = (@state.cur_seat + 1) % PLAYERS
+    @state.cur_seat = (@state.cur_seat + 1) % @state.num_players
 
 
   deal_card: (seat) ->
-    assert @state.hands[seat].length < HAND_SIZE, 'Dealt to full hand'
+    assert @state.hands[seat].length < @state.hand_size, 'Dealt to full hand'
     if @state.deck.length > 0
       @state.hands[seat].push @state.deck.pop()
       @state.knowledge[seat].push [UNKNOWN, UNKNOWN]
