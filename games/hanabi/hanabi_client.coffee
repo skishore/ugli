@@ -74,10 +74,17 @@ class @HanabiClient extends UGLIClient
       @status_message.text 'Waiting for a player to join...'
     else
       player_str = if cur_player == @me then "your" else "#{cur_player}'s"
-      @status_message.text (
-        "It is #{player_str} turn. " +
-        "There are #{view.deck_size} cards left in the deck."
-      )
+      deck_str = "There are #{view.deck_size} cards left in the deck."
+      if view.deck_size == 1
+          deck_str = (
+            "There is 1 card left in the deck, " +
+            "and #{view.turns} turns left after drawing it."
+          )
+      else if not view.deck_size
+        deck_str = "The deck is out! There are #{view.turns} turns left."
+        if view.turns == 1
+          deck_str = "The deck is out! There is 1 turn left."
+      @status_message.text "It is #{player_str} turn. #{deck_str}"
     @counters.text "burns: #{view.burns}, hints: #{view.hints}"
 
     for seat, player of view.seats

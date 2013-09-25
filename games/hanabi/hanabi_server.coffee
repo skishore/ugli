@@ -39,6 +39,7 @@ class @HanabiServer extends UGLIServer
     @state.cur_seat = 0
     @state.burns = BURNS
     @state.hints = HINTS
+    @state.turns = num_players
     @state.final_result = false
 
   get_seat: (player) ->
@@ -68,6 +69,7 @@ class @HanabiServer extends UGLIServer
     cur_seat: @state.cur_seat
     burns: @state.burns
     hints: @state.hints
+    turns: @state.turns
     final_result: @state.final_result
 
   get_public_view: ->
@@ -77,6 +79,11 @@ class @HanabiServer extends UGLIServer
     seat = @get_seat player
     if seat != @state.cur_seat
       throw new UGLIClientError "#{player} tried to play out of turn"
+    if message.type not in [
+        'discard_card', 'play_card', 'give_suit_hint', 'give_value_hint']
+      throw new UGLIClientError "#{player} sent invalid message #{message.type}"
+
+    out_of_cards = not @state.deck.length
     if message.type == 'discard_card'
       @discard_card seat, message.i
     else if message.type == 'play_card'
@@ -86,9 +93,13 @@ class @HanabiServer extends UGLIServer
     else if message.type == 'give_value_hint'
       @give_value_hint seat, message.target, message.value
     else
-      throw new UGLIClientError "#{player} sent invalid message #{message.type}"
-    @state.cur_seat = (@state.cur_seat + 1) % @state.num_players
+      assert false, "Unexpected message type: #{message.type}"
 
+    if out_of_cards
+      @state.turns -= 1
+      if not @state.turns and not @state.final_result
+        @state.final_result = 'You FAILED! Your team is out of turns.'
+    @state.cur_seat = (@state.cur_seat + 1) % @state.num_players
 
   deal_card: (seat) ->
     assert @state.hands[seat].length < @state.hand_size, 'Dealt to full hand'
