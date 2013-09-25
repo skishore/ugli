@@ -3,27 +3,27 @@ class GameUI
   @game_clients = {}
   @last_key = null
 
-  @get_game_ui_key = (user_id, room_id) ->
+  @get_game_ui_key: (user_id, room_id) ->
     "#{user_id}-#{room_id}"
 
-  @create_game_ui = (key) ->
+  @create_game_ui: (key) ->
     elt = $('<div>').attr('id', key).addClass("#{@game_ui_class}")
     $('#game-ui-container').append elt
     elt
 
-  @hide_game_ui = ->
+  @hide_game_ui: ->
     $(".#{@game_ui_class}").css 'left', -10000
     $(".#{@game_ui_class}").css 'top', -10000
 
-  @show_game_ui = (key) ->
+  @show_game_ui: (key) ->
     game_ui = $("##{key}.#{@game_ui_class}")
     offset = $('#main-content').offset()
     game_ui.css 'left', offset.left
     game_ui.css 'top', offset.top
 
-  @update_game_ui = ->
+  @update_game_ui: ->
     user = Meteor.user()
-    room = Rooms.get(Session.get 'room_id')
+    room = Rooms.get Session.get 'room_id'
     key = @get_game_ui_key user?._id, room?._id
 
     # Optimization: do not hide the game UI if we're still in the same game as

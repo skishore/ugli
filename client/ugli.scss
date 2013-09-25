@@ -1,4 +1,5 @@
 $height: 600px;
+
 $margin: 18px;
 $padding: 8px;
 
@@ -200,14 +201,11 @@ body {
 }
 
 #config-box {
-  border: 1px solid black;
+  /* Account for 1px borders around the config ui. */
+  border: 1px solid white;
   height: $config-box-height;
   margin-bottom: $margin;
   padding: $padding;
-
-  .create-button {
-    padding: 8px;
-  }
 }
 
 #games-list-wrapper {
@@ -244,12 +242,21 @@ body {
   }
 }
 
-#game-ui-container {
-  .ugli-game-ui {
-    border: 1px solid black;
-    height: $height - 2*$padding;
-    padding: $padding;
-    position: absolute;
-    width: $main-content-width - 2*$padding - 2;
+.ugli-config-ui, .ugli-game-ui {
+  border: 1px solid black;
+  padding: $padding;
+  position: absolute;
+  width: $main-content-width - 2*$padding - 2;
+}
+
+.ugli-config-ui {
+  height: $config-box-height;
+
+  .create-button {
+    padding: 8px;
   }
+}
+
+.ugli-game-ui {
+  height: $height - 2*$padding;
 }
