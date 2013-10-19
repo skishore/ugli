@@ -4,7 +4,9 @@ class ConfigUI
   @last_key = null
 
   @get_config_ui_key: (room) ->
-    if room?.is_game then 'generic-in-game-ui' else 'generic-config-ui'
+    if Meteor.userId() and not room?.is_game
+      return 'generic-in-game-ui'
+    'generic-config-ui'
 
   @create_config_ui: (key) ->
     elt = $('<div>').attr('id', key).addClass(@config_ui_class)
@@ -29,7 +31,7 @@ class ConfigUI
       @hide_config_ui()
     @last_key = key
 
-    if not room?.is_game
+    if Meteor.userId() and not room?.is_game
       if key not of @config_clients
         container = @create_config_ui key
         @config_clients[key] = Common.ugli_client().make_config_ui(
