@@ -41,6 +41,8 @@ class @HanabiServer extends UGLIServer
     @state.hints = HINTS
     @state.turns = num_players
     @state.final_result = false
+    # Some private information used only on the server.
+    @state.seat_history = {}
 
   get_seat: (player) ->
     seat = @state.seats.indexOf player
@@ -165,10 +167,19 @@ class @HanabiServer extends UGLIServer
     @state.hints -= 1
 
   join_game: (player) ->
+    if player of @state.seat_history
+      # The player has sat at this game before. Check if their old seat is open.
+      seat = @state.seat_history[player]
+      if not @state.seats[seat]
+        @state.seats[seat] = player
+        return
+      throw new UGLIClientError "#{player}'s old seat is taken"
+    # The player has not sat at this game before. Check for open seats.
     if (other for other of @players).length >= 5
       throw new UGLIClientError "#{player} tried to join a full game"
     for seat of @state.seats
       if not @state.seats[seat]
+        @state.seat_history[player] = seat
         @state.seats[seat] = player
         return
     assert false, "Could not find open seat: #{@state.seats}"
