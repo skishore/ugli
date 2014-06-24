@@ -75,7 +75,7 @@ class @HanabiServer extends UGLIServer
     final_result: @state.final_result
 
   get_public_view: ->
-    return open: (player for player of @players).length < 5
+    open: (player for player of @players).length < @state.num_players
 
   handle_message: (player, message) ->
     seat = @get_seat player
