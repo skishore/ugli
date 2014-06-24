@@ -10,10 +10,8 @@
       {{> side_bar}}
     </div>
   </div>
-  {{#constant}}
-    <div id="config-ui-container"></div>
-    <div id="game-ui-container"></div>
-  {{/constant}}
+  <div id="config-ui-container"></div>
+  <div id="game-ui-container"></div>
 </body>
 
 <template name="top_bar">
@@ -21,7 +19,7 @@
     <div id="top-bar">
       <span id="nav-title">UGLI</span>
       {{#if logged_in}}
-        {{loginButtons}}
+        {{> loginButtons}}
       {{/if}}
     </div>
     <div id="tab-bar">
@@ -98,7 +96,7 @@
           {{#if is_member}}
             <button class="leave-button" data-room-id="{{_id}}">Leave</button>
           {{else}}
-            <button class="join-button" data-room-id="{{_id}}" {{open}}>
+            <button class="join-button" data-room-id="{{_id}}" disabled="{{disabled}}">
               Join
             </button>
           {{/if}}
@@ -111,6 +109,6 @@
 
 <template name="signed_out_message">
   <div class="signed-out-message">
-    {{loginButtons}} to play a game on UGLI.
+    {{> loginButtons}} to play a game on UGLI.
   </div>
 </template>

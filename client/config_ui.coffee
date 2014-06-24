@@ -19,7 +19,7 @@ class ConfigUI
 
   @show_config_ui: (key) ->
     config_ui = $("##{key}.#{@config_ui_class}")
-    offset = $('#config-box').offset()
+    offset = $('#remainder').offset()
     config_ui.css 'left', offset.left
     config_ui.css 'top', offset.top
 

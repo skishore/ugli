@@ -4,10 +4,10 @@ Template.games_list.games = ->
 Template.games_list.is_member = ->
   Meteor.userId() in @user_ids
 
-Template.games_list.open = ->
+Template.games_list.disabled = ->
   game_state = GameStates.get_current_state @_id
   # TODO(skishore): Show some information about why the game is closed here.
-  if game_state?.public_view?.open then '' else 'disabled="disabled"'
+  if game_state?.public_view?.open then '' else 'disabled'
 
 Template.games_list.events
   'click .join-button': (e) ->

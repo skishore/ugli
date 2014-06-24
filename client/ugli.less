@@ -1,13 +1,13 @@
-$height: 600px;
+@height: 600px;
 
-$margin: 18px;
-$padding: 8px;
+@margin: 18px;
+@padding: 8px;
 
-$main-content-width: 720px;
-$config-box-height: 200px;
-$game-list-margin: 20px;
-$user-list-width: 140px;
-$chat-width: 260px;
+@main-content-width: 720px;
+@config-box-height: 200px;
+@game-list-margin: 20px;
+@user-list-width: 140px;
+@chat-width: 260px;
 
 body {
   margin: 0px;
@@ -35,7 +35,7 @@ body {
     }
 
     #login-dropdown-list {
-      left: 0px;
+      left: -52px;
       padding: 4px 12px;
       top: 6px;
 
@@ -79,7 +79,7 @@ body {
 
 #remainder-wrapper {
   /* The height of the top bar and tab bar plus the margin. */
-  margin-top: $margin;
+  margin-top: @margin;
   text-align: center;
   /* Needed to keep the main content underneath the login buttons. */
   z-index: -1;
@@ -90,12 +90,12 @@ body {
 
     #main-content, #side-bar, #user-wrapper, #chat-wrapper {
       float: left;
-      height: $height;
+      height: @height;
     }
 
     #main-content {
-      margin-right: $margin;
-      width: $main-content-width;
+      margin-right: @margin;
+      width: @main-content-width;
 
       .signed-out-message {
         text-align: center;
@@ -133,7 +133,7 @@ body {
   float: left;
   overflow-x: hidden;
   overflow-y: scroll;
-  width: $user-list-width;
+  width: @user-list-width;
 
   #user-list {
     margin: 0px;
@@ -156,11 +156,11 @@ body {
 #chat-wrapper {
   border: solid black;
   border-width: 0px 0px 0px 1px;
-  width: $chat-width;
+  width: @chat-width;
 
   #message-list {
     /* The main content height minus 28px, the chat input height. */
-    height: $height - 28px;
+    height: @height - 28px;
     margin: 0px;
     overflow-y: scroll;
     padding: 0px;
@@ -203,14 +203,14 @@ body {
 #config-box {
   /* Account for 1px borders around the config ui. */
   border: 1px solid white;
-  height: $config-box-height;
-  margin-bottom: $margin;
-  padding: $padding;
+  height: @config-box-height;
+  margin-bottom: @margin;
+  padding: @padding;
 }
 
 #games-list-wrapper {
   border: 1px solid black;
-  height: $height - $margin - $config-box-height - 19px;
+  height: @height - @margin - @config-box-height - 19px;
   overflow-y: scroll;
   padding-bottom: 1px;
 
@@ -221,9 +221,9 @@ body {
       border-radius: 4px;
       float: left;
       font-size: 14px;
-      margin: $padding 0% 0% $game-list-margin;
-      padding: 2px $padding;
-      width: $main-content-width/2 - 3*$game-list-margin/2 - 2*$padding - 11;
+      margin: @padding 0% 0% @game-list-margin;
+      padding: 2px @padding;
+      width: @main-content-width/2 - 3*@game-list-margin/2 - 2*@padding - 11;
 
       .game-name {
         float: left;
@@ -244,13 +244,13 @@ body {
 
 .ugli-config-ui, .ugli-game-ui {
   border: 1px solid black;
-  padding: $padding;
+  padding: @padding;
   position: absolute;
-  width: $main-content-width - 2*$padding - 2;
+  width: @main-content-width - 2*@padding - 2;
 }
 
 .ugli-config-ui {
-  height: $config-box-height;
+  height: @config-box-height;
 
   .create-button {
     padding: 8px;
@@ -258,5 +258,5 @@ body {
 }
 
 .ugli-game-ui {
-  height: $height - 2*$padding;
+  height: @height - 2*@padding;
 }
