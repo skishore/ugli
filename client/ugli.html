@@ -4,111 +4,91 @@
 
 <body>
   {{> top_bar}}
-  <div id="remainder-wrapper">
-    <div id="remainder">
+  <div id="remainder">
+    {{#if logged_in}}
       {{> main_content}}
-      {{> side_bar}}
-    </div>
+    {{else}}
+      {{> signed_out_message}}
+    {{/if}}
   </div>
-  <div id="config-ui-container"></div>
-  <div id="game-ui-container"></div>
 </body>
 
 <template name="top_bar">
-  <div id="top-bar-wrapper">
-    <div id="top-bar">
-      <span id="nav-title">UGLI</span>
-      {{#if logged_in}}
-        {{> loginButtons}}
-      {{/if}}
-    </div>
-    <div id="tab-bar">
-      {{#each rooms}}
-        <div class="room-tab {{selected}}" data-room-id="{{_id}}">
-          {{name}}
-        </div>
-      {{/each}}
-    </div>
-  </div>
-</template>
-
-<template name="side_bar">
-  {{#if logged_in}}
-    <div id="side-bar" class="logged-in">
-      {{> user_list}}
-      {{> chat_box}}
-    </div>
-  {{/if}}
-</template>
-
-<template name="user_list">
-  <div id="user-wrapper" class="full-height">
-    <ul id="user-list">
-      <li class="num_users">{{num_users}} users</li>
-      {{#each users}}
-        <li>{{username}}</li>
-      {{/each}}
-    </ul>
-  </div>
-</template>
-
-<template name="chat_box">
-  <div id="chat-wrapper">
-    <ul id="message-list" class="full-height">
-      {{#each chats}}
-        <li>
-          <span class="sender">{{sender}}:</span>
-          {{message}}
-        </li>
-      {{/each}}
-    </ul>
-    <div id="chat-input-wrapper">
-      <div id="chat-message">Message:</div>
-      <input id="chat-input" type="text">
+  <div id="top-bar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand">UGLI</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          {{#if logged_in}}
+            <li><a>{{> loginButtons}}</a></li>
+          {{/if}}
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <template name="main_content">
-  <div id="main-content">
-    {{#if logged_in}}
-      {{#unless in_game}}
-        {{> config_box}}
-        {{> games_list}}
-      {{/unless}}
-    {{else}}
-      {{> signed_out_message}}
-    {{/if}}
+  <div id="main-content" class="row">
+    <div id="left-content" class="col-md-8">
+      {{> game_list}}
+      {{> chat_box }}
+    </div>
+    <div id="right-content" class="col-md-4">
+      {{> options_box }}
+      {{> player_list }}
+    </div>
   </div>
 </template>
 
-<template name="config_box">
-  <!-- This box will be populated on render by an UGLI client. -->
-  <div id="config-box"></div>
+<template name="game_list">
+  <div id="game-list" class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">Games</h4>
+    </div>
+    <div class="panel-body">
+      Games go here...
+    </div>
+  </div>
 </template>
 
-<template name="games_list">
-  <div id="games-list-wrapper">
-    <div id="games-list">
-      {{#each games}}
-        <div class="game">
-          <div class="game-name">{{name}}</div>
-          {{#if is_member}}
-            <button class="leave-button" data-room-id="{{_id}}">Leave</button>
-          {{else}}
-            <button class="join-button" data-room-id="{{_id}}" disabled="{{disabled}}">
-              Join
-            </button>
-          {{/if}}
-          <div class="game-size">{{user_ids.length}} players</div>
-        </div>
-      {{/each}}
+<template name="chat_box">
+  <div id="chat-box" class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">Chat</h4>
+    </div>
+    <div class="panel-body">
+      Chat goes here...
+    </div>
+  </div>
+</template>
+
+<template name="options_box">
+  <div id="options-box" class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">Options</h4>
+    </div>
+    <div class="panel-body">
+      Options go here...
+    </div>
+  </div>
+</template>
+
+<template name="player_list">
+  <div id="player-list" class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">Players</h4>
+    </div>
+    <div class="panel-body">
+      Players go here...
     </div>
   </div>
 </template>
 
 <template name="signed_out_message">
-  <div class="signed-out-message">
+  <div id="signed-out-message">
     {{> loginButtons}} to play a game on UGLI.
   </div>
 </template>

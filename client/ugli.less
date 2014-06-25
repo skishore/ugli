@@ -1,262 +1,107 @@
-@height: 600px;
+@left-content-width: 720px;
+@right-content-width: 360px;
+@game-list-height: 400px;
+@chat-box-height: 200px;
+@option-box-height: 300px;
+@player-list-height: 300px;
 
-@margin: 18px;
-@padding: 8px;
-
-@main-content-width: 720px;
-@config-box-height: 200px;
-@game-list-margin: 20px;
-@user-list-width: 140px;
-@chat-width: 260px;
+@top-bar-height: 41px;
+@panel-margin: 18px;
 
 body {
   margin: 0px;
-  overflow-y: scroll;
+  overflow-y: none;
 }
 
-#top-bar-wrapper {
-  top: 0;
-  width: 100%;
-
-  #top-bar {
-    background-color: #BDF;
-    border: solid black;
-    border-width: 0px 0px 1px;
-    padding: 2px 8px;
-  }
+#top-bar {
+  background-color: #eee;
 
   #login-buttons {
-    float: right;
-
-    #login-name-link, #login-sign-in-link {
-      display: block;
-      text-align: right;
-      width: 204px;
-    }
-
     #login-dropdown-list {
-      left: -52px;
+      left: -162px;
       padding: 4px 12px;
-      top: 6px;
+      top: 0px;
 
       .login-close-text {
         float: right;
       }
     }
   }
+}
 
-  #tab-bar {
-    background-color: #AAA;
-    border: solid black;
-    border-width: 0px 0px 1px;
-    height: 22px;
-    padding: 4px 0px 0px;
-    width: 100%;
+#remainder {
+  padding-top: @top-bar-height;
+  text-align: center;
 
-    .room-tab {
-      background-color: #EEE;
-      border: 1px solid #444;
-      border-radius: 4px;
-      color: #444;
-      cursor: pointer;
-      float: left;
-      font-size: 14px;
-      margin-left: 12px;
-      padding: 0px 6px;
+  .panel {
+    margin-top: @panel-margin;
+    margin-bottom: 0px;
+  }
+  
+  .panel-heading {
+    padding: 8px 12px;
+  }
 
-      &.selected {
-        background-color: white;
-        border: 1px solid black;
-        border-bottom-left-radius: 0px;
-        border-bottom-right-radius: 0px;
-        border-width: 1px 1px 0px;
-        color: black;
-        padding: 0px 6px 5px;
+  .panel-body {
+    padding: 12px;
+  }
+
+  .panel-default>.panel-heading {
+    background-color: #eee;
+  }
+
+  #main-content {
+    margin: 0 auto;
+    text-align: center;
+    width: @left-content-width + @right-content-width;
+
+    #left-content, #right-content {
+      display: inline-block;
+      margin: 0 auto;
+      padding-left: @panel-margin/2;
+      padding-right: @panel-margin/2;
+      text-align: left;
+    }
+
+    #left-content {
+      #game-list {
+        height: @game-list-height;
+      }
+
+      #chat-box {
+        height: @chat-box-height;
+      }
+    }
+
+    #right-content {
+      #options-box {
+        height: @option-box-height;
+      }
+
+      #player-list {
+        height: @player-list-height;
       }
     }
   }
-}
 
-#remainder-wrapper {
-  /* The height of the top bar and tab bar plus the margin. */
-  margin-top: @margin;
-  text-align: center;
-  /* Needed to keep the main content underneath the login buttons. */
-  z-index: -1;
-
-  #remainder {
+  #signed-out-message {
     display: inline-block;
-    text-align: left;
+    margin: 40px auto 0;
 
-    #main-content, #side-bar, #user-wrapper, #chat-wrapper {
-      float: left;
-      height: @height;
-    }
+    #login-buttons {
+      text-align: left;
 
-    #main-content {
-      margin-right: @margin;
-      width: @main-content-width;
+      #login-dropdown-list {
+        border: none;
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        left: -8px;
+        top: 28px;
 
-      .signed-out-message {
-        text-align: center;
-      }
-
-      #login-buttons {
-        #login-dropdown-list {
-          border: none;
-          box-shadow: none;
-          -webkit-box-shadow: none;
-          left: 12px;
-          top: 28px;
-
-          .loading, .login-buttons-padding, .login-close-text {
-            display: none;
-          }
+        .loading, .login-buttons-padding, .login-close-text {
+          display: none;
         }
       }
     }
-
-    #side-bar {
-      &.logged-in {
-        border: 1px solid black;
-      }
-
-      &.logged-out {
-        text-align: right;
-      }
-    }
   }
-}
-
-#user-wrapper {
-  background-color: #EEE;
-  float: left;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  width: @user-list-width;
-
-  #user-list {
-    margin: 0px;
-    padding: 0px;
-
-    li {
-      background-color: #EEE;
-      border: solid #DDD;
-      border-width: 0px 0px 1px;
-      font-size: 12px;
-      padding: 2px 8px;
-    }
-
-    li.num_users {
-      text-align: center;
-    }
-  }
-}
-
-#chat-wrapper {
-  border: solid black;
-  border-width: 0px 0px 0px 1px;
-  width: @chat-width;
-
-  #message-list {
-    /* The main content height minus 28px, the chat input height. */
-    height: @height - 28px;
-    margin: 0px;
-    overflow-y: scroll;
-    padding: 0px;
-
-    li {
-      font-size: 12px;
-      padding: 4px 8px;
-
-      .sender {
-        font-weight: bold;
-      }
-    }
-  }
-
-  #chat-input-wrapper {
-    background-color: #EEE;
-    border: solid black;
-    border-width: 1px 0px 0px 1px;
-    bottom: 0px;
-    height: 22px;
-    margin-left: -1px;
-    padding: 2px 0px 3px 8px;
-
-    #chat-message {
-      float: left;
-      font-size: 12px;
-      margin: 4px -2px;
-      width: 50px;
-    }
-
-    input {
-      /* This left is the width of the chat-message. */
-      /* The width is the width of the chat box minus the left. */
-      left: 54px;
-      width: 196px;
-    }
-  }
-}
-
-#config-box {
-  /* Account for 1px borders around the config ui. */
-  border: 1px solid white;
-  height: @config-box-height;
-  margin-bottom: @margin;
-  padding: @padding;
-}
-
-#games-list-wrapper {
-  border: 1px solid black;
-  height: @height - @margin - @config-box-height - 19px;
-  overflow-y: scroll;
-  padding-bottom: 1px;
-
-  #games-list {
-    .game {
-      background-color: #EEE;
-      border: 1px solid #AAA;
-      border-radius: 4px;
-      float: left;
-      font-size: 14px;
-      margin: @padding 0% 0% @game-list-margin;
-      padding: 2px @padding;
-      width: @main-content-width/2 - 3*@game-list-margin/2 - 2*@padding - 11;
-
-      .game-name {
-        float: left;
-        font-weight: bold;
-      }
-
-      .game-size {
-        clear: left;
-      }
-
-      .join-button, .leave-button {
-        float: right;
-        padding: 8px;
-      }
-    }
-  }
-}
-
-.ugli-config-ui, .ugli-game-ui {
-  border: 1px solid black;
-  padding: @padding;
-  position: absolute;
-  width: @main-content-width - 2*@padding - 2;
-}
-
-.ugli-config-ui {
-  height: @config-box-height;
-
-  .create-button {
-    padding: 8px;
-  }
-}
-
-.ugli-game-ui {
-  height: @height - 2*@padding;
 }
