@@ -7,6 +7,7 @@
 @player-list-height: 400px;
 
 @near-black: #222;
+@panel-heading: 32px;
 
 body {
   background-color: #f4f4f4;
@@ -56,8 +57,8 @@ body {
   }
 
   .panel-body {
-    padding: 8px;
     font-size: 12px;
+    padding: 8px;
   }
 
   .panel-default>.panel-heading {
@@ -77,27 +78,39 @@ body {
       text-align: left;
     }
 
+    #game-list, #chat-box, #options-box, #player-list {
+      overflow: none;
+    }
+
     #left-content {
       width: 72%;
 
-      #game-list {
-        height: @game-list-height;
+      #game-list .panel-body {
+        height: @game-list-height - @panel-heading;
       }
 
-      #chat-box {
-        height: @chat-box-height;
+      #chat-box .panel-body {
+        height: @chat-box-height - @panel-heading;
       }
     }
 
     #right-content {
       width: 28%;
 
-      #options-box {
-        height: @options-box-height;
+      #options-box .panel-body {
+        height: @options-box-height - @panel-heading;
       }
 
-      #player-list {
-        height: @player-list-height;
+      #player-list .panel-body {
+        height: @player-list-height - @panel-heading;
+        overflow-y: scroll;
+        padding: 0px;
+
+        .player-row {
+          font-size: 12px;
+          padding: 4px 8px;
+          border-bottom: 1px solid #eee;
+        }
       }
     }
   }
