@@ -34,17 +34,16 @@
   <div id="main-content" class="row">
     <div id="left-content" class="col-md-8">
       {{> game_list}}
-      {{> chat_box }}
     </div>
     <div id="right-content" class="col-md-4">
-      {{> options_box }}
       {{> player_list }}
+      {{> chat_box }}
     </div>
   </div>
 </template>
 
 <template name="game_list">
-  <div id="game-list" class="panel panel-default">
+  <div id="game-list" class="panel panel-info">
     <div class="panel-heading">
       <h4 class="panel-title">Games</h4>
     </div>
@@ -54,35 +53,24 @@
   </div>
 </template>
 
-<template name="chat_box">
-  <div id="chat-box" class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">Chat</h4>
-    </div>
-    <div class="panel-body">
-      Chat goes here...
-    </div>
-  </div>
-</template>
-
-<template name="options_box">
-  <div id="options-box" class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">Options</h4>
-    </div>
-    <div class="panel-body">
-      Options go here...
-    </div>
-  </div>
-</template>
-
 <template name="player_list">
-  <div id="player-list" class="panel panel-default">
+  <div id="player-list" class="panel panel-primary">
     <div class="panel-heading">
       <h4 class="panel-title">Players</h4>
     </div>
     <div class="panel-body">
       Players go here...
+    </div>
+  </div>
+</template>
+
+<template name="chat_box">
+  <div id="chat-box" class="panel panel-warning">
+    <div class="panel-heading">
+      <h4 class="panel-title">Chat</h4>
+    </div>
+    <div class="panel-body">
+      Chat goes here...
     </div>
   </div>
 </template>

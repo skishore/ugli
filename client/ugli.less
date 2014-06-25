@@ -1,22 +1,30 @@
-@left-content-width: 720px;
-@right-content-width: 360px;
-@game-list-height: 400px;
-@chat-box-height: 200px;
-@option-box-height: 300px;
-@player-list-height: 300px;
-
 @top-bar-height: 41px;
 @panel-margin: 18px;
+@main-content-width: 1080px;
+@game-list-height: 600px;
+@player-list-height: 200px - @panel-margin/2;
+@chat-box-height: @game-list-height - @player-list-height - @panel-margin;
+
+@near-black: #222;
 
 body {
+  background-color: #f4f4f4;
+  color: @near-black;
   margin: 0px;
   overflow-y: none;
 }
 
 #top-bar {
-  background-color: #eee;
+  background-color: #333;
+  .navbar-brand {
+    color: white;
+  }
 
   #login-buttons {
+    a.login-link-text {
+      color: white;
+    }
+
     #login-dropdown-list {
       left: -162px;
       padding: 4px 12px;
@@ -53,7 +61,7 @@ body {
   #main-content {
     margin: 0 auto;
     text-align: center;
-    width: @left-content-width + @right-content-width;
+    width: @main-content-width;
 
     #left-content, #right-content {
       display: inline-block;
@@ -66,20 +74,17 @@ body {
     #left-content {
       #game-list {
         height: @game-list-height;
-      }
 
-      #chat-box {
-        height: @chat-box-height;
       }
     }
 
     #right-content {
-      #options-box {
-        height: @option-box-height;
-      }
-
       #player-list {
         height: @player-list-height;
+      }
+
+      #chat-box {
+        height: @chat-box-height;
       }
     }
   }
