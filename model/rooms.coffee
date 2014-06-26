@@ -1,101 +1,28 @@
-# This collection stores data about rooms, which can be lobbies,
-# singleplayer games, or multiplayer games.
+# This collection stores data about rooms, which can be lobbies, singleplayer
+# games, or multiplayer games. A room is a lobby if and only if game is false.
 #   name: string
-#   user_ids: [user _ids]
-#   is_game: bool
-#   active: bool
-#   created: ts
-# privates and invites fields to come soon.
+#   game_state: either false, or a dict with the following keys:
+#     public_view: Object
+#     private_views: Object
+#   players: [string]
 
 class @Rooms extends Collection
   @set_schema
-    name: 'rooms'
-    durable: Common.durable
+    name: 'games'
     fields: [
       'name',
-      'user_ids',
-      'is_game',
-      'active',
-      'created',
-    ]
-    indices: [
-      {columns: 'name', options: unique: true}
-      {columns: 'active'}
+      'game',
+      'players',
     ]
 
-  @publish: (user_id) ->
-    check user_id, String
-    @find active: true
-
-  @create_room: (name, is_game) ->
-    # Create a new game room with no initial game state. Return its _id.
+  @create_room: (name, game, players) ->
+    # Create a new room and return its id.
     check name, String
-    check is_game, Boolean
-    @insert
-      name: name
-      user_ids: []
-      is_game: is_game
+    check players, [String]
+    @insert {name: name,  game: game, players: players}
 
-  @get_lobby = ->
-    lobby = @findOne(name: Common.lobby_name)
-    if not lobby? and Meteor.isServer
-      @create_room Common.lobby_name, false
-      lobby = @findOne(name: Common.lobby_name)
-    lobby
-
-  @get_user_rooms = (user_id) ->
-    check user_id, String
-    @find(active: true, user_ids: user_id).fetch()
-
-  @join_room = (user_id, room_id) ->
-    # Have a user join a room. Notify the UGLI server if a game is being played.
-    check user_id, String
+  @update_room: (room_id, name, game, players) ->
     check room_id, String
-    user = Users.get user_id
-    room = Rooms.get room_id
-    if user? and room? and user_id not in room.user_ids
-      if room.is_game
-        UGLICore.call_state_mutator room_id, ((game) ->
-          if game? and user.username not of game.players
-            game._add_user user
-        ), => @update {_id: room_id}, $addToSet: 'user_ids': user_id
-      else
-        @update {_id: room_id}, $addToSet: 'user_ids': user_id
-
-  @leave_room = (user_id, room_id) ->
-    # Have a user leave a room. Notify the UGLI server if a game is being played.
-    check user_id, String
-    check room_id, String
-    user = Users.get user_id
-    room = Rooms.get room_id
-    if user? and room? and user_id in room.user_ids
-      if room.is_game
-        UGLICore.call_state_mutator room_id, ((game) ->
-          if game? and user.username of game.players
-            game._remove_user user
-        ), => @update {_id: room_id}, $pull: 'user_ids': user_id
-      else
-        @update {_id: room_id}, $pull: 'user_ids': user_id
-
-  @boot_user = (user_id) ->
-    for room in @find({user_ids: user_id}, fields: _id: 1).fetch()
-      @leave_room(user_id, room._id)
-
-  @boot_users = (user_ids) ->
-    for user_id in user_ids
-      @boot_user(user_id)
-
-  @cleanup_all_game_rooms = ->
-    # Clean up all game rooms. This method is called on server startup.
-    @cleanup is_game: true
-
-  @cleanup_orphaned_rooms = (idle_timeout) ->
-    # Clean up orphaned game rooms, that is, games that have existed for
-    # idle_timeout ms without an active game state.
-    game_states = GameStates.find({active: true}, fields: room_id: 1).fetch()
-    active_room_ids = _.uniq(game_state.room_id for game_state in game_states)
-    idle_time = new Date().getTime() - idle_timeout
-    @cleanup
-      is_game: true
-      _id: $not: $in: active_room_ids
-      created: $lt: idle_time
+    check name, String
+    check players, [String]
+    @update {_id: room_id}, {$set: {name: name, game: game, players: players}}

@@ -6,7 +6,7 @@ Accounts.ui.config {
 Meteor.startup ->
   Deps.autorun ->
     if Meteor.userId()?
-      Meteor.subscribe 'users'
+      Meteor.subscribe 'data'
 
   Meteor.setInterval (->
     if Meteor.userId()?

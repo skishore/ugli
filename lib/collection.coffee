@@ -29,21 +29,13 @@ class @Collection
           throw Error "Illegal index: #{index}"
         @collection._ensureIndex index.columns, index.options
 
-  # Some fields will automatically be populated on inserts.
-  @default_field_values =
-    active: -> true
-    created: -> new Date().getTime()
-
   @_check_fields_exist: (schema) ->
     for key in @fields
       if key not of schema
-        if key of @default_field_values
-          schema[key] = do @default_field_values[key]
-        else
-          throw new UGLIModelError "#{@collection._name}: missing key: #{key}"
+        throw new UGLIModelError "#{@collection._name}: missing key: #{key}"
 
-  @_check_fields_legal: (schema) ->
-    for key of schema
+  @_check_fields_legal: (document) ->
+    for key of document
       if key not in @fields and key != '_id'
         throw new UGLIModelError "#{@collection._name}: illegal key: #{key}"
 
@@ -60,18 +52,18 @@ class @Collection
     if selector?
       @_check_fields_legal selector
       return @collection.find selector, options
-    @collection.find()
+    do @collection.find
 
   @findOne: (selector, options) ->
     if selector?
       @_check_fields_legal selector
       return @collection.findOne selector, options
-    @collection.findOne()
+    do @collection.findOne
 
-  @insert: (obj) ->
-    @_check_fields_exist obj
-    @_check_fields_legal obj
-    @collection.insert obj
+  @insert: (document) ->
+    @_check_fields_exist document
+    @_check_fields_legal document
+    @collection.insert document
 
   @update: (selector, update) ->
     if not selector?
@@ -85,10 +77,3 @@ class @Collection
       throw new UGLIModelError 'remove called with no selector!'
     @_check_fields_legal selector
     @collection.remove selector
-
-  @cleanup: (clause) ->
-    clause.active = true
-    if Common.keep_history
-      @update clause, $set: $active: false
-    else
-      @remove clause

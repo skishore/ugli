@@ -1,36 +1,32 @@
-Meteor.publish 'users', ->
-  Users.publish @userId
-
-Meteor.publish 'rooms', ->
-  Rooms.publish @userId
-
-Meteor.publish 'public_game_views', ->
-  GameStates.publish_public_views @userId
-
-Meteor.publish 'chats', (room_ids) ->
-  Chats.publish @userId, room_ids
-
-Meteor.publish 'game_states', (room_ids) ->
-  GameStates.publish @userId, room_ids
+Meteor.startup ->
+  core = new UGLICore
 
 
-Meteor.methods
-  'create_game': (config) ->
-    UGLICore.create_game @userId, config
+  Meteor.publish 'data', ->
+    core.publish @userId
 
-  'heartbeat': ->
-    Users.heartbeat @userId
 
-  'join_game': (room_id) ->
-    if Rooms.get(room_id).is_game
-      Rooms.join_room @userId, room_id
+  Meteor.methods
+    'heartbeat': ->
+      core.heartbeat @userId
 
-  'leave_game': (room_id) ->
-    if Rooms.get(room_id).is_game
-      Rooms.leave_room @userId, room_id
+    'create_game': (config) ->
+      throw new NotImplementedError
 
-  'send_chat': (room_id, message) ->
-    Chats.send_chat @userId, room_id, message
+    'join_game': (room_id) ->
+      throw new NotImplementedError
 
-  'send_game_message': (room_id, message) ->
-    UGLICore.handle_message @userId, room_id, message
+    'leave_game': (room_id) ->
+      throw new NotImplementedError
+
+    'send_chat': (room_id, message) ->
+      core.send_chat @userId, room_id, message
+
+    'send_game_message': (room_id, message) ->
+      core.handle_message @userId, room_id, message
+
+
+  cleanup = ->
+    core.mark_idle_users Common.idle_timeout
+
+  Meteor.setInterval cleanup, Common.idle_timeout
