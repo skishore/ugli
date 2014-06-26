@@ -13,7 +13,6 @@ body {
   background-color: #f4f4f4;
   color: @near-black;
   margin: 0px;
-  overflow-y: none;
 }
 
 #top-bar {
@@ -79,7 +78,7 @@ body {
     }
 
     #game-list, #chat-box, #options-box, #player-list {
-      overflow: none;
+      overflow: hidden;
     }
 
     #left-content {
@@ -92,8 +91,22 @@ body {
       #chat-box {
         @footer-height: 26px;
 
-        .panel-body {
+        #chat-message-list {
           height: @chat-box-height - @panel-heading - @footer-height;
+          list-style-type: none;
+          margin: 0px;
+          padding: 0px;
+          overflow-x: hidden;
+          overflow-y: scroll;
+
+          .chat-message {
+            margin: 2px 8px;
+
+            .chat-sender {
+              display: inline-block;
+              font-weight: bold;
+            }
+          }
         }
 
         .panel-footer {
@@ -127,6 +140,7 @@ body {
 
       #player-list .panel-body {
         height: @player-list-height - @panel-heading;
+        overflow-x: hidden;
         overflow-y: scroll;
         padding: 0px;
 

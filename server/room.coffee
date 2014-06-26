@@ -28,6 +28,9 @@ class @Room
     @players.splice index, 1
     do @save_state
 
+  send_chat: (user, message) ->
+    Chats.send_chat @_id, user.name, message
+
   publish: (user_id) ->
     fields = {name: 1, players: 1}
     result = [Chats.find {room_id: this._id}]

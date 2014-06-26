@@ -21,11 +21,11 @@ class @Chats extends Collection
     if room_id == legal_room_id
       @find room_id: room_id
 
-  @send_chat: (user_id, room_id, message) ->
-    check user_id, String
+  @send_chat: (room_id, sender, message) ->
     check room_id, String
+    check sender, String
     check message, String
     @insert
       room_id: room_id
-      sender: user.username
+      sender: sender
       message: message

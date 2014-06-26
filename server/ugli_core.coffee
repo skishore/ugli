@@ -29,9 +29,9 @@ class @UGLICore
     do user.heartbeat
 
   send_chat: (user_id, room_id, message) ->
-    user = @get_user user_id
-    if room_id == user.room_id
-      @rooms[room_id].send_chat user, message
+    [user, room] = @get_user_and_room user_id
+    if room_id == room._id
+      room.send_chat user, message
 
   mark_idle_users: (timeout) ->
     cutoff = new Date().getTime() - timeout

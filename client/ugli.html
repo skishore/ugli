@@ -59,12 +59,17 @@
     <div class="panel-heading">
       <h4 class="panel-title">Chat</h4>
     </div>
-    <div class="panel-body">
-      Chat goes here...
-    </div>
+    <ul id="chat-message-list" class="panel-body">
+      {{#each chats}}
+        <li class="chat-message">
+          <div class="chat-sender">{{sender}}:</div>
+          {{message}}
+        </li>
+      {{/each}}
+    </ul>
     <div class="panel-footer">
       <div class="chat-left">Enter a message:</div>
-      <input type="text">
+      <input id="chat-input" type="text">
     </div>
   </div>
 </template>

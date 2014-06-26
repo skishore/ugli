@@ -1,12 +1,10 @@
-Accounts.ui.config {
-  passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL',
-}
-
-
 Meteor.startup ->
   Deps.autorun ->
-    if Meteor.userId()?
+    if Meteor.userId()? or Session.get 'room_id'
       Meteor.subscribe 'data'
+
+  Deps.autorun ->
+    Session.set 'room_id', (Rooms.findOne {}, {_id: 1})?._id
 
   Meteor.setInterval (->
     if Meteor.userId()?
