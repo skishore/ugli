@@ -89,8 +89,32 @@ body {
         height: @game-list-height - @panel-heading;
       }
 
-      #chat-box .panel-body {
-        height: @chat-box-height - @panel-heading;
+      #chat-box {
+        @footer-height: 26px;
+
+        .panel-body {
+          height: @chat-box-height - @panel-heading - @footer-height;
+        }
+
+        .panel-footer {
+          border-top: 1px solid #cccccc;
+          font-size: 12px;
+          padding: 0px;
+
+          .chat-left {
+            border-right: 1px solid #cccccc;
+            display: inline-block;
+            padding: 4px 8px;
+            width: 16%;
+          }
+
+          input {
+            border: none;
+            outline: none;
+            padding: 4px 4px;
+            width: 83%;
+          }
+        }
       }
     }
 
