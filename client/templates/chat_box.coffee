@@ -13,7 +13,7 @@ scroll_chats = ->
 Template.chat_box.chats = ->
   # Scroll chats when this template is created anew, on login or room change.
   chats_were_scrolled = true
-  Chats.find({room_id: Session.get 'room_id'}, sort: created: 1)
+  Chats.find {room_id: Session.get 'room_id'}, {sort: created: 1}
 
 Template.chat_box.events
   'keydown #chat-input': (e) ->

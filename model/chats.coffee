@@ -2,6 +2,7 @@
 #   room_id: room _id
 #   sender: string
 #   message: string
+#   created: creation timestamp
 
 class @Chats extends Collection
   @set_schema
@@ -10,16 +11,15 @@ class @Chats extends Collection
       'room_id',
       'sender',
       'message',
+      'created',
     ]
     indices: [
-      {columns: room_id: 1}
+      {columns: room_id: 1},
     ]
 
-  @publish: (user_id, room_id) ->
-    check user_id, String
-    legal_room_id = UGLICore.get_room_id user_id
-    if room_id == legal_room_id
-      @find room_id: room_id
+  @publish: (room_id) ->
+    check room_id, String
+    @find room_id: room_id
 
   @send_chat: (room_id, sender, message) ->
     check room_id, String
@@ -29,3 +29,4 @@ class @Chats extends Collection
       room_id: room_id
       sender: sender
       message: message
+      created: new Date().getTime()

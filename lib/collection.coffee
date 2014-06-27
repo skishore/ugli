@@ -23,9 +23,9 @@ class @Collection
     @fields = schema.fields
     if Meteor.isServer and @durable
       for index in (if schema.indices? then schema.indices else [])
-        if not 'columns' of index
+        if 'columns' not of index
           throw Error "Illegal index: #{index}"
-        if (key for key of index).length > 1 and not 'options' of index
+        if (key for key of index).length > 1 and 'options' not of index
           throw Error "Illegal index: #{index}"
         @collection._ensureIndex index.columns, index.options
 

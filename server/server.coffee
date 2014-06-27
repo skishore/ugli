@@ -2,8 +2,11 @@ Meteor.startup ->
   core = new UGLICore
 
 
-  Meteor.publish 'data', ->
-    core.publish @userId
+  Meteor.publish 'rooms', ->
+    Rooms.publish @userId
+
+  Meteor.publish 'chats', (room_id) ->
+    core.publish_chats @userId, room_id
 
 
   Meteor.methods
