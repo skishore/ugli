@@ -37,4 +37,5 @@ class @UGLICore
     cutoff = new Date().getTime() - timeout
     idle_users = (user for _, user of @users when user.last_heartbeat < cutoff)
     for user in idle_users
+      delete @users[user._id]
       @rooms[user.room_id].drop_user user
