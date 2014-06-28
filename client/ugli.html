@@ -49,7 +49,26 @@
       <h4 class="panel-title">Games</h4>
     </div>
     <div class="panel-body">
-      Games go here...
+      <table class="table table-striped table-hover ">
+        <thead>
+          <tr>
+            <th>Room</th>
+            <th>Creator</th>
+            <th>Rules</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each games}}
+            <tr>
+              <td>{{name}}</td>
+              <td>{{creator}}</td>
+              <td>{{rules}}</td>
+              <td>{{state}} ({{num_players}}/{{max_players}})</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
