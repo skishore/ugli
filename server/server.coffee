@@ -5,6 +5,10 @@ Meteor.startup ->
   Meteor.publish 'rooms', ->
     Rooms.publish @userId
 
+  do Games.create_test_data
+  Meteor.publish 'games', ->
+    Games.publish @userId
+
   Meteor.publish 'chats', (room_id) ->
     core.publish_chats @userId, room_id
 

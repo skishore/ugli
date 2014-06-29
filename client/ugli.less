@@ -86,6 +86,44 @@ body {
 
       #game-list .panel-body {
         height: @game-list-height - @panel-heading;
+
+        .buttonlike {
+          cursor: pointer;
+          // TODO(skishore): Use a mixin here.
+          -webkit-user-select: none;
+        }
+
+        .table {
+          margin: 4px 0px 10px;
+
+          .room-name {
+            width: 35%;
+          }
+
+          .creator {
+            width: 20%;
+          }
+
+          .description {
+            width: 25%;
+          }
+
+          .status {
+            width: 20%;
+          }
+        }
+
+        .pager {
+          margin: 10px 0px 0px;
+
+          li>a {
+            padding: 4px 8px;
+          }
+
+          .page-text {
+            margin: 0px 8px;
+          }
+        }
       }
 
       #chat-box {
@@ -155,7 +193,7 @@ body {
 
   #signed-out-message {
     display: inline-block;
-    margin: 40px auto 0;
+    margin: 40px auto 0px;
 
     #login-buttons {
       text-align: left;

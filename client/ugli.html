@@ -49,26 +49,37 @@
       <h4 class="panel-title">Games</h4>
     </div>
     <div class="panel-body">
-      <table class="table table-striped table-hover ">
+      <table class="table table-hover">
         <thead>
           <tr>
-            <th>Room</th>
-            <th>Creator</th>
-            <th>Rules</th>
-            <th>Status</th>
+            <th class="room-name">Room</th>
+            <th class="creator">Creator</th>
+            <th class="description">Rules</th>
+            <th class="room-status">Status</th>
           </tr>
         </thead>
         <tbody>
           {{#each games}}
-            <tr>
-              <td>{{name}}</td>
-              <td>{{creator}}</td>
-              <td>{{rules}}</td>
-              <td>{{state}} ({{num_players}}/{{max_players}})</td>
+            <tr class="buttonlike">
+              <td class="room-name">{{room_name}}</td>
+              <td class="creator">{{creator}}</td>
+              <td class="description">{{description}}</td>
+              <td class="room-status">
+                {{state}} ({{num_players}}/{{max_players}})
+              </td>
             </tr>
           {{/each}}
         </tbody>
       </table>
+      <ul class="pager">
+        {{#if show_prev_button}}
+          <li class="buttonlike prev-button"><a>Previous</a></li>
+        {{/if}}
+        <li class="page-text">Page {{page}} of {{num_pages}}</li>
+        {{#if show_next_button}}
+          <li class="buttonlike next-button"><a>Next</a></li>
+        {{/if}}
+      </ul>
     </div>
   </div>
 </template>
