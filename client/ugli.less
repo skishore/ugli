@@ -9,6 +9,13 @@
 @near-black: #222;
 @panel-heading: 32px;
 
+.user-select (@val) {
+  user-select: @val;
+  -moz-user-select: @val;
+  -ms-user-select: @val;
+  -webkit-user-select: @val;
+}
+
 body {
   background-color: #f4f4f4;
   color: @near-black;
@@ -89,12 +96,11 @@ body {
 
         .buttonlike {
           cursor: pointer;
-          // TODO(skishore): Use a mixin here.
-          -webkit-user-select: none;
+          .user-select(none);
         }
 
         .table {
-          margin: 4px 0px 10px;
+          margin: 0px 0px 12px;
 
           .room-name {
             width: 35%;
@@ -113,15 +119,11 @@ body {
           }
         }
 
-        .pager {
-          margin: 10px 0px 0px;
+        .pagination-wrapper {
+          text-align: center;
 
-          li>a {
-            padding: 4px 8px;
-          }
-
-          .page-text {
-            margin: 0px 8px;
+          .pagination {
+            margin: 0 auto;
           }
         }
       }

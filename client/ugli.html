@@ -71,15 +71,17 @@
           {{/each}}
         </tbody>
       </table>
-      <ul class="pager">
-        {{#if show_prev_button}}
-          <li class="buttonlike prev-button"><a>Previous</a></li>
-        {{/if}}
-        <li class="page-text">Page {{page}} of {{num_pages}}</li>
-        {{#if show_next_button}}
-          <li class="buttonlike next-button"><a>Next</a></li>
-        {{/if}}
-      </ul>
+      <div class="pagination-wrapper">
+        <ul class="pagination pagination-sm buttonlike">
+          <li class="disabled"><a>«</a></li>
+          <li class="active"><a>1</a></li>
+          <li><a>2</a></li>
+          <li><a>3</a></li>
+          <li><a>4</a></li>
+          <li><a>5</a></li>
+          <li><a>»</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
