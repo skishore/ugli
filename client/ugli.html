@@ -73,13 +73,9 @@
       </table>
       <div class="pagination-wrapper">
         <ul class="pagination pagination-sm buttonlike">
-          <li class="disabled"><a>«</a></li>
-          <li class="active"><a>1</a></li>
-          <li><a>2</a></li>
-          <li><a>3</a></li>
-          <li><a>4</a></li>
-          <li><a>5</a></li>
-          <li><a>»</a></li>
+          {{#each pagination}}
+            <li class="{{class}}"><a>{{text}}</a></li>
+          {{/each}}
         </ul>
       </div>
     </div>

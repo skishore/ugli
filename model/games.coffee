@@ -25,7 +25,7 @@ class @Games extends Collection
 
   @create_test_data: ->
     @remove {}
-    for i in [0...10]
+    for i in [0...100]
       @insert
         room_id: 'test'
         room_name: RoomNames.data[i]
