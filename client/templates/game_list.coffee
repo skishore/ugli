@@ -1,4 +1,3 @@
-page_key = 'game-list-page'
 rows_per_page = 8
 page_range = 5
 
@@ -23,7 +22,7 @@ get_pagination = (page, num_pages) ->
 
 
 Template.game_list.games = ->
-  page = Session.get page_key
+  page = do Session.get_game_list_page
   Rooms.find game_clause,
     skip: rows_per_page*page
     limit: rows_per_page
@@ -32,16 +31,16 @@ Template.game_list.num_pages = ->
   Math.max (Math.ceil (do Rooms.find(game_clause).count)/rows_per_page), 1
 
 Template.game_list.pagination = ->
-  page = Session.get page_key
+  page = do Session.get_game_list_page
   num_pages = do Template.game_list.num_pages
   new_page = clamp page, num_pages
   if page != new_page
-    Session.set page_key, new_page
+    Session.set_game_list_page new_page
   get_pagination new_page, num_pages
 
 Template.game_list.events
   'click ul.pagination li': (e) ->
-    page = Session.get page_key
+    page = do Session.get_game_list_page
     num_pages = do Template.game_list.num_pages
     new_page =
       if @data == 'prev' then page - 1
@@ -49,9 +48,9 @@ Template.game_list.events
       else @data
     new_page = clamp new_page, num_pages
     if new_page != page
-      Session.set page_key, new_page
+      Session.set_game_list_page new_page
 
-
-Deps.autorun ->
-  room_id = Session.get 'room_id'
-  Session.set page_key, 0
+Meteor.startup ->
+  Deps.autorun ->
+    if do Session.get_in_lobby
+      Session.set_game_list_page 0

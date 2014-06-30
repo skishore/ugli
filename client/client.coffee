@@ -6,17 +6,17 @@ Meteor.startup ->
   Deps.autorun ->
     room = Rooms.findOne {user_ids: Meteor.userId() or null}
     if room?
-      Session.set 'room_id', room._id
-      Session.set 'in_lobby', room.state == RoomState.LOBBY
+      Session.set_room_id room._id
+      Session.set_in_lobby room.state == RoomState.LOBBY
     else
-      Session.set 'room_id', null
-      Session.set 'in_lobby', true
+      Session.set_room_id null
+      Session.set_in_lobby true
 
   Deps.autorun ->
-    room_id = Session.get 'room_id'
+    room_id = do Session.get_room_id
     if room_id?
       Meteor.subscribe 'chats', room_id
-    if Session.get 'in_lobby'
+    if do Session.get_in_lobby
       Meteor.subscribe 'game_rooms'
 
   Meteor.setInterval (->

@@ -1,5 +1,5 @@
 Template.player_list.players = ->
-  (Rooms.findOne {_id: Session.get 'room_id'}, {players: 1})?.players or []
+  (Rooms.findOne {_id: do Session.get_room_id}, {players: 1})?.players or []
 
 Template.player_list.num_players = ->
   (do Template.player_list.players).length
