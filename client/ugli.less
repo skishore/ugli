@@ -1,7 +1,7 @@
 @top-bar-height: 41px;
 @panel-margin: 18px;
 @main-content-width: 960px;
-@game-list-height: 400px;
+@game-info-height: 400px;
 @chat-box-height: 200px;
 @options-box-height: 200px;
 @player-list-height: 400px;
@@ -84,15 +84,15 @@ body {
       text-align: left;
     }
 
-    #game-list, #chat-box, #options-box, #player-list {
+    #game-info, #chat-box, #options-box, #player-list {
       overflow: hidden;
     }
 
     #left-content {
       width: 72%;
 
-      #game-list .panel-body {
-        height: @game-list-height - @panel-heading;
+      #game-info .panel-body {
+        height: @game-info-height - @panel-heading;
 
         .buttonlike {
           cursor: pointer;

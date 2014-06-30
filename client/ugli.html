@@ -33,7 +33,7 @@
 <template name="main_content">
   <div id="main-content" class="row">
     <div id="left-content" class="col-md-8">
-      {{> game_list}}
+      {{> game_info}}
       {{> chat_box }}
     </div>
     <div id="right-content" class="col-md-4">
@@ -43,42 +43,54 @@
   </div>
 </template>
 
-<template name="game_list">
-  <div id="game-list" class="panel panel-info">
+<template name="game_info">
+  <div id="game-info" class="panel panel-info">
     <div class="panel-heading">
       <h4 class="panel-title">Games</h4>
     </div>
     <div class="panel-body">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th class="room-name">Name</th>
-            <th class="host">Host</th>
-            <th class="description">Rules</th>
-            <th class="room-status">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each games}}
-            <tr class="buttonlike">
-              <td class="room-name">{{name}}</td>
-              <td class="host">{{summary.host}}</td>
-              <td class="description">{{summary.description}}</td>
-              <td class="room-status">
-                {{state}} ({{players.length}}/{{summary.max_players}})
-              </td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
-      <div class="pagination-wrapper">
-        <ul class="pagination pagination-sm buttonlike">
-          {{#each pagination}}
-            <li class="{{class}}"><a>{{text}}</a></li>
-          {{/each}}
-        </ul>
-      </div>
+      {{#if show_game_details}}
+        {{> game_details}}
+      {{else}}
+        {{> game_list}}
+      {{/if}}
     </div>
+  </div>
+</template>
+
+<template name="game_details">
+  Game details go here...
+</template>
+
+<template name="game_list">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="room-name">Name</th>
+        <th class="host">Host</th>
+        <th class="description">Rules</th>
+        <th class="room-status">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each games}}
+        <tr class="buttonlike">
+          <td class="room-name">{{name}}</td>
+          <td class="host">{{summary.host}}</td>
+          <td class="description">{{summary.description}}</td>
+          <td class="room-status">
+            {{state}} ({{players.length}}/{{summary.max_players}})
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div class="pagination-wrapper">
+    <ul class="pagination pagination-sm buttonlike">
+      {{#each pagination}}
+        <li class="{{class}}"><a>{{text}}</a></li>
+      {{/each}}
+    </ul>
   </div>
 </template>
 
