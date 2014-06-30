@@ -10,7 +10,7 @@ class @Room
     else
       @name = Common.lobby_name
       @game = false
-    @_id = Rooms.create_room @name, @game
+    @_id = do Rooms.create_lobby
     @users = []
 
   add_user: (user) ->

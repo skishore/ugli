@@ -1,17 +1,23 @@
 Meteor.startup ->
   Deps.autorun ->
     if Meteor.userId()?
-      Meteor.subscribe 'rooms'
-      # TODO(skishore): Only subscribe to games if in the lobby.
-      Meteor.subscribe 'games'
+      Meteor.subscribe 'current_room'
 
   Deps.autorun ->
-    Session.set 'room_id', (Rooms.findOne {}, {_id: 1})?._id
+    room = Rooms.findOne {user_ids: Meteor.userId() or null}
+    if room?
+      Session.set 'room_id', room._id
+      Session.set 'in_lobby', room.state == RoomState.LOBBY
+    else
+      Session.set 'room_id', null
+      Session.set 'in_lobby', true
 
   Deps.autorun ->
     room_id = Session.get 'room_id'
     if room_id?
       Meteor.subscribe 'chats', room_id
+    if Session.get 'in_lobby'
+      Meteor.subscribe 'game_rooms'
 
   Meteor.setInterval (->
     if Meteor.userId()?

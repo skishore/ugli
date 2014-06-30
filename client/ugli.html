@@ -52,8 +52,8 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th class="room-name">Room</th>
-            <th class="creator">Creator</th>
+            <th class="room-name">Name</th>
+            <th class="host">Host</th>
             <th class="description">Rules</th>
             <th class="room-status">Status</th>
           </tr>
@@ -61,11 +61,11 @@
         <tbody>
           {{#each games}}
             <tr class="buttonlike">
-              <td class="room-name">{{room_name}}</td>
-              <td class="creator">{{creator}}</td>
-              <td class="description">{{description}}</td>
+              <td class="room-name">{{name}}</td>
+              <td class="host">{{summary.host}}</td>
+              <td class="description">{{summary.description}}</td>
               <td class="room-status">
-                {{state}} ({{num_players}}/{{max_players}})
+                {{state}} ({{players.length}}/{{summary.max_players}})
               </td>
             </tr>
           {{/each}}

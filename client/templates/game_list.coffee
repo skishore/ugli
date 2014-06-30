@@ -2,6 +2,8 @@ page_key = 'game-list-page'
 rows_per_page = 8
 page_range = 5
 
+game_clause = state: '$ne': RoomState.LOBBY
+
 clamp = (page, num_pages) ->
   Math.max (Math.min page, num_pages - 1), 0
 
@@ -22,12 +24,12 @@ get_pagination = (page, num_pages) ->
 
 Template.game_list.games = ->
   page = Session.get page_key
-  Games.find {},
+  Rooms.find game_clause,
     skip: rows_per_page*page
     limit: rows_per_page
 
 Template.game_list.num_pages = ->
-  Math.max (Math.ceil (do Games.find().count)/rows_per_page), 1
+  Math.max (Math.ceil (do Rooms.find(game_clause).count)/rows_per_page), 1
 
 Template.game_list.pagination = ->
   page = Session.get page_key
