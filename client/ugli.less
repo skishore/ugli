@@ -9,6 +9,8 @@
 @near-black: #222;
 @panel-heading: 32px;
 
+@chat-left-width: 16%;
+
 .user-select (@val) {
   user-select: @val;
   -moz-user-select: @val;
@@ -163,15 +165,23 @@ body {
           .chat-left {
             border-right: 1px solid #cccccc;
             display: inline-block;
-            padding: 4px 8px;
-            width: 16%;
+            margin-left: -100%;
+            padding: 4px 0px;
+            text-align: center;
+            width: @chat-left-width;
           }
 
-          input {
-            border: none;
-            outline: none;
-            padding: 4px 4px;
-            width: 83%;
+          .chat-input-wrapper {
+            float: left;
+            width: 100%;
+
+            input {
+              border: none;
+              outline: none;
+              margin-left: @chat-left-width;
+              padding: 4px 4px;
+              width: 100% - @chat-left-width;
+            }
           }
         }
       }
