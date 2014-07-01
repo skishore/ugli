@@ -14,5 +14,8 @@ class @User
     @room_id = null
     @last_heartbeat = new Date().getTime()
 
+  conflicts: (other) ->
+    @_id == other._id or @username == other.username
+
   heartbeat: (user_id) ->
     @last_heartbeat = new Date().getTime()

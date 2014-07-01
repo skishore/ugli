@@ -14,8 +14,7 @@ class @Room
     @users = []
 
   add_user: (user) ->
-    assert (not @users.some (other) -> other._id == user._id),
-        "Duplicate user: #{@}, #{user}"
+    assert (not @users.some user.conflicts), "Duplicate user: #{@}, #{user}"
     assert user.room_id == null, "User already in a room: #{user}"
     user.room_id = @_id
     @users.push user

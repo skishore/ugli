@@ -1,9 +1,11 @@
 # An instance of UGLIServer stores the following data about the game:
-#   @players: map from current player names -> _ids
-#   @state: fully-specified mutable game state
+#   @players:
+#       sorted list of current players that should not be modified by any
+#       instance methods of this server
+#   @state: fully-specified, mutable game state
 #
 # An implementation of UGLIServer should override the following methods:
-#   initialize_state: (config) ->
+#   initialize_state: (config) -> summary
 #   get_player_view: (config) -> view
 #   get_public_view: (config) -> view
 #   handle_message: (player, message) ->
@@ -12,10 +14,21 @@
 # See below for detailed specifications for these methods.
 
 class @UGLIServer
-  constructor: (_index, players, state) ->
-    @_index = _index or 0
-    @players = players or {}
-    @state = state or {}
+  constructor: (config) ->
+    @players = []
+    @state = {}
+    @initialize_state config
+
+  _add_user: (user) ->
+    @join_game user.username
+    @players.push user.username
+    do @players.sort
+
+  _drop_user: (user) ->
+    index = @players.indexOf user.username
+    assert index >= 0, "User not in this game: #{user.username}"
+    @leave_game user.username
+    @players.splice index, 1
 
   setTimeout: (callback, delay) ->
     throw new NotImplementedError 'UGLIServer.setTimeout'
@@ -23,50 +36,36 @@ class @UGLIServer
   clearTimeout: (timeout) ->
     throw new NotImplementedError 'UGLIServer.clearTimeout'
 
-  _get_views: ->
-    # Return a pair [user_views, public_view] of views. user_views is a dict
-    # mapping user_ids to their views while public_view is visible to all.
-    user_views = {}
-    for player, user_id of @players
-      user_views[user_id] = @get_player_view player
-    public_view = @get_public_view()
-    [user_views, public_view]
-
-  _add_user: (user) ->
-    # Called by the framework to add a user if he is accepted by join_game.
-    @join_game user.username
-    @players[user.username] = user._id
-
-  _remove_user: (user) ->
-    # Called by the framework to remove a user if they leave the game's room.
-    @leave_game user.username
-    delete @players[user.username]
-
   '''
   Server interface methods follow. To write a new game, override these methods.
   '''
 
   initialize_state: (config) ->
     # Initialize @state based on config, or throw an UGLIClientError if config
-    # is invalid.
+    # is invalid. If the config is valid, this method should return a summary
+    # dict with the following keys:
+    #   description: a short description of the game mode (eg, 'Sprint')
+    #   explanation: a longer explanation of the game mode
+    #   max_players: the maximum number of players allowed in the game
     console.log 'UGLIServer.constructor has not been implemented.'
 
   get_player_view: (player) ->
-    # Return the view of the game that the given player should see right now.
+    # Return data about the state that is only visible to the given player.
+    #
+    # The final view for a player is the public view extended by the private
+    # view - that is, the value of shared keys are taken from the private view.
+    #
+    # By default, there is no per-player hidden information.
+    return {}
+
+  get_public_view: ->
+    # Return data about the state that is visible to all players.
     #
     # The default implementation makes the entire state visible.
     return @state
 
-  get_public_view: ->
-    # Return the view of the game that users in the lobby should see. Certain
-    # attributes of this view are handled specially:
-    #   open: bool - used to determine whether the join buttons are enabled
-    #
-    # The default implementation sets open to true.
-    return open: true
-
   handle_message: (player, message) ->
-    # Called when a client calls @ugli.send message.
+    # Called when a client calls this.send(message).
     console.log 'UGLIServer.handle_message has not been implemented.'
 
   join_game: (player) ->
