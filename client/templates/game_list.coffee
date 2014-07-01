@@ -28,7 +28,7 @@ Template.game_list.games = ->
     limit: rows_per_page
 
 Template.game_list.num_pages = ->
-  Math.max (Math.ceil (do Rooms.find(game_clause).count)/rows_per_page), 1
+  Math.ceil (do Rooms.find(game_clause).count)/rows_per_page
 
 Template.game_list.pagination = ->
   page = do Session.get_game_list_page

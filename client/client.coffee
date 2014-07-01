@@ -10,7 +10,7 @@ Meteor.startup ->
       Session.set_in_lobby room.state == RoomState.LOBBY
     else
       Session.set_room_id null
-      Session.set_in_lobby true
+      Session.set_in_lobby false
 
   Deps.autorun ->
     room_id = do Session.get_room_id

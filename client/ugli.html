@@ -63,35 +63,45 @@
 </template>
 
 <template name="game_list">
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th class="room-name">Name</th>
-        <th class="host">Host</th>
-        <th class="description">Rules</th>
-        <th class="room-status">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each games}}
-        <tr class="buttonlike">
-          <td class="room-name">{{name}}</td>
-          <td class="host">{{summary.host}}</td>
-          <td class="description">{{summary.description}}</td>
-          <td class="room-status">
-            {{state}} ({{players.length}}/{{summary.max_players}})
-          </td>
+  {{#with games}}
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th class="room-name">Name</th>
+          <th class="host">Host</th>
+          <th class="description">Rules</th>
+          <th class="room-status">Status</th>
         </tr>
-      {{/each}}
-    </tbody>
-  </table>
-  <div class="pagination-wrapper">
-    <ul class="pagination pagination-sm buttonlike">
-      {{#each pagination}}
-        <li class="{{class}}"><a>{{text}}</a></li>
-      {{/each}}
-    </ul>
-  </div>
+      </thead>
+      <tbody>
+        {{#if count}}
+          {{#each this}}
+            <tr class="buttonlike">
+              <td class="room-name">{{name}}</td>
+              <td class="host">{{summary.host}}</td>
+              <td class="description">{{summary.description}}</td>
+              <td class="room-status">
+                {{state}} ({{players.length}}/{{summary.max_players}})
+              </td>
+            </tr>
+          {{/each}}
+        {{/if}}
+      </tbody>
+    </table>
+    {{#if count}}
+      <div class="pagination-wrapper">
+        <ul class="pagination pagination-sm buttonlike">
+          {{#each pagination}}
+            <li class="{{class}}"><a>{{text}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+    {{else}}
+      <div class="no-games-message">
+        There are no games. Use the menu to the right to create one.
+      </div>
+    {{/if}}
+  {{/with}}
 </template>
 
 <template name="chat_box">
