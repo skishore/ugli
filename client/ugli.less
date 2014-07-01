@@ -6,7 +6,7 @@
 @menu-box-height: 200px;
 @player-list-height: 400px;
 
-@near-black: #222;
+@near-black: #444;
 @panel-heading: 32px;
 
 @chat-left-width: 16%;
@@ -19,13 +19,13 @@
 }
 
 body {
-  background-color: #f4f4f4;
-  color: @near-black;
+  background-color: #eee;
+  color: black;
   margin: 0px;
 }
 
 #top-bar {
-  background-color: #333;
+  background-color: @near-black;
   .navbar-brand {
     color: white;
   }
@@ -52,11 +52,14 @@ body {
   text-align: center;
 
   .panel {
+    border-color: @near-black;
     margin-top: @panel-margin;
     margin-bottom: 0px;
   }
 
   .panel-heading {
+    background-color: @near-black;
+    border-color: @near-black;
     padding: 6px 8px;
   }
 
@@ -70,7 +73,7 @@ body {
   }
 
   .panel-default>.panel-heading {
-    background-color: #eee;
+    background-color: #ddd;
   }
 
   #main-content {
@@ -132,7 +135,7 @@ body {
                 }
 
                 .player-row {
-                  border-top: 1px solid #eee;
+                  border-top: 1px solid #ddd;
                   padding: 4px 8px;
                 }
               }
@@ -210,7 +213,7 @@ body {
           height: @chat-box-height - @panel-heading - @footer-height;
           list-style-type: none;
           margin: 0px;
-          padding: 0px;
+          padding: 2px 0px;
           overflow-x: hidden;
           overflow-y: scroll;
 
@@ -225,12 +228,12 @@ body {
         }
 
         .panel-footer {
-          border-top: 1px solid #cccccc;
+          border-top: 1px solid #bbb;
           font-size: 12px;
           padding: 0px;
 
           .chat-left {
-            border-right: 1px solid #cccccc;
+            border-right: 1px solid #bbb;
             display: inline-block;
             margin-left: -100%;
             padding: 4px 0px;
@@ -277,7 +280,7 @@ body {
         padding: 0px;
 
         .player-row {
-          border-bottom: 1px solid #eee;
+          border-bottom: 1px solid #ddd;
           padding: 4px 8px;
         }
       }

@@ -3,7 +3,7 @@ chats_were_scrolled = false
 
 are_chats_scrolled = ->
   elt = $ '#chat-message-list'
-  not elt.length or (elt[0].scrollTop + elt.height() + 1 >= elt[0].scrollHeight)
+  not elt.length or (elt[0].scrollTop + elt.height() + 6 >= elt[0].scrollHeight)
 
 scroll_chats = ->
   elt = $ '#chat-message-list'
@@ -38,4 +38,4 @@ Meteor.startup ->
       added: (document) ->
         # Scroll chats when a new chat comes in if we were already scrolled.
         if chats_were_scrolled
-          do scroll_chats
+          Meteor.setTimeout scroll_chats, 0
