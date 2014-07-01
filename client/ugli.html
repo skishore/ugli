@@ -59,7 +59,38 @@
 </template>
 
 <template name="game_details">
-  Game details go here...
+  <div id="game-details">
+    {{#with game}}
+      <h3 class="name">{{name}}</h3>
+      <div class="host">Hosted by {{summary.host}}</div>
+      <div class="left-details">
+        <div class="details-player-list panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">Players</h4>
+          </div>
+          <div class="panel-body">
+            {{#each players}}
+              <div class="player-row">{{this}}</div>
+            {{/each}}
+            {{#each empty_spots}}
+              <div class="player-row">(empty seat)</div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+      <div class="right-details">
+        <h4 class="description">{{summary.description}}</h4>
+        <div class="explanation">
+          Start at 100 points and clear lines as fast as possible.
+          The first person to 200 points wins!
+        </div>
+      </div>
+      <div class="details-controls">
+        <a class="back-to-list btn btn-sm btn-default">Back to game list</a>
+        <a class="join-game btn btn-sm btn-primary">Join this game</a>
+      </div>
+    {{/with}}
+  </div>
 </template>
 
 <template name="game_list">
@@ -67,25 +98,23 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th class="room-name">Name</th>
+          <th class="name">Name</th>
           <th class="host">Host</th>
           <th class="description">Rules</th>
-          <th class="room-status">Status</th>
+          <th class="status">Status</th>
         </tr>
       </thead>
       <tbody>
-        {{#if count}}
-          {{#each this}}
-            <tr class="buttonlike">
-              <td class="room-name">{{name}}</td>
-              <td class="host">{{summary.host}}</td>
-              <td class="description">{{summary.description}}</td>
-              <td class="room-status">
-                {{state}} ({{players.length}}/{{summary.max_players}})
-              </td>
-            </tr>
-          {{/each}}
-        {{/if}}
+        {{#each this}}
+          <tr class="buttonlike">
+            <td class="name">{{name}}</td>
+            <td class="host">{{summary.host}}</td>
+            <td class="description">{{summary.description}}</td>
+            <td class="status">
+              {{state}} ({{players.length}}/{{summary.max_players}})
+            </td>
+          </tr>
+        {{/each}}
       </tbody>
     </table>
     {{#if count}}

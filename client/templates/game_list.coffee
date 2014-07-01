@@ -39,6 +39,9 @@ Template.game_list.pagination = ->
   get_pagination new_page, num_pages
 
 Template.game_list.events
+  'click .table tr': (e) ->
+    Session.set_game_details_id @_id
+
   'click ul.pagination li': (e) ->
     page = do Session.get_game_list_page
     num_pages = do Template.game_list.num_pages
