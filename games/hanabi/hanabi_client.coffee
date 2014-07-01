@@ -15,15 +15,6 @@ SUIT_CLASSES =
   '?': 'hanabi-unknown'
 
 class @HanabiClient extends UGLIClient
-  @make_config_ui: (container, start_game) ->
-    container.append(
-      $('<span>').text('Play Hanabi with ')
-      $('<input type="number" min="2" max="5" value="2">')
-      $('<span>').text(' players:')
-      $('<button>').addClass('hanabi-start-game-button').text('Go!').click ->
-        start_game num_players: container.find('input').val()
-    )
-
   make_game_ui: ->
     @status_message = $('<div>').addClass 'hanabi-status-message'
     @counters = $('<div>').addClass 'hanabi-counters'

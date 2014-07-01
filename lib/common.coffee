@@ -7,5 +7,5 @@ class @Common
     HanabiClient
 
   @ugli_server = (game_type) ->
-    # TODO(skishore): Multiplex between different game clients here.
+    # TODO(skishore): Multiplex between different game servers here.
     HanabiServer

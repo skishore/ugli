@@ -5,7 +5,7 @@
 #   @container: a jQuery-wrapped div that contains the game UI
 #
 # An implementation of UGLIServer should override the following methods:
-#   @make_config_ui: (container, start_game) ->
+#   @make_config_ui: (container) ->
 #   make_game_ui: ->
 #   handle_update: (players, view) ->
 # See below for detailed specifications for these methods.
@@ -24,7 +24,7 @@ class @UGLIClient
     @view = game_state.user_views[@_user_id]
 
   _handle_update: (game_state) ->
-    # Framework's wrapper method around implemenations of handle_update.
+    # Framework's wrapper method around implementations of handle_update.
     if game_state.index > @_index
       @handle_update game_state.players, game_state.user_views[@_user_id]
       @_set_game_state game_state
@@ -37,19 +37,19 @@ class @UGLIClient
   Client interface methods follow. To write a new game, override these methods.
   '''
 
-  @make_config_ui: (container, start_game) ->
+  @make_config_ui: (container) ->
     # Constructs config UI inside the given jQuery-wrapped container.
     #
-    # The UI should include a submit button, which, when clicked, calls the
-    # start_game callback with the config of the new game.
+    # This method should return a function that, when called, returns a dict
+    # of the current config set in the UI.
     #
-    # The default implementation creates UI for a game which needs no config.
+    # The default implementation creates UI for a game which needs one piece
+    # of config: the number of players.
     container.append(
-      $('<span>').text('Set up a new game here: '),
-      $('<button>').addClass('create-button').text('Create').on(
-        'click', -> start_game {}
-      ),
+      $('<span>').text('Number of players: ')
+      $('<input type="number" class="max-players" min="2" max="5" value="2">')
     )
+    -> max_players: do container.find('.max-players').val
 
   make_game_ui: ->
     # Constructs game UI inside an empty @container.
