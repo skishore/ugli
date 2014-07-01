@@ -11,6 +11,7 @@
       {{> signed_out_message}}
     {{/if}}
   </div>
+  {{> create_game_modal}}
 </body>
 
 <template name="top_bar">
@@ -162,13 +163,13 @@
     </div>
     <div class="panel-body">
       <div class="btn-wrapper">
-        <a class="btn btn-sm btn-primary">Create game</a>
+        <a class="create-game btn btn-sm btn-primary">Create game</a>
       </div>
       <div class="btn-wrapper">
-        <a class="btn btn-sm btn-default">Options</a>
+        <a class="show-options btn btn-sm btn-default">Options</a>
       </div>
       <div class="btn-wrapper">
-        <a class="btn btn-sm btn-default">About UGLI</a>
+        <a class="show-about btn btn-sm btn-default">About UGLI</a>
       </div>
     </div>
   </div>
@@ -191,5 +192,24 @@
 <template name="signed_out_message">
   <div id="signed-out-message">
     {{> loginButtons}} to play a game on UGLI.
+  </div>
+</template>
+
+<template name="create_game_modal">
+  <div id="create-game-modal" class="ugli-modal modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Create game</h4>
+        </div>
+        <div class="modal-body">
+          UGLI config UI goes here...
+        </div>
+        <div class="modal-footer">
+          <a class="cancel btn btn-sm btn-default">Cancel</a>
+          <a class="ok btn btn-sm btn-primary">Ok</a>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
