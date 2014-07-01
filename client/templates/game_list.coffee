@@ -13,11 +13,12 @@ get_indices = (page, num_pages) ->
 
 get_pagination = (page, num_pages) ->
   result = []
-  result.push text: '«', data: 'prev', class: if page == 0 then 'disabled'
-  for i in get_indices page, num_pages
-    result.push text: i + 1, data: i, class: if i == page then 'active'
-  last = page == num_pages - 1
-  result.push text: '»', data: 'next', class: if last then 'disabled'
+  if num_pages > 1
+    result.push text: '«', data: 'prev', class: if page == 0 then 'disabled'
+    for i in get_indices page, num_pages
+      result.push text: i + 1, data: i, class: if i == page then 'active'
+    last = page == num_pages - 1
+    result.push text: '»', data: 'next', class: if last then 'disabled'
   result
 
 
