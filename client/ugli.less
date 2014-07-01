@@ -21,6 +21,7 @@
 body {
   background-color: #eee;
   color: black;
+  font-family: Arial,sans-serif;
   margin: 0px;
 }
 
@@ -38,13 +39,19 @@ body {
     #login-dropdown-list {
       left: -162px;
       padding: 4px 12px;
-      top: 0px;
+      top: 3px;
 
       .login-close-text {
         float: right;
       }
     }
   }
+}
+
+// We need to keep this declaration at the same scope as the original
+// Bootswatch declaration so that the .active rule will still override it.
+.pagination>li>a {
+  border-color: #ccc;
 }
 
 #remainder {
@@ -130,13 +137,13 @@ body {
                 overflow: hidden;
                 padding: 0px;
 
-                :first-child {
-                  border-top: none;
-                }
-
                 .player-row {
                   border-top: 1px solid #ddd;
                   padding: 4px 8px;
+
+                  &:first-child {
+                    border-top: none;
+                  }
                 }
               }
             }
@@ -192,9 +199,9 @@ body {
             margin: 0 auto;
 
             li>a {
-              width: 32px;
               padding: 5px 0px;
               text-align: center;
+              width: 32px;
             }
           }
         }
@@ -320,7 +327,7 @@ body {
   }
 
   .modal-body {
-    font-size: 14px;
+    font-size: 12px;
     padding: 24px;
   }
 }
