@@ -37,7 +37,7 @@
       {{> chat_box }}
     </div>
     <div id="right-content" class="col-md-4">
-      {{> options_box }}
+      {{> menu_box }}
       {{> player_list }}
     </div>
   </div>
@@ -155,13 +155,21 @@
   </div>
 </template>
 
-<template name="options_box">
-  <div id="options-box" class="panel panel-success">
+<template name="menu_box">
+  <div id="menu-box" class="panel panel-success">
     <div class="panel-heading">
-      <h4 class="panel-title">Options</h4>
+      <h4 class="panel-title">Menu</h4>
     </div>
     <div class="panel-body">
-      Options go here...
+      <div class="btn-wrapper">
+        <a class="btn btn-sm btn-default">Create game</a>
+      </div>
+      <div class="btn-wrapper">
+        <a class="btn btn-sm btn-default">Options</a>
+      </div>
+      <div class="btn-wrapper">
+        <a class="btn btn-sm btn-default">About UGLI</a>
+      </div>
     </div>
   </div>
 </template>

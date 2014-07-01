@@ -3,7 +3,7 @@
 @main-content-width: 960px;
 @game-info-height: 400px;
 @chat-box-height: 200px;
-@options-box-height: 200px;
+@menu-box-height: 200px;
 @player-list-height: 400px;
 
 @near-black: #222;
@@ -86,7 +86,7 @@ body {
       text-align: left;
     }
 
-    #game-info, #chat-box, #options-box, #player-list {
+    #game-info, #chat-box, #menu-box, #player-list {
       overflow: hidden;
     }
 
@@ -257,8 +257,17 @@ body {
     #right-content {
       width: 28%;
 
-      #options-box .panel-body {
-        height: @options-box-height - @panel-heading;
+      #menu-box .panel-body {
+        height: @menu-box-height - @panel-heading;
+
+        .btn-wrapper {
+          line-height: (@menu-box-height - @panel-heading - 16)/3;
+
+          .btn {
+            width: 72%;
+            margin: 0 14%;
+          }
+        }
       }
 
       #player-list .panel-body {
