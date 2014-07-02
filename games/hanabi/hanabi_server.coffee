@@ -15,6 +15,14 @@ do ->
       for i in [0...COUNTS[value]]
         DECK.push [suit, value]
 
+DESCRIPTION = 'Standard'
+EXPLANATION= '''
+You will be able to see everyone's hand but your own.
+Cooperate with other players by giving them hints about the suits or values
+of cards in their hands.
+To win, play out a full stack in each suit.
+'''
+
 class @HanabiServer extends UGLIServer
   initialize_state: (config) ->
     num_players = config.max_players
@@ -43,6 +51,10 @@ class @HanabiServer extends UGLIServer
     @state.final_result = false
     # Some private information used only on the server.
     @state.seat_history = {}
+
+    description: DESCRIPTION
+    explanation: EXPLANATION
+    max_players: num_players
 
   get_seat: (player) ->
     seat = @state.seats.indexOf player
