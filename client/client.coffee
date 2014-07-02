@@ -4,10 +4,14 @@ Meteor.startup ->
       Meteor.subscribe 'current_room'
 
   Deps.autorun ->
-    room = Rooms.findOne {user_ids: Meteor.userId() or null}
-    if room?
-      Session.set_room_id room._id
-      Session.set_in_lobby room.state == RoomState.LOBBY
+    rooms = do (Rooms.find {players: Meteor.user()?.username}).fetch
+    if rooms.length > 0
+      for room in rooms
+        if room.state == RoomState.WAITING
+          Session.set_game_details_id room._id
+        else
+          Session.set_room_id room._id
+          Session.set_in_lobby room.state == RoomState.LOBBY
     else
       Session.set_room_id null
       Session.set_in_lobby false

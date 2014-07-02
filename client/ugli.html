@@ -63,7 +63,11 @@
   <div id="game-details">
     {{#with game}}
       <h3 class="name">{{name}}</h3>
-      <div class="host">Hosted by {{summary.host}}</div>
+      {{# if is_host}}
+        <div class="host">Hosted by you</div>
+      {{else}}
+        <div class="host">Hosted by {{summary.host}}</div>
+      {{/if}}
       <div class="left-details">
         <div class="details-player-list panel panel-default">
           <div class="panel-heading">
@@ -84,8 +88,17 @@
         <div class="explanation">{{summary.explanation}}</div>
       </div>
       <div class="details-controls">
-        <a class="back-to-list btn btn-sm btn-default">Back to game list</a>
-        <a class="join-game btn btn-sm btn-primary">Join this game</a>
+        {{#if is_host}}
+          <a class="leave-game btn btn-sm btn-default">Leave this game</a>
+          <a class="start-game btn btn-sm btn-success">Start this game</a>
+        {{else}}
+          {{#if is_member}}
+            <a class="leave-game btn btn-sm btn-default">Leave this game</a>
+          {{else}}
+            <a class="back-to-list btn btn-sm btn-default">Back to game list</a>
+            <a class="join-game btn btn-sm btn-primary">Join this game</a>
+          {{/if}}
+        {{/if}}
       </div>
     {{/with}}
   </div>

@@ -31,12 +31,14 @@ class @Rooms extends Collection
 
   @publish_current_room: (user_id) ->
     check user_id, String
-    fields = {name: 1, 'game.public_view': 1, players: 1, summary: 1}
+    fields = {name: 1, players: 1, summary: 1, state: 1}
+    fields['game.public_view'] = 1
     fields["game.private_views.#{user_id}"] = 1
-    @find {user_ids: user_id}, fields
+    @find {user_ids: user_id}, fields: fields
 
   @publish_game_rooms: ->
-    @find {state: '$ne': RoomState.LOBBY}, {name: 1, summary: 1, players: 1}
+    @find {state: '$ne': RoomState.LOBBY},
+        fields: {name: 1, summary: 1, players: 1, state: 1}
 
   @save_room: (room) ->
     data = name: room.name
