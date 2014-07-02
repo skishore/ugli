@@ -41,6 +41,18 @@ class @UGLICore
     @rooms[game_room._id] = game_room
     game_room.add_user user
 
+  join_game: (user_id, room_id) ->
+    [user, room] = @get_user_and_room user_id
+    if room._id != @lobby_id
+      throw new UGLIPermissionsError "Can only join a game from the lobby!"
+    if room_id of @rooms and @rooms[room_id].state? != RoomState.LOBBY
+      @rooms[room_id].add_user user
+
+  leave_game: (user_id, room_id) ->
+    [user, room] = @get_user_and_room user_id
+    if room_id of @rooms and @rooms[room_id].state? != RoomState.LOBBY
+      @rooms[room_id].drop_user user
+
   send_chat: (user_id, room_id, message) ->
     [user, room] = @get_user_and_room user_id
     if room_id == room._id

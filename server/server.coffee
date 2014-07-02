@@ -20,10 +20,13 @@ Meteor.startup ->
       core.create_game @userId, config
 
     'join_game': (room_id) ->
-      throw new NotImplementedError
+      core.join_game @userId, room_id
 
     'leave_game': (room_id) ->
-      throw new NotImplementedError
+      core.leave_game @userId, room_id
+
+    'start_game': (room_id) ->
+      core.start_game @userId, room_id
 
     'send_chat': (room_id, message) ->
       core.send_chat @userId, room_id, message

@@ -22,17 +22,13 @@ class @User
     @last_heartbeat = new Date().getTime()
 
   set_room_id: (room_id, state) ->
-    if state == RoomState.WAITING
-      assert @wait_id == null, "User already waiting: #{@wait_id}"
-      @wait_id = room_id
-    else
-      assert @room_id == null, "User already waiting: #{@room_id}"
-      @room_id = room_id
+    field = if state == RoomState.WAITING then 'wait_id' else 'room_id'
+    if @[field] != null
+      throw new UGLIPermissionsError "room_id set: #{@[field]}"
+    @[field] = room_id
 
   clear_room_id: (room_id, state) ->
-    if state == RoomState.WAITING
-      assert @wait_id == room_id, "Incorrect wait_id: #{@wait_id}"
-      @wait_id = null
-    else
-      assert @room_id == room_id, "Incorrect room_id: #{@room_id}"
-      @room_id = null
+    field = if state == RoomState.WAITING then 'wait_id' else 'room_id'
+    if @[field] != room_id
+      throw new UGLIPermissionsError "Incorrect room_id: #{@[field]}"
+    @[field] = null

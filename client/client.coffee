@@ -5,16 +5,21 @@ Meteor.startup ->
 
   Deps.autorun ->
     rooms = do (Rooms.find {players: Meteor.user()?.username}).fetch
-    if rooms.length > 0
-      for room in rooms
-        if room.state == RoomState.WAITING
-          Session.set_game_details_id room._id
-        else
-          Session.set_room_id room._id
-          Session.set_in_lobby room.state == RoomState.LOBBY
-    else
-      Session.set_room_id null
-      Session.set_in_lobby false
+
+    room_id = null
+    in_lobby = false
+    wait_id = null
+
+    for room in rooms
+      if room.state == RoomState.WAITING
+        wait_id = room._id
+      else
+        room_id = room._id
+        in_lobby = room.state == RoomState.LOBBY
+
+    Session.set_room_id room_id
+    Session.set_in_lobby in_lobby
+    Session.set_wait_id wait_id
 
   Deps.autorun ->
     room_id = do Session.get_room_id
