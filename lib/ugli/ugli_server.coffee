@@ -1,7 +1,4 @@
 # An instance of UGLIServer stores the following data about the game:
-#   @players:
-#       sorted list of current players that should not be modified by any
-#       instance methods of this server
 #   @state: fully-specified, mutable game state
 #
 # An implementation of UGLIServer should override the following methods:
@@ -14,21 +11,14 @@
 # See below for detailed specifications for these methods.
 
 class @UGLIServer
-  constructor: (config) ->
-    @players = []
+  constructor: () ->
     @state = {}
-    @initialize_state config
 
-  _add_user: (user) ->
-    @join_game user.username
-    @players.push user.username
-    do @players.sort
-
-  _drop_user: (user) ->
-    index = @players.indexOf user.username
-    assert index >= 0, "User not in this game: #{user.username}"
-    @leave_game user.username
-    @players.splice index, 1
+  _get_views: (users) ->
+    private_views = {}
+    for user_id, user of users
+      private_views[user_id] = @get_player_view user.name
+    {private_views: private_views, public_view: do @get_public_view}
 
   setTimeout: (callback, delay) ->
     throw new NotImplementedError 'UGLIServer.setTimeout'

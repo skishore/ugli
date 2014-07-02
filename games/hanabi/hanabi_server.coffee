@@ -17,7 +17,7 @@ do ->
 
 class @HanabiServer extends UGLIServer
   initialize_state: (config) ->
-    num_players = parseInt config.num_players
+    num_players = config.max_players
     check num_players, Number
     if num_players not of HAND_SIZES
       throw new UGLIClientError "Invalid num_players: #{num_players}"
@@ -75,7 +75,7 @@ class @HanabiServer extends UGLIServer
     final_result: @state.final_result
 
   get_public_view: ->
-    open: (player for player of @players).length < @state.num_players
+    {}
 
   handle_message: (player, message) ->
     seat = @get_seat player
@@ -175,14 +175,12 @@ class @HanabiServer extends UGLIServer
         return
       throw new UGLIClientError "#{player}'s old seat is taken"
     # The player has not sat at this game before. Check for open seats.
-    if (other for other of @players).length >= 5
-      throw new UGLIClientError "#{player} tried to join a full game"
     for seat of @state.seats
       if not @state.seats[seat]
         @state.seat_history[player] = seat
         @state.seats[seat] = player
         return
-    assert false, "Could not find open seat: #{@state.seats}"
+    throw new UGLIClientError "#{player} tried to join a full game"
 
   leave_game: (player) ->
     @state.seats[@get_seat player] = false

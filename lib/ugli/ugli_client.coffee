@@ -49,7 +49,7 @@ class @UGLIClient
       $('<span>').text('Number of players: ')
       $('<input type="number" class="max-players" min="2" max="5" value="2">')
     )
-    -> max_players: do container.find('.max-players').val
+    -> max_players: (parseInt (do container.find('.max-players').val), 10)
 
   make_game_ui: ->
     # Constructs game UI inside an empty @container.

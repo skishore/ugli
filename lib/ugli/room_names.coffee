@@ -1,4 +1,25 @@
 class @RoomNames
+  constructor: ->
+    @data = RoomNames.data
+    @used_set = {}
+    @num_used = 0
+
+  get_unused_name: ->
+    if @num_used >= @data.length
+      throw new UGLIPermissionsError "The server ran out of room names!"
+    while true
+      name = @data[Math.floor @data.length*(do Math.random)]
+      check name, String
+      if name not of @used_set
+        @used_set[name] = true
+        @num_used += 1
+        return name
+
+  free_name: (name) ->
+    assert (name of @used_set), "Name #{name} was not in use!"
+    delete @used_set[name]
+    @num_used -= 1
+
   @data: [
     'Exterior Docking Hangar',
     'Air Lock',

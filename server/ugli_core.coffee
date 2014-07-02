@@ -2,6 +2,7 @@
 #   users: dict mapping user_id -> User instances
 #   rooms: dict mapping game_id -> Room instances
 #   lobby_id: the id of the lobby room
+#   room_names: instance of a RoomNames object that stores free names
 
 class @UGLICore
   constructor: ->
@@ -11,6 +12,7 @@ class @UGLICore
     lobby = new Room
     @rooms[lobby._id] = lobby
     @lobby_id = lobby._id
+    @room_names = new RoomNames
 
   get_user_and_room: (user_id) ->
     if user_id not of @users
@@ -29,6 +31,16 @@ class @UGLICore
     [user, room] = @get_user_and_room user_id
     do user.heartbeat
 
+  create_game: (user_id, config) ->
+    [user, room] = @get_user_and_room user_id
+    if room._id != @lobby_id
+      throw new UGLIPermissionsError "Can only create a game from the lobby!"
+    if user.wait_id?
+      throw new UGLIPermissionsError "Can't create a game while waiting on one!"
+    game_room = new Room (do @room_names.get_unused_name), config
+    @rooms[game_room._id] = game_room
+    game_room.add_user user
+
   send_chat: (user_id, room_id, message) ->
     [user, room] = @get_user_and_room user_id
     if room_id == room._id
@@ -39,4 +51,7 @@ class @UGLICore
     idle_users = (user for _, user of @users when user.last_heartbeat < cutoff)
     for user in idle_users
       delete @users[user._id]
-      @rooms[user.room_id].drop_user user
+      if user.room_id?
+        @rooms[user.room_id].drop_user user
+      if user.wait_id?
+        @rooms[user.wait_id].drop_user user

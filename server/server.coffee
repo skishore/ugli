@@ -5,7 +5,6 @@ Meteor.startup ->
   Meteor.publish 'current_room', ->
     Rooms.publish_current_room @userId
 
-  do Rooms.create_test_data
   Meteor.publish 'game_rooms', ->
     do Rooms.publish_game_rooms
 
@@ -18,7 +17,7 @@ Meteor.startup ->
       core.heartbeat @userId
 
     'create_game': (config) ->
-      throw new NotImplementedError
+      core.create_game @userId, config
 
     'join_game': (room_id) ->
       throw new NotImplementedError

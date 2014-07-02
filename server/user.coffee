@@ -12,10 +12,27 @@ class @User
     @_id = user_id
     @name = user.username
     @room_id = null
+    @wait_id = null
     @last_heartbeat = new Date().getTime()
 
   conflicts: (other) ->
-    @_id == other._id or @username == other.username
+    @_id == other._id or @name == other.name
 
   heartbeat: (user_id) ->
     @last_heartbeat = new Date().getTime()
+
+  set_room_id: (room_id, state) ->
+    if state == RoomState.WAITING
+      assert @wait_id == null, "User already waiting: #{@wait_id}"
+      @wait_id = room_id
+    else
+      assert @room_id == null, "User already waiting: #{@room_id}"
+      @room_id = room_id
+
+  clear_room_id: (room_id, state) ->
+    if state == RoomState.WAITING
+      assert @wait_id == room_id, "Incorrect wait_id: #{@wait_id}"
+      @wait_id = null
+    else
+      assert @room_id == room_id, "Incorrect room_id: #{@room_id}"
+      @room_id = null

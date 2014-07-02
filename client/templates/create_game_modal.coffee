@@ -7,7 +7,7 @@ Template.create_game_modal.events
 
   'click .btn.ok': (e) ->
     $('#create-game-modal').modal 'hide'
-    console.log do config_binding
+    Meteor.call 'create_game', do config_binding
 
 
 Meteor.startup ->
