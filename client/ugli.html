@@ -89,7 +89,11 @@
       </div>
       <div class="details-controls">
         {{#if is_host}}
-          <a class="leave-game btn btn-sm btn-default">Leave this game</a>
+          {{#if only_member}}
+            <a class="leave-game btn btn-sm btn-default">Cancel this game</a>
+          {{else}}
+            <a class="leave-game btn btn-sm btn-default">Leave this game</a>
+          {{/if}}
           <a class="start-game btn btn-sm btn-success">Start this game</a>
         {{else}}
           {{#if is_member}}

@@ -45,13 +45,13 @@ class @UGLICore
     [user, room] = @get_user_and_room user_id
     if room._id != @lobby_id
       throw new UGLIPermissionsError "Can only join a game from the lobby!"
-    if room_id of @rooms and @rooms[room_id].state? != RoomState.LOBBY
+    if room_id of @rooms and room_id != @lobby_id
       @rooms[room_id].add_user user
 
   leave_game: (user_id, room_id) ->
     [user, room] = @get_user_and_room user_id
-    if room_id of @rooms and @rooms[room_id].state? != RoomState.LOBBY
-      @rooms[room_id].drop_user user
+    if room_id of @rooms and room_id != @lobby_id
+      @drop_user_from_room user, room_id
 
   send_chat: (user_id, room_id, message) ->
     [user, room] = @get_user_and_room user_id
@@ -63,7 +63,12 @@ class @UGLICore
     idle_users = (user for _, user of @users when user.last_heartbeat < cutoff)
     for user in idle_users
       delete @users[user._id]
-      if user.room_id?
-        @rooms[user.room_id].drop_user user
-      if user.wait_id?
-        @rooms[user.wait_id].drop_user user
+      @drop_user_from_room user, user.room_id, true
+      @drop_user_from_room user, user.wait_id, true
+
+  drop_user_from_room: (user, room_id, force) ->
+    if room_id of @rooms
+      @rooms[room_id].drop_user user
+      if @rooms[room_id]?.users.length == 0 and room_id != @lobby_id
+        delete @rooms[room_id]
+        Rooms.remove {_id: room_id}

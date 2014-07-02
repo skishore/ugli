@@ -8,9 +8,11 @@ Template.game_details.game = ->
   if game?
     num_empty_spots = Math.max game.summary.max_players - game.players.length, 0
     game.empty_spots = [0...num_empty_spots]
+
     username = Meteor.user()?.username
-    game.is_host = (game.summary.host == username)
+    game.is_host = game.summary.host == username
     game.is_member = (game.players.indexOf username) >= 0
+    game.only_member = game.players.length == 1
   else
     Session.set_game_details_id null
   game
