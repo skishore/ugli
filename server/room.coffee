@@ -4,7 +4,7 @@
 #   users: a list of User objects currently in this room
 
 class @Room
-  constructor: (name, config, user) ->
+  constructor: (@model, name, config, user) ->
     @users = []
     if name? or config? or user?
       @name = name
@@ -16,24 +16,20 @@ class @Room
       @summary = false
       @game = false
       @state = RoomState.LOBBY
-    @_id = Rooms.save_room @
+    @model.create_room @
 
   add_user: (user) ->
     assert (not @users.some user.conflicts), "Duplicate user: #{user}"
     user.set_room_id @_id, @state
     @users.push user
-    Rooms.save_room @
+    @model.update_room @
 
   drop_user: (user) ->
     index = @users.indexOf user
     assert (index >= 0), "Missing user: #{user}"
     user.clear_room_id @_id, @state
     @users.splice index, 1
-    Rooms.save_room @
-
-  send_chat: (user, message) ->
-    Chats.send_chat @_id, user.name, message
-
-  @reset: ->
-    Rooms.remove {}
-    Chats.remove {}
+    if @users.length == 0 and @state != RoomState.LOBBY
+      @model.delete_room @
+    else
+      @model.update_room @

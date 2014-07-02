@@ -2,7 +2,7 @@
 #   throw UGLIModelError 'Details about illegal model call go here.'
 
 stack = ->
-  # Strip out the first four lines, which are tracebacks from the
+  # Strip out the first few lines, which are tracebacks from the
   # exception function / register_ugli_error / stack calls.
   stack_lines = new Error().stack.split '\n'
   stack_lines.splice(3).join '\n'
