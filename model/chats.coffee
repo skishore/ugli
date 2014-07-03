@@ -18,7 +18,8 @@ class @Chats extends Collection
     ]
 
   @publish: (room_id) ->
-    check room_id, String
+    if room_id?
+      check room_id, String
     @find room_id: room_id
 
   @send_chat: (room_id, sender, message) ->

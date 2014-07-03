@@ -14,9 +14,8 @@ class @UGLICore
     @room_names = new RoomNames
     @model = new Model @rooms, @room_names
     # Create the lobby and record its _id.
-    lobby = @model.transaction =>
-      new Room @model
-    @lobby_id = lobby._id
+    @lobby_id = (@model.transaction => new Room @model)._id
+    assert @lobby_id?, 'Failed to get a lobby_id!'
 
   add_user: (db_user) ->
     @model.transaction =>
@@ -29,8 +28,8 @@ class @UGLICore
     @model.transaction =>
       if db_user._id not of @users
         throw new UGLIPermissionsError 'User dropped before being added!'
-      [user, room] = @get_user_and_room db_user._id
-      delete @users[user._id]
+      user = @users[db_user._id]
+      delete @users[db_user._id]
       if user.room_id?
         @rooms[user.room_id].drop_user user
       if user.wait_id?
@@ -38,7 +37,7 @@ class @UGLICore
 
   get_user_and_room: (user_id, user) ->
     if user_id not of @users
-      throw new UGLIPermissionsError 'User took action before being added!'
+      throw new UGLIPermissionsError 'User called method before being added!'
     user = @users[user_id]
     assert user.room_id of @rooms, "Orphaned user: #{user}"
     [user, @rooms[user.room_id]]
@@ -47,8 +46,8 @@ class @UGLICore
     Chats.publish @users[user_id]?.room_id
 
   create_game: (user_id, config) ->
-    [user, room] = @get_user_and_room user_id
     game_room = @model.transaction =>
+      [user, room] = @get_user_and_room user_id
       if room._id != @lobby_id
         throw new UGLIPermissionsError 'Can only create a game from the lobby!'
       if user.wait_id?
@@ -57,16 +56,16 @@ class @UGLICore
     @join_game user_id, game_room._id
 
   join_game: (user_id, room_id) ->
-    [user, room] = @get_user_and_room user_id
     @model.transaction =>
+      [user, room] = @get_user_and_room user_id
       if room._id != @lobby_id
-        throw new UGLIPermissionsError "Can only join a game from the lobby!"
+        throw new UGLIPermissionsError 'Can only join a game from the lobby!'
       if room_id of @rooms and room_id != @lobby_id
         @rooms[room_id].add_user user
 
   leave_game: (user_id, room_id) ->
-    [user, room] = @get_user_and_room user_id
     @model.transaction =>
+      [user, room] = @get_user_and_room user_id
       if room_id of @rooms and room_id != @lobby_id
         @rooms[room_id].drop_user user
 
