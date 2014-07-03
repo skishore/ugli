@@ -70,8 +70,9 @@ class @UGLICore
   leave_game: (user_id, room_id) ->
     @model.transaction =>
       [user, room] = @get_user_and_room user_id
-      if room_id of @rooms and room_id != @lobby_id
-        @rooms[room_id].drop_user user
+      if room_id not of @rooms or room_id == @lobby_id
+        throw new UGLIPermissionsError "User can't leave room: #{room_id}"
+      @rooms[room_id].drop_user user
       if user.room_id == null
         @rooms[@lobby_id].add_user user
 
@@ -87,5 +88,14 @@ class @UGLICore
 
   send_chat: (user_id, room_id, message) ->
     [user, room] = @get_user_and_room user_id
-    if room_id == room._id
-      Chats.send_chat room_id, user.name, message
+    if room_id != room._id
+      throw new UGLIPermissionsError "User can't send chat in room #{room_id}!"
+    Chats.send_chat room_id, user.name, message
+
+  send_game_message: (user_id, room_id, message) ->
+    @model.transaction =>
+      [user, room] = @get_user_and_room user_id
+      if room_id != room._id or room.state != RoomState.PLAYING
+        throw new UGLIPermissionsError "User isn't in game in room #{room_id}!"
+      room.game.handle_message user.name, message
+      @model.update_room room

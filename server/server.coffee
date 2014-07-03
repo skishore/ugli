@@ -34,4 +34,4 @@ Meteor.startup ->
       core.send_chat @userId, room_id, message
 
     'send_game_message': (room_id, message) ->
-      core.handle_message @userId, room_id, message
+      core.send_game_message @userId, room_id, message
