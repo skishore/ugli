@@ -68,6 +68,8 @@ class @UGLICore
       [user, room] = @get_user_and_room user_id
       if room_id of @rooms and room_id != @lobby_id
         @rooms[room_id].drop_user user
+      if user.room_id == null
+        @rooms[@lobby_id].add_user user
 
   start_game: (user_id, room_id) ->
     @model.transaction =>

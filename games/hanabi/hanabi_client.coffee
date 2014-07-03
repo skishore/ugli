@@ -30,7 +30,7 @@ class @HanabiClient extends UGLIClient
     @container.append @stacks, @discards
 
     window.client = @
-    @handle_update @players, @view
+    @handle_update @view
 
   make_seat_row: (hand_size) ->
     seat_row = $('<div>').addClass('hanabi-seat-row')

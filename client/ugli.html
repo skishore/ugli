@@ -21,6 +21,9 @@
         <a class="navbar-brand">UGLI</a>
       </div>
       <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a>{{room_name}}</a></li>
+        </ul>
         <ul class="nav navbar-nav navbar-right">
           {{#if logged_in}}
             <li><a>{{> loginButtons}}</a></li>
@@ -47,13 +50,21 @@
 <template name="game_info">
   <div id="game-info" class="panel panel-info">
     <div class="panel-heading">
-      <h4 class="panel-title">Games</h4>
+      {{#if in_lobby}}
+        <h4 class="panel-title">Games</h4>
+      {{else}}
+        <h4 class="panel-title">Game</h4>
+      {{/if}}
     </div>
     <div class="panel-body">
-      {{#if show_game_details}}
-        {{> game_details}}
+      {{#if in_lobby}}
+        {{#if show_game_details}}
+          {{> game_details}}
+        {{else}}
+          {{> game_list}}
+        {{/if}}
       {{else}}
-        {{> game_list}}
+        {{> ingame_ui}}
       {{/if}}
     </div>
   </div>
@@ -148,6 +159,10 @@
   {{/with}}
 </template>
 
+<template name="ingame_ui">
+  <div class="ugli-client-container"></div>
+</template>
+
 <template name="chat_box">
   <div id="chat-box" class="panel panel-warning">
     <div class="panel-heading">
@@ -176,9 +191,17 @@
       <h4 class="panel-title">Menu</h4>
     </div>
     <div class="panel-body">
-      <div class="btn-wrapper">
-        <a class="create-game btn btn-sm btn-primary">Create game</a>
-      </div>
+      {{#if in_lobby}}
+        <div class="btn-wrapper">
+          <a class="create-game btn btn-sm btn-primary {{disable_create_game}}">
+            Create game
+          </a>
+        </div>
+      {{else}}
+        <div class="btn-wrapper">
+          <a class="leave-game btn btn-sm btn-default">Leave game</a>
+        </div>
+      {{/if}}
       <div class="btn-wrapper">
         <a class="show-options btn btn-sm btn-default">Options</a>
       </div>

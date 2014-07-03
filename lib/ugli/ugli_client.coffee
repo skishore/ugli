@@ -1,7 +1,6 @@
 # An instance of UGLIClient stores the following data about the game:
-#   @players: map from current player names -> _ids
-#   @view: immutable view of game state
 #   @me: which player this client is for
+#   @view: immutable view of game state
 #   @container: a jQuery-wrapped div that contains the game UI
 #
 # An implementation of UGLIServer should override the following methods:
@@ -11,23 +10,20 @@
 # See below for detailed specifications for these methods.
 
 class @UGLIClient
-  constructor: (user, room, game_state, @container) ->
+  constructor: (user, room, @container) ->
     @_user_id = user._id
     @_room_id = room._id
     @me = user.username
-    @view = game_state.user_views[user._id]
-    @_set_game_state game_state
+    @view = @_extract_view room.game
+    do @make_game_ui
 
-  _set_game_state: (game_state) ->
-    @_index = game_state.index
-    @players = game_state.players
-    @view = game_state.user_views[@_user_id]
+  _extract_view: (game) ->
+    @view = $.extend game.public_view, game.private_views[@_user_id]
 
-  _handle_update: (game_state) ->
-    # Framework's wrapper method around implementations of handle_update.
-    if game_state.index > @_index
-      @handle_update game_state.players, game_state.user_views[@_user_id]
-      @_set_game_state game_state
+  _handle_update: (room) ->
+    new_view = @_extract_view room.game
+    @handle_update new_view
+    @view = new_view
 
   send: (message) ->
     Meteor.call 'send_game_message', @_room_id, message, (err, result) ->
@@ -55,6 +51,6 @@ class @UGLIClient
     # Constructs game UI inside an empty @container.
     console.log 'UGLIClient.make_game_ui has not been implemented.'
 
-  handle_update: (players, view) ->
-    # Takes a new list of players and a new view and updates the game UI.
+  handle_update: (view) ->
+    # Takes a new view and updates the UI. The last view is available in @view.
     console.log 'UGLIClient.handle_update has not been implemented.'

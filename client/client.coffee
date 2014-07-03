@@ -12,7 +12,7 @@ Meteor.startup ->
     rooms = do (Rooms.find {players: Meteor.user()?.username}).fetch
 
     room_id = null
-    in_lobby = false
+    in_lobby = true
     wait_id = null
 
     for room in rooms

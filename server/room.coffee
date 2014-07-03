@@ -47,6 +47,7 @@ class @Room
     for user in @users
       assert user.room_id == null and user.wait_id == @_id
     for user in @users
-      user.room_id = user.wait_id
+      user.room_id = @_id
+      user.wait_id = null
     @set_state RoomState.PLAYING
     @model.update_room @
