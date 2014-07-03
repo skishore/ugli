@@ -24,8 +24,8 @@ Meteor.startup ->
     'join_game': (room_id) ->
       core.join_game @userId, room_id
 
-    'leave_game': (room_id) ->
-      core.leave_game @userId, room_id
+    'leave_game': (room_id, autoremove) ->
+      core.leave_game @userId, room_id, autoremove
 
     'start_game': (room_id) ->
       core.start_game @userId, room_id

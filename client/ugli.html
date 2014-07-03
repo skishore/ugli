@@ -12,6 +12,7 @@
     {{/if}}
   </div>
   {{> create_game_modal}}
+  {{> leave_game_modal}}
 </body>
 
 <template name="top_bar">
@@ -99,20 +100,14 @@
         <div class="explanation">{{summary.explanation}}</div>
       </div>
       <div class="details-controls">
-        {{#if is_host}}
-          {{#if only_member}}
-            <a class="leave-game btn btn-sm btn-default">Cancel this game</a>
-          {{else}}
-            <a class="leave-game btn btn-sm btn-default">Leave this game</a>
-          {{/if}}
-          <a class="start-game btn btn-sm btn-success">Start this game</a>
+        {{#if is_member}}
+          <a class="leave-game btn btn-sm btn-default">Leave this game</a>
+          <a class="start-game btn btn-sm btn-success {{disable_start_game}}">
+            Start this game
+          </a>
         {{else}}
-          {{#if is_member}}
-            <a class="leave-game btn btn-sm btn-default">Leave this game</a>
-          {{else}}
-            <a class="back-to-list btn btn-sm btn-default">Back to game list</a>
-            <a class="join-game btn btn-sm btn-primary">Join this game</a>
-          {{/if}}
+          <a class="back-to-list btn btn-sm btn-default">Back to game list</a>
+          <a class="join-game btn btn-sm btn-primary">Join this game</a>
         {{/if}}
       </div>
     {{/with}}
@@ -250,6 +245,26 @@
         <div class="modal-footer">
           <a class="cancel btn btn-sm btn-default">Cancel</a>
           <a class="ok btn btn-sm btn-primary">Ok</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="leave_game_modal">
+  <div id="leave-game-modal" class="ugli-modal modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Leave game</h4>
+        </div>
+        <div class="modal-body">
+          <p>You are the last person to leave this game.</p>
+          <p>Do you want to delete it as well?</p>
+        </div>
+        <div class="modal-footer">
+          <a class="yes btn btn-sm btn-default">Yes</a>
+          <a class="no btn btn-sm btn-default">No</a>
         </div>
       </div>
     </div>

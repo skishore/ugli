@@ -67,12 +67,12 @@ class @UGLICore
         else
           @rooms[room_id].add_user user
 
-  leave_game: (user_id, room_id) ->
+  leave_game: (user_id, room_id, autoremove) ->
     @model.transaction =>
       [user, room] = @get_user_and_room user_id
       if room_id not of @rooms or room_id == @lobby_id
         throw new UGLIPermissionsError "User can't leave room: #{room_id}"
-      @rooms[room_id].drop_user user
+      @rooms[room_id].drop_user user, autoremove
       if user.room_id == null
         @rooms[@lobby_id].add_user user
 

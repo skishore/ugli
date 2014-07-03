@@ -30,7 +30,7 @@ class @Room
     user[@id_field] = @_id
     @model.update_room @
 
-  drop_user: (user) ->
+  drop_user: (user, autoremove) ->
     index = @users.indexOf user
     assert (index >= 0), "Missing user: #{user}"
     assert user[@id_field] == @_id, "Incorrect #{@id_field}: #{user[@id_field]}"
@@ -38,7 +38,11 @@ class @Room
     @users.splice index, 1
     user[@id_field] = null
     if @users.length == 0 and @state != RoomState.LOBBY
-      @model.delete_room @
+      if autoremove?
+        @model.delete_room @
+      else
+        @set_state RoomState.WAITING
+        @model.update_room @
     else
       @model.update_room @
 

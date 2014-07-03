@@ -18,11 +18,26 @@
   -webkit-user-select: @val;
 }
 
+.transition (@val) {
+  -webkit-transition:-webkit-transform @val;
+  -moz-transition:-moz-transform @val;
+  -o-transition:-o-transform @val;
+  transition:transform @val;
+}
+
 body {
   background-color: #eee;
   color: black;
   font-family: Arial,sans-serif;
   margin: 0px;
+}
+
+p {
+  margin: 12px 0px 0px;
+
+  &:first-child {
+    margin: 0px;
+  }
 }
 
 #top-bar {
@@ -322,18 +337,26 @@ body {
   }
 }
 
-.ugli-modal.modal .modal-dialog .modal-content {
-  .modal-header, .modal-footer {
-    margin: 0px;
-    padding: 12px 16px;
-  }
+.ugli-modal.modal {
+  .transition(opacity 0.05s linear);
 
-  .modal-header h4 {
-    margin: 0px;
-  }
+  .modal-dialog {
+    .transition(0.10s ease-out);
 
-  .modal-body {
-    font-size: 12px;
-    padding: 24px;
+    .modal-content {
+      .modal-header, .modal-footer {
+        margin: 0px;
+        padding: 12px 16px;
+      }
+
+      .modal-header h4 {
+        margin: 0px;
+      }
+
+      .modal-body {
+        font-size: 12px;
+        padding: 24px;
+      }
+    }
   }
 }

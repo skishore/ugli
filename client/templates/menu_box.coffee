@@ -6,4 +6,4 @@ Template.menu_box.events
     $('#create-game-modal').modal 'show'
 
   'click .btn.leave-game': (e) ->
-    Meteor.call 'leave_game', do Session.get_room_id
+    LeaveGameModal.show do Session.get_room_id
