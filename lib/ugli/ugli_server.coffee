@@ -22,7 +22,6 @@
 class @UGLIServer
   constructor: (room, config) ->
     @log_game_message = room.model.log_game_message.bind room.model, room
-    @state = {}
     @initialize_state config
 
   _get_views: (users) ->
