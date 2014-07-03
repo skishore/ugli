@@ -69,6 +69,16 @@ class @UGLICore
       if room_id of @rooms and room_id != @lobby_id
         @rooms[room_id].drop_user user
 
+  start_game: (user_id, room_id) ->
+    @model.transaction =>
+      [user, room] = @get_user_and_room user_id
+      if room_id != user.wait_id
+        throw new UGLIPermissionsError 'Can only start a WAITING game!'
+      game_room = @rooms[user.wait_id]
+      for other in game_room.users
+        @rooms[other.room_id].drop_user other
+      do game_room.start_game
+
   send_chat: (user_id, room_id, message) ->
     [user, room] = @get_user_and_room user_id
     if room_id == room._id

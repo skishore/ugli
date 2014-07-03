@@ -10,16 +10,16 @@ class @Room
       @name = name
       @game = new (do Common.ugli_server)
       @summary = @game.initialize_state config
-      @state = RoomState.WAITING
+      @set_state RoomState.WAITING
     else
       @name = Common.lobby_name
       @summary = false
       @game = false
-      @state = RoomState.LOBBY
-    do @set_id_field_for_state
+      @set_state RoomState.LOBBY
     @model.create_room @
 
-  set_id_field_for_state: ->
+  set_state: (state) ->
+    @state = state
     @id_field = if @state == RoomState.WAITING then 'wait_id' else 'room_id'
 
   add_user: (user) ->
@@ -41,3 +41,12 @@ class @Room
       @model.delete_room @
     else
       @model.update_room @
+
+  start_game: ->
+    assert @game and @state == RoomState.WAITING
+    for user in @users
+      assert user.room_id == null and user.wait_id == @_id
+    for user in @users
+      user.room_id = user.wait_id
+    @set_state RoomState.PLAYING
+    @model.update_room @

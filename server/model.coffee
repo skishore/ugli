@@ -4,6 +4,7 @@ class @Model
     Chats.remove {}
     @_updates = []
     @_num_updates = 0
+    @_updated_room_ids = {}
 
   transaction: (callback) ->
     result = Meteor._noYieldsAllowed callback
@@ -17,8 +18,10 @@ class @Model
 
   update_room: (room) ->
     assert room._id?, "Tried to save room without _id: #{room}"
-    @_updates.push ['update', room]
-    @_num_updates += 1
+    if not @_updated_room_ids[room._id]?
+      @_updates.push ['update', room]
+      @_num_updates += 1
+      @_updated_room_ids[room._id] = true
 
   delete_room: (room) ->
     assert room._id of @rooms, "Missing room_id: #{room}"
@@ -36,6 +39,7 @@ class @Model
     # of updates, although it could apply updates from other transactions.
     num_updates = @_num_updates
     @_num_updates = 0
+    @_updated_room_ids = {}
     for i in [0...num_updates]
       [type, room] = do @_updates.shift
       if type == 'create'
