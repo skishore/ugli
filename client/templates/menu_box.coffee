@@ -3,7 +3,7 @@ Template.menu_box.disable_create_game = ->
 
 Template.menu_box.events
   'click .btn.create-game': (e) ->
-    $('#create-game-modal').modal 'show'
+    do CreateGameModal.show
 
   'click .btn.leave-game': (e) ->
     LeaveGameModal.show do Session.get_room_id
