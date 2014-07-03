@@ -5,6 +5,7 @@
 #   created: creation timestamp
 
 class @Chats extends Collection
+  @cleanup_time = 4*3600*1000
   @set_schema
     name: 'chats'
     fields: [
@@ -31,3 +32,9 @@ class @Chats extends Collection
       sender: sender
       message: message
       created: new Date().getTime()
+
+  @set_cleanup_timer: ->
+    Meteor.setInterval (=>
+      cutoff = new Date().getTime() - @cleanup_time
+      @remove {created: $lt: cutoff}
+    ), @cleanup_time

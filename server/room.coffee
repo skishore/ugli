@@ -12,7 +12,7 @@ class @Room
       @summary = @game.initialize_state config
       @set_state RoomState.WAITING
     else
-      @name = Common.lobby_name
+      @name = 'Lobby'
       @summary = false
       @game = false
       @set_state RoomState.LOBBY

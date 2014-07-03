@@ -2,6 +2,7 @@ class @Model
   constructor: (@rooms, @room_names) ->
     Rooms.remove {}
     Chats.remove {}
+    do Chats.set_cleanup_timer
     @_updates = []
     @_num_updates = 0
     @_updated_room_ids = {}
