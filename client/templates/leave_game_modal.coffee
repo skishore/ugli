@@ -16,4 +16,4 @@ Template.leave_game_modal.events
     LeaveGameModal.hide true
 
   'click .btn.no': (e) ->
-    do LeaveGameModal.hide
+    LeaveGameModal.hide false

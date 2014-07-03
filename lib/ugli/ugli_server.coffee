@@ -11,7 +11,8 @@
 # See below for detailed specifications for these methods.
 
 class @UGLIServer
-  constructor: () ->
+  constructor: (room) ->
+    @log_game_message = room.model.log_game_message.bind room.model, room
     @state = {}
 
   _get_views: (users) ->

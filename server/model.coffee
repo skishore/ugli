@@ -14,13 +14,13 @@ class @Model
 
   create_room: (room) ->
     assert not room._id?, "Tried to create room with _id: #{room}"
-    @_updates.push ['create', room]
+    @_updates.push {type: 'create', room: room}
     @_num_updates += 1
 
   update_room: (room) ->
     assert room._id?, "Tried to save room without _id: #{room}"
     if not @_updated_room_ids[room._id]?
-      @_updates.push ['update', room]
+      @_updates.push {type: 'update', room: room}
       @_num_updates += 1
       @_updated_room_ids[room._id] = true
 
@@ -29,7 +29,13 @@ class @Model
     assert room.users.length == 0, "Tried to delete non-empty room: #{room}"
     delete @rooms[room._id]
     @room_names.free_name room.name
-    @_updates.push ['delete', room]
+    @_updates.push {type: 'delete', room: room}
+    @_num_updates += 1
+
+  log_game_message: (room, message) ->
+    assert room._id of @rooms, "Missing room_id: #{room}"
+    assert room.game, 'Logged a game message from a room missing an _id!'
+    @_updates.push {type: 'log_game_message', room: room, message: message}
     @_num_updates += 1
 
   _commit: ->
@@ -42,7 +48,9 @@ class @Model
     @_num_updates = 0
     @_updated_room_ids = {}
     for i in [0...num_updates]
-      [type, room] = do @_updates.shift
+      update = do @_updates.shift
+      type = update.type
+      room = update.room
       if type == 'create'
         room._id = Rooms.save_room room
         assert room._id?, "Created room does not have an _id: #{room}"
@@ -51,5 +59,7 @@ class @Model
         Rooms.save_room room
       else if type == 'delete'
         Rooms.remove {_id: room._id}
+      else if type == 'log_game_message'
+        Chats.send_chat room._id, '', update.message
       else
         assert false, "Invalid update type: #{type}"

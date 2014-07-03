@@ -1,6 +1,6 @@
 # This collection stores messages that are local to a room:
 #   room_id: room _id
-#   sender: string
+#   sender: string, empty if this is a log message
 #   message: string
 #   created: creation timestamp
 

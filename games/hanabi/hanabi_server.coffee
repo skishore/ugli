@@ -23,6 +23,10 @@ of cards in their hands.
 To win, play out a full stack in each suit.
 '''
 
+ORDINALS = ['first', 'second', 'third', 'fourth', 'fifth']
+COLORS = ['red', 'orange', 'yellow', 'green', 'blue']
+
+
 class @HanabiServer extends UGLIServer
   initialize_state: (config) ->
     num_players = config.max_players
@@ -61,6 +65,13 @@ class @HanabiServer extends UGLIServer
     if seat < 0
       throw new UGLIClientError "#{player} has no seat"
     seat
+
+  get_name: (seat, last) ->
+    @state.seats[seat] or
+      "#{if last then 't' else 'T'}he #{ORDINALS[seat]} player"
+
+  describe_card: (card) ->
+    "a#{if card[0] == 1 then 'n' else ''}  #{COLORS[card[0]]} #{card[1] + 1}"
 
   get_player_view: (player) ->
     seat = @get_seat player
@@ -131,8 +142,12 @@ class @HanabiServer extends UGLIServer
   discard_card: (seat, i) ->
     if @state.hints >= HINTS
       throw new UGLIClientError "#{seat} tried to discard with #{HINTS} hints"
-    @state.discards.push @drop_card seat, i
+    card = @drop_card seat, i
+    @state.discards.push card
     @state.hints += 1
+    @log_game_message (
+        "#{@get_name seat} discarded their #{ORDINALS[i]} card. " +
+        "It was #{@describe_card card}.")
 
   play_card: (seat, i) ->
     card = @drop_card seat, i
@@ -144,11 +159,18 @@ class @HanabiServer extends UGLIServer
         1 for suit, stack of @state.stacks when stack == VALUES.length - 1
       ).length == SUITS.length
           @state.final_result = 'You won! All stacks are complete.'
-    else if @state.burns > 0
-      @state.discards.push card
-      @state.burns -= 1
+      @log_game_message (
+          "#{@get_name seat} played their #{ORDINALS[i]} card. " +
+          "It was #{@describe_card card}.")
     else
-      @state.final_result = 'You FAILED! Your team burned too many cards.'
+      @state.discards.push card
+      if @state.burns > 0
+        @state.burns -= 1
+      else
+        @state.final_result = 'You FAILED! Your team burned too many cards.'
+      @log_game_message (
+          "#{@get_name seat} tried to play their #{ORDINALS[i]} card, " +
+          "but it burned. It was #{@describe_card card}.")
 
   check_hint_target: (seat, target) ->
     if parseInt(seat) == parseInt(target) or not @state.hands[target]?
@@ -166,6 +188,9 @@ class @HanabiServer extends UGLIServer
       if @state.hands[target][i][0] == suit
         @state.knowledge[target][i][0] = suit
     @state.hints -= 1
+    @log_game_message (
+        "#{@get_name seat} hinted #{@get_name target, true}'s " +
+        "#{COLORS[suit]} cards.")
 
   give_value_hint: (seat, target, value) ->
     @check_hint_target seat, target
@@ -177,6 +202,8 @@ class @HanabiServer extends UGLIServer
       if @state.hands[target][i][1] == value
         @state.knowledge[target][i][1] = value
     @state.hints -= 1
+    @log_game_message (
+        "#{@get_name seat} hinted #{@get_name target, true}'s #{value + 1}s.")
 
   join_game: (player) ->
     if player of @state.seat_history

@@ -8,7 +8,7 @@ class @Room
     @users = []
     if name? or config? or user?
       @name = name
-      @game = new (do Common.ugli_server)
+      @game = new (do Common.ugli_server) @
       @summary = @game.initialize_state config
       @set_state RoomState.WAITING
     else
@@ -38,7 +38,7 @@ class @Room
     @users.splice index, 1
     user[@id_field] = null
     if @users.length == 0 and @state != RoomState.LOBBY
-      if autoremove?
+      if !!autoremove
         @model.delete_room @
       else
         @set_state RoomState.WAITING

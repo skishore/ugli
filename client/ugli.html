@@ -165,10 +165,16 @@
     </div>
     <ul id="chat-message-list" class="panel-body">
       {{#each chats}}
-        <li class="chat-message">
-          <div class="chat-sender">{{sender}}:</div>
-          {{message}}
-        </li>
+        {{#if sender.length}}
+          <li class="chat-message">
+            <div class="chat-sender">{{sender}}:</div>
+            {{message}}
+          </li>
+        {{else}}
+          <li class="chat-message">
+            <div class="game-log">{{message}}</div>
+          </li>
+        {{/if}}
       {{/each}}
     </ul>
     <div class="panel-footer">
