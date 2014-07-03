@@ -218,7 +218,14 @@
       <h4 class="panel-title">Players</h4>
     </div>
     <div class="panel-body">
-      <div class="player-row">{{num_players}} {{player_str}} online</div>
+      <div class="player-row">
+        {{num_players}} {{player_str}}
+        {{#if in_lobby}}
+          in the lobby
+        {{else}}
+          in-game
+        {{/if}}
+      </div>
       {{#each players}}
         <div class="player-row">{{this}}</div>
       {{/each}}
