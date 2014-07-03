@@ -12,15 +12,3 @@ class @User
 
   conflicts: (other) ->
     @_id == other._id or @name == other.name
-
-  set_room_id: (room_id, state) ->
-    field = if state == RoomState.WAITING then 'wait_id' else 'room_id'
-    if @[field] != null
-      throw new UGLIPermissionsError "room_id set: #{@[field]}"
-    @[field] = room_id
-
-  clear_room_id: (room_id, state) ->
-    field = if state == RoomState.WAITING then 'wait_id' else 'room_id'
-    if @[field] != room_id
-      throw new UGLIPermissionsError "Incorrect room_id: #{@[field]}"
-    @[field] = null

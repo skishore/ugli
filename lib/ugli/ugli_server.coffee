@@ -16,8 +16,8 @@ class @UGLIServer
 
   _get_views: (users) ->
     private_views = {}
-    for user_id, user of users
-      private_views[user_id] = @get_player_view user.name
+    for user in users
+      private_views[user._id] = @get_player_view user.name
     {private_views: private_views, public_view: do @get_public_view}
 
   setTimeout: (callback, delay) ->

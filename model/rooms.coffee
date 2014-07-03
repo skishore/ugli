@@ -34,7 +34,7 @@ class @Rooms extends Collection
     fields = {name: 1, players: 1, summary: 1, state: 1}
     fields['game.public_view'] = 1
     fields["game.private_views.#{user_id}"] = 1
-    @find {user_ids: user_id}, fields: fields
+    @find {user_ids: user_id, state: '$ne': RoomState.WAITING}, fields: fields
 
   @publish_game_rooms: ->
     @find {state: '$ne': RoomState.LOBBY},
@@ -42,7 +42,7 @@ class @Rooms extends Collection
 
   @save_room: (room) ->
     data = name: room.name
-    data.game = (if room.game then (do room.game._get_views) else false)
+    data.game = (if room.game then (room.game._get_views room.users) else false)
     data.players = do (user.name for user in room.users).sort
     data.state = room.state
     data.user_ids = (user._id for user in room.users)
