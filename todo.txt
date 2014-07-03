@@ -1,55 +1,24 @@
 Core server-side functionality
 ==============================
-Timeouts
-- Rethink timeouts API
-- Add ability to cancel timeout
-- Improve semantics (deal with concurrent update) in callback
-
-Joining/leaving
-- Add fallback notifications in case of db failure
-
-Exceptions
-- Add UGLI-specific exception for canceling state updates
-
-Update propagation
-- Give clients a guarantee that they will go through each intermediate state
-- Minimize or squash trivial/spammy updates
-- Only send updates to players when their view changes
-- Keep only a single snapshot of each state around?
-
-General refactoring
-
-Make it possible to run multiple game classes on the same server
-
-Tests!
-
+- Implement setTimeout / clearTimeout
+- Pick a testing framework and write tests
 
 Room/game layer
 ===============
-General framework for waiting for players to join before starting
+- Implement options that save to users collection
+- Implement in-lobby singleplayer mode
+- API method on game completion that closes game, records win / loss
+- Create some sort of framework for a game with rounds
+- Private rooms / invites
+- ELO / other rating system
+- Automatic matchmaking
 
-General framework for dealing with drops/joins (only between rounds?)
-
-Mark room tabs when those games are waiting for input on the user
-
-Callback on game completion that closes game, add winning / losing, ELO
-
-Close game when all players leave?
-
-Private rooms / invites
-
-Rating system
-
-Matchmaking
-
-More games (ntris, Tichu, grabble)
-
+combinos!!
 
 UI layer
 ========
-- x buttons for leaving games
-- Fixed-size for all main-content UI elements
-- Keep lobby focused on initial page load
-- Show reason for being unable to join game in tooltip
-- Game-specific UI in the games list
-- Show games you're in / invited to at the top and in different colors
+- Show state and "full" status on game details page
+- Animation between games list and game details
+- Show reason for being unable to join game if join fails
+- Sort games list in the lobby by state / created
+- Flash tab when the game is waiting on the user for input
