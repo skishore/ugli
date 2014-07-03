@@ -61,7 +61,11 @@ class @UGLICore
       if room._id != @lobby_id
         throw new UGLIPermissionsError 'Can only join a game from the lobby!'
       if room_id of @rooms and room_id != @lobby_id
-        @rooms[room_id].add_user user
+        room = @rooms[room_id]
+        if room.state == RoomState.PLAYING
+          @rooms[room_id].swap_user user, @rooms[@lobby_id]
+        else
+          @rooms[room_id].add_user user
 
   leave_game: (user_id, room_id) ->
     @model.transaction =>

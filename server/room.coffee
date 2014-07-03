@@ -42,6 +42,19 @@ class @Room
     else
       @model.update_room @
 
+  swap_user: (user, other_room) ->
+    assert (not @users.some user.conflicts), "Duplicate user: #{user}"
+    assert (user.room_id  == other_room._id) and not user.wait_id?
+    # Call join_game first to give the UGLIServer a chance to reject the user.
+    @game.join_game user.name if @game
+    # Rely on the lazy update of the model. This update will go through before
+    # the update that drops the user from the other room, but after the other edits.
+    @model.update_room @
+    # Drop the user from the other room and add it to this one.
+    other_room.drop_user user
+    @users.push user
+    user[@id_field] = @_id
+
   start_game: ->
     assert @game and @state == RoomState.WAITING
     for user in @users
