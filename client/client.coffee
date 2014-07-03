@@ -1,3 +1,8 @@
+old_subscribe = Meteor.subscribe
+Meteor.subscribe = (x, y, z, w) ->
+  console.log x, y, z, w
+  old_subscribe x, y, z, w
+
 Meteor.startup ->
   Deps.autorun ->
     if Meteor.userId()?
