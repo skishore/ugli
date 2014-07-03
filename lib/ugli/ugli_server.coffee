@@ -1,19 +1,29 @@
-# An instance of UGLIServer stores the following data about the game:
-#   @state: fully-specified, mutable game state
+# UGLIServer is an abstract base class that you should subclass to provide an
+# implementation of the server-side logic of your game. There are two classes
+# of virtual methods to override:
+#   - event handlers: @handle_message, @join_game, @leave_game
+#       Override these methods and modify in-memory state based on the update.
+#       To avoid getting the server into an inconsistent state, fully validate
+#       the update before modifying any state.
+#       TODO(skishore): We could checkpoint the state before calling handlers.
+#   - view computation: @get_player_view, @get_public_view, @get_lobby_view
+#       These methods are used to notify the client of a change to game state.
+#       Both the public_view and the player's view are passed to each player.
+#       The lobby view is used to populate the game list in the lobby.
 #
-# An implementation of UGLIServer should override the following methods:
-#   initialize_state: (config) -> summary
-#   get_player_view: (config) -> view
-#   get_public_view: (config) -> view
-#   handle_message: (player, message) ->
-#   join_game: (player) -> accepted
-#   leave_game: (player) ->
+# UGLIServer instances are also initialized by calling @initialize_state, which
+# is passed the rules dict requested by the client.
+
 # See below for detailed specifications for these methods.
+#
+# The framework also provides a @log_game_message method that can be used to
+# push small text status updates to the game log.
 
 class @UGLIServer
-  constructor: (room) ->
+  constructor: (room, config) ->
     @log_game_message = room.model.log_game_message.bind room.model, room
     @state = {}
+    @initialize_state config
 
   _get_views: (users) ->
     private_views = {}
@@ -32,28 +42,29 @@ class @UGLIServer
   '''
 
   initialize_state: (config) ->
-    # Initialize @state based on config, or throw an UGLIClientError if config
-    # is invalid. If the config is valid, this method should return a summary
-    # dict with the following keys:
+    # Initialize server from the config. Throw an UGLIClientError if is invalid.
+    console.log 'UGLIServer.initialize_state has not been implemented.'
+
+  get_lobby_view: ->
+    # Return data about the game that is visible from the lobby. This data is
+    # used to populate the game list, so it includes a restricted set of keys:
     #   description: a short description of the game mode (eg, 'Sprint')
     #   explanation: a longer explanation of the game mode
+    #   open: boolean that should be true if players can join the game
     #   max_players: the maximum number of players allowed in the game
-    console.log 'UGLIServer.constructor has not been implemented.'
+    console.log 'UGLIServer.get_lobby_view has not been implemented.'
 
   get_player_view: (player) ->
-    # Return data about the state that is only visible to the given player.
+    # Return game state that is only visible to the given player.
     #
     # The final view for a player is the public view extended by the private
     # view - that is, the value of shared keys are taken from the private view.
-    #
-    # By default, there is no per-player hidden information.
-    return {}
+    # (The full private view is available to client-side Javascript, though.)
+    console.log 'UGLIServer.get_player_view has not been implemented.'
 
   get_public_view: ->
-    # Return data about the state that is visible to all players.
-    #
-    # The default implementation makes the entire state visible.
-    return @state
+    # Return game state that is visible to all players.
+    console.log 'UGLIServer.get_public_view has not been implemented.'
 
   handle_message: (player, message) ->
     # Called when a client calls this.send(message).

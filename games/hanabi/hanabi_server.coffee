@@ -56,10 +56,6 @@ class @HanabiServer extends UGLIServer
     # Some private information used only on the server.
     @state.seat_history = {}
 
-    description: DESCRIPTION
-    explanation: EXPLANATION
-    max_players: num_players
-
   get_seat: (player) ->
     seat = @state.seats.indexOf player
     if seat < 0
@@ -72,6 +68,12 @@ class @HanabiServer extends UGLIServer
 
   describe_card: (card) ->
     "a#{if card[0] == 1 then 'n' else ''}  #{COLORS[card[0]]} #{card[1] + 1}"
+
+  get_lobby_view: ->
+    description: DESCRIPTION
+    explanation: EXPLANATION
+    open: @state.seats.some (seat) -> !seat
+    max_players: @state.num_players
 
   get_player_view: (player) ->
     seat = @get_seat player

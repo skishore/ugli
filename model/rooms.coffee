@@ -47,7 +47,8 @@ class @Rooms extends Collection
     data.state = room.state
     data.user_ids = (user._id for user in room.users)
 
-    if room.summary
+    if room.game
+      room.summary = do room.game.get_lobby_view
       room.summary.host = room.users[0]?.name or '-'
     data.summary = room.summary
 

@@ -107,7 +107,9 @@
           </a>
         {{else}}
           <a class="back-to-list btn btn-sm btn-default">Back to game list</a>
-          <a class="join-game btn btn-sm btn-primary">Join this game</a>
+          <a class="join-game btn btn-sm btn-primary {{disable_join_game}}">
+            Join this game
+          </a>
         {{/if}}
       </div>
     {{/with}}

@@ -1,3 +1,7 @@
+active_if = (condition) ->
+  if condition then '' else 'disabled'
+
+
 Template.game_details.game = ->
   wait_id = do Session.get_wait_id
   if wait_id?
@@ -10,9 +14,8 @@ Template.game_details.game = ->
     game.empty_spots = [0...num_empty_spots]
 
     username = Meteor.user()?.username
-    game.disable_start_game = 'disabled'
-    if game.summary.host == username
-      game.disable_start_game = ''
+    game.disable_start_game = active_if game.summary.host == username
+    game.disable_join_game = active_if game.summary.open
     game.is_member = (game.players.indexOf username) >= 0
   else
     Session.set_game_details_id null

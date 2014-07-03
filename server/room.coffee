@@ -8,8 +8,7 @@ class @Room
     @users = []
     if name? or config? or user?
       @name = name
-      @game = new (do Common.ugli_server) @
-      @summary = @game.initialize_state config
+      @game = new (do Common.ugli_server) @, config
       @set_state RoomState.WAITING
     else
       @name = 'Lobby'
