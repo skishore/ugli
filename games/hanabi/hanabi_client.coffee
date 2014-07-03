@@ -16,7 +16,13 @@ SUIT_CLASSES =
 
 class @HanabiClient extends UGLIClient
   make_game_ui: ->
-    @status_message = $('<div>').addClass 'hanabi-status-message'
+    spacing = ''
+    if @view.num_players < 4
+      spacing = ' hanabi-less-than-four-player-spacing'
+    else if @view.num_players == 4
+      spacing = ' hanabi-four-player-spacing'
+
+    @status_message = $('<div>').addClass 'hanabi-status-message' + spacing
     @counters = $('<div>').addClass 'hanabi-counters'
     @container.append @status_message, @counters
 
@@ -25,11 +31,10 @@ class @HanabiClient extends UGLIClient
       @seat_rows.push @make_seat_row(@view.hand_size)
       @container.append @seat_rows[@seat_rows.length - 1]
 
-    @stacks = @make_status_row('Stacks:').addClass 'hanabi-stacks-row'
+    @stacks = @make_status_row('Stacks:').addClass 'hanabi-stacks-row' + spacing
     @discards = @make_status_row 'Discards:'
     @container.append @stacks, @discards
 
-    window.client = @
     @handle_update @view
 
   make_seat_row: (hand_size) ->
