@@ -5,7 +5,7 @@
 
 .hanabi-status-message {
   float: left;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 }
 
 .hanabi-counters {
@@ -14,15 +14,16 @@
 
 .hanabi-seat-row {
   clear: both;
-  height: 34px;
-  margin-bottom: 20px;
+  height: 26px;
+  line-height: 1;
+  margin-bottom: 12px;
 
   .hanabi-player-col, .hanabi-cards-col, .hanabi-moves-col {
     float: left;
   }
 
   .hanabi-player-col {
-    line-height: 34px;
+    line-height: 26px;
     width: 120px;
 
     &.hanabi-cur-seat {
@@ -31,21 +32,21 @@
   }
 
   .hanabi-cards-col {
-    width: 160px;
+    width: 128px;
 
     &.hanabi-five-card-hand {
-      width: 200px;
+      width: 160px;
     }
 
     .hanabi-card {
       border: 2px solid black;
       border-radius: 2px;
       float: left;
-      font-size: 24px;
-      margin: 0px 10px 10px 0px;
-      padding: 1px;
+      font-size: 18px;
+      margin: 0px 6px 6px 0px;
+      padding: 2px;
       text-align: center;
-      width: 24px;
+      width: 22px;
 
       &.hanabi-suit-known {
         border-color: red;
@@ -58,14 +59,16 @@
   }
 
   .hanabi-moves-col {
-    line-height: 34px;
-    width: 420px;
+    line-height: 26px;
+    width: 392px;
 
     &.hanabi-five-card-hand {
-      width: 380px;
+      width: 360px;
     }
 
     button {
+      line-height: 1;
+      margin: 0px 1px 0px 3px;
       padding: 5px;
 
       &.hanabi-no-padding {
@@ -76,17 +79,17 @@
 
   &.hanabi-status-row {
     .hanabi-player-col {
-      width: 80px;
+      width: 78px;
     }
 
     .hanabi-cards-col {
-      width: 400px;
+      width: 440px;
     }
   }
 }
 
 .hanabi-stacks-row {
-  margin-top: 48px;
+  margin: 24px 0px;
 }
 
 .hanabi-red {

@@ -55,7 +55,7 @@ class @HanabiClient extends UGLIClient
     row.moves_col.remove()
     row
 
-  handle_update: (players, view) ->
+  handle_update: (view) ->
     cur_player = view.seats[view.cur_seat]
 
     # Draw status message and counters.
