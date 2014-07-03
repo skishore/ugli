@@ -41,7 +41,7 @@ class @Rooms extends Collection
         fields: {name: 1, summary: 1, players: 1, state: 1}
 
   @save_room: (room) ->
-    data = name: room.name
+    data = {name: room.name}
     data.game = (if room.game then (room.game._get_views room.users) else false)
     data.players = do (user.name for user in room.users).sort
     data.state = room.state
@@ -53,3 +53,8 @@ class @Rooms extends Collection
     data.summary = room.summary
 
     if room._id? then (@update {_id: room._id}, $set: data) else (@insert data)
+
+  @update_game: (room) ->
+    assert room._id? and room.game
+    data = {game: room.game._get_views room.users}
+    @update {_id: room._id}, {$set: data}

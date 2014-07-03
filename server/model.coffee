@@ -6,6 +6,7 @@ class @Model
     @_updates = []
     @_num_updates = 0
     @_updated_room_ids = {}
+    @_updated_game_ids = {}
 
   transaction: (callback) ->
     result = Meteor._noYieldsAllowed callback
@@ -14,13 +15,13 @@ class @Model
 
   create_room: (room) ->
     assert not room._id?, "Tried to create room with _id: #{room}"
-    @_updates.push {type: 'create', room: room}
+    @_updates.push {type: 'create_room', room: room}
     @_num_updates += 1
 
   update_room: (room) ->
     assert room._id?, "Tried to save room without _id: #{room}"
     if not @_updated_room_ids[room._id]?
-      @_updates.push {type: 'update', room: room}
+      @_updates.push {type: 'update_room', room: room}
       @_num_updates += 1
       @_updated_room_ids[room._id] = true
 
@@ -29,8 +30,15 @@ class @Model
     assert room.users.length == 0, "Tried to delete non-empty room: #{room}"
     delete @rooms[room._id]
     @room_names.free_name room.name
-    @_updates.push {type: 'delete', room: room}
+    @_updates.push {type: 'delete_room', room: room}
     @_num_updates += 1
+
+  update_game: (room) ->
+    assert room._id? and room.game
+    if not @_updated_game_ids[room._id]?
+      @_updates.push {type: 'update_game', room: room}
+      @_num_updates += 1
+      @_updated_game_ids[room._id] = true
 
   log_game_message: (room, message) ->
     assert room._id of @rooms, "Missing room_id: #{room}"
@@ -47,18 +55,21 @@ class @Model
     num_updates = @_num_updates
     @_num_updates = 0
     @_updated_room_ids = {}
+    @_updated_game_ids = {}
     for i in [0...num_updates]
       update = do @_updates.shift
       type = update.type
       room = update.room
-      if type == 'create'
+      if type == 'create_room'
         room._id = Rooms.save_room room
         assert room._id?, "Created room does not have an _id: #{room}"
         @rooms[room._id] = room
-      else if type == 'update'
+      else if type == 'update_room'
         Rooms.save_room room
-      else if type == 'delete'
+      else if type == 'delete_room'
         Rooms.remove {_id: room._id}
+      else if type == 'update_game'
+        Rooms.update_game room
       else if type == 'log_game_message'
         Chats.send_chat room._id, '', update.message
       else

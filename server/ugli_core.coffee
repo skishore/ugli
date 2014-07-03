@@ -98,4 +98,4 @@ class @UGLICore
       if room_id != room._id or room.state != RoomState.PLAYING
         throw new UGLIPermissionsError "User isn't in game in room #{room_id}!"
       room.game.handle_message user.name, message
-      @model.update_room room
+      @model.update_game room
