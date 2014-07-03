@@ -18,29 +18,39 @@ class @UGLICore
       new Room @model
     @lobby_id = lobby._id
 
-  get_user_and_room: (user_id) ->
+  add_user: (db_user) ->
+    @model.transaction =>
+      if db_user._id of @users
+        throw new UGLIPermissionsError 'User added before being dropped!'
+      @users[db_user._id] = new User db_user
+      @rooms[@lobby_id].add_user @users[db_user._id]
+
+  drop_user: (db_user) ->
+    @model.transaction =>
+      if db_user._id not of @users
+        throw new UGLIPermissionsError 'User dropped before being added!'
+      [user, room] = @get_user_and_room db_user._id
+      delete @users[user._id]
+      if user.room_id?
+        @rooms[user.room_id].drop_user user
+      if user.wait_id?
+        @rooms[user.wait_id].drop_user user
+
+  get_user_and_room: (user_id, user) ->
     if user_id not of @users
-      @users[user_id] = new User user_id
-      @model.transaction =>
-        @rooms[@lobby_id].add_user @users[user_id]
+      throw new UGLIPermissionsError 'User took action before being added!'
     user = @users[user_id]
     assert user.room_id of @rooms, "Orphaned user: #{user}"
     [user, @rooms[user.room_id]]
 
   publish_chats: (user_id, room_id) ->
-    # Ignores the room_id and returns chats for the user's current room.
-    [user, room] = @get_user_and_room user_id
-    Chats.publish room._id
-
-  heartbeat: (user_id) ->
-    [user, room] = @get_user_and_room user_id
-    do user.heartbeat
+    Chats.publish @users[user_id]?.room_id
 
   create_game: (user_id, config) ->
     [user, room] = @get_user_and_room user_id
     game_room = @model.transaction =>
       if room._id != @lobby_id
-        throw new UGLIPermissionsError "Can only create a game from the lobby!"
+        throw new UGLIPermissionsError 'Can only create a game from the lobby!'
       if user.wait_id?
         throw new UGLIPermissionsError "Can't create a game while waiting!"
       new Room @model, (do @room_names.get_unused_name), config
@@ -64,14 +74,3 @@ class @UGLICore
     [user, room] = @get_user_and_room user_id
     if room_id == room._id
       Chats.send_chat room_id, user.name, message
-
-  mark_idle_users: (timeout) ->
-    @model.transaction =>
-      ts = new Date().getTime() - timeout
-      idle_users = (user for _, user of @users when user.last_heartbeat < ts)
-      for user in idle_users
-        delete @users[user._id]
-        if user.room_id of @rooms
-          @rooms[user.room_id].drop_user user
-        if user.wait_id of @rooms
-          @rooms[user.wait_id].drop_user user

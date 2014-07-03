@@ -12,10 +12,12 @@ Meteor.startup ->
     core.publish_chats @userId, room_id
 
 
-  Meteor.methods
-    'heartbeat': ->
-      core.heartbeat @userId
+  Meteor.users.find({"status.online": true}).observe
+    added: core.add_user.bind(core)
+    removed: core.drop_user.bind(core)
 
+
+  Meteor.methods
     'create_game': (config) ->
       core.create_game @userId, config
 
@@ -33,9 +35,3 @@ Meteor.startup ->
 
     'send_game_message': (room_id, message) ->
       core.handle_message @userId, room_id, message
-
-
-  cleanup = ->
-    core.mark_idle_users Common.idle_timeout
-
-  Meteor.setInterval cleanup, Common.idle_timeout

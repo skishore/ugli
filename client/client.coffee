@@ -1,7 +1,12 @@
 Meteor.startup ->
   Deps.autorun ->
-    if Meteor.userId()?
+    if (do Meteor.userId)?
       Meteor.subscribe 'current_room'
+      room_id = do Session.get_room_id
+      if room_id?
+        Meteor.subscribe 'chats', room_id
+      if do Session.get_in_lobby
+        Meteor.subscribe 'game_rooms'
 
   Deps.autorun ->
     rooms = do (Rooms.find {players: Meteor.user()?.username}).fetch
@@ -20,16 +25,3 @@ Meteor.startup ->
     Session.set_room_id room_id
     Session.set_in_lobby in_lobby
     Session.set_wait_id wait_id
-
-  Deps.autorun ->
-    room_id = do Session.get_room_id
-    if room_id?
-      Meteor.subscribe 'chats', room_id
-    if do Session.get_in_lobby
-      Meteor.subscribe 'game_rooms'
-
-  Meteor.setInterval (->
-    if Meteor.userId()?
-      Meteor.call 'heartbeat', (err, result) ->
-        console.log err if err?
-  ), 1000
