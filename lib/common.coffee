@@ -6,6 +6,6 @@
 #   - Set the name, ugli_client getter, and ugli_server getter here
 
 class @Common
-  @title = 'Hanabi'
-  @ugli_client = -> HanabiClient
-  @ugli_server = -> HanabiServer
+  @title = 'Grabble'
+  @ugli_client = -> GrabbleClient
+  @ugli_server = -> GrabbleServer
