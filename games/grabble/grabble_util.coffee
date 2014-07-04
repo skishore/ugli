@@ -2,6 +2,19 @@
 # constraint logic of grabble.
 
 class @GrabbleUtil
+  @Element = Match.Where (x) ->
+    check x.source, String
+    if x.source == 'free'
+      check x.letter, String
+      return x.letter.length == 1
+    else if x.source == 'stolen'
+      [i, j] = x.index
+      check i, Number
+      check j, Number
+      return true
+    return false
+  @Plan = [[@Element]]
+
   @count: (string) =>
     result = {}
     for i in [0...string.length]
@@ -86,7 +99,7 @@ class @GrabbleUtil
         @add_source sources, stolen[i][j], {source: 'stolen', index: [i, j]}
     for i in [0...free.length]
       if (leftover_count[free[i]] or 0) > 0
-        @add_source sources, free[i], {source: 'free', index: i}
+        @add_source sources, free[i], {source: 'free', letter: free[i]}
         leftover_count[i] -= 1
     plan = ([] for word in made)
     # Then, for the one required free letter in each made word, fills that one
@@ -122,7 +135,7 @@ class @GrabbleUtil
   @check_plan: (free, made, stolen, plan) =>
     # Throws an UGLIClientError if this plan is illegal.
     @check_basic_conditions free, made, stolen
-    free_used = (false for i in [0...free.length])
+    free_count = @count free
     stolen_used = []
     for word in stolen
       stolen_used.push (false for i in [0...word.length])
@@ -132,11 +145,11 @@ class @GrabbleUtil
         step = plan[i][j]
         if step.source == 'free'
           # Check that a) the free letter matches and b) is not already used.
-          if made[i][j] != free[step.index]
-            throw new UGLIClientError "Mismatched free letter #{step.index}!"
-          if free_used[step.index]
-            throw new UGLIClientError "Reused free letter #{step.index}!"
-          free_used[step.index] = true
+          if made[i][j] != step.letter
+            throw new UGLIClientError "Mismatched free letter #{step.letter}!"
+          if (free_count[step.letter] or 0) == 0
+            throw new UGLIClientError "Used too many free #{step.letter}!"
+          free_count[step.letter] -= 1
         else
           # Check that a) the stolen letter matches and b) is not already used.
           [x, y] = step.index

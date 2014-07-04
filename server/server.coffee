@@ -1,4 +1,7 @@
 Meteor.startup ->
+  plan = GrabbleUtil.plan_play('cat', ['bat', 'ocb'], ['bob'])
+  check plan, GrabbleUtil.Plan
+
   core = new UGLICore
 
 
