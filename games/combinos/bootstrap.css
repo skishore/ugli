@@ -1,0 +1,12 @@
+#create-game-modal .form-group {
+  margin-bottom: 0;
+}
+
+#create-game-modal .radio-inline {
+  margin-left: 0px;
+  padding-left: 12px;
+}
+
+#create-game-modal .radio-inline input[type="radio"] {
+  margin: 2px 6px 2px 0;
+}
