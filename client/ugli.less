@@ -238,6 +238,33 @@ p {
       #chat-box {
         @footer-height: 26px;
 
+        .tabbed-heading {
+          padding: 4px 0px 0px 0px;
+          border-bottom-width: 0px;
+
+          .nav {
+            border-bottom-width: 0px;
+            padding-left: 8px;
+
+            &>li>a {
+              color: #ddd;
+              cursor: pointer;
+              .user-select(none);
+              padding: 0px 4px 3px;
+
+              &:hover {
+                background-color: #ddd;
+                color: black;
+              }
+            }
+
+            &>li.active>a {
+              background-color: white;
+              color: black;
+            }
+          }
+        }
+
         #chat-message-list {
           height: @chat-box-height - @panel-heading - @footer-height;
           list-style-type: none;

@@ -158,9 +158,22 @@
 
 <template name="chat_box">
   <div id="chat-box" class="panel panel-warning">
-    <div class="panel-heading">
-      <h4 class="panel-title">Chat</h4>
-    </div>
+    {{#if in_game}}
+      <div class="panel-heading tabbed-heading">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="{{game_chat_active}}">
+            <a data-chat="game">Game chat</a>
+          </li>
+          <li class="{{lobby_chat_active}}">
+            <a data-chat="lobby">Lobby chat</a>
+          </li>
+        </ul>
+      </div>
+    {{else}}
+      <div class="panel-heading">
+        <h4 class="panel-title">Chat</h4>
+      </div>
+    {{/if}}
     <ul id="chat-message-list" class="panel-body">
       {{#each chats}}
         {{#if sender.length}}

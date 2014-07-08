@@ -40,8 +40,7 @@ class @UGLICore
     @users[user_id]
 
   publish_chats: (user_id, room_id) ->
-    user = @get_user user_id
-    Chats.publish @lobby_id, user.room_id
+    Chats.publish @lobby_id, @users[user_id]?.room_id
 
   create_game: (user_id, config) ->
     game_room = @model.transaction =>
