@@ -1,0 +1,52 @@
+#!/bin/bash
+
+SOURCE_PATH="../combinos"
+TARGET_PATH="games/combinos"
+
+FILES=(
+util.js
+
+Action.js
+Key.js
+Options.js
+
+Color.js
+Constants.js
+Point.js
+Block.js
+
+KeyRepeater.js
+Graphics.js
+Physics.js
+Board.js
+ClientBoard.js
+OpponentBoard.js
+ServerBoard.js
+)
+
+cp $SOURCE_PATH/style.css $TARGET_PATH/style.css
+
+if true; then
+  cat $SOURCE_PATH/RawBlockData.js
+  printf '''
+this.combinos = this.combinos || {};
+this.combinos.RawBlockData = RawBlockData;
+'''
+fi > $TARGET_PATH/data.js
+
+if true; then
+  printf '''var RawBlockData = combinos.RawBlockData;\n'''
+  for i in ${!FILES[@]}; do
+    if [ $i -gt 0 ]; then printf '\n'; fi
+    cat $SOURCE_PATH/${FILES[$i]}
+  done
+  printf '''
+this.combinos.ClientBoard = ClientBoard;
+this.combinos.OpponentBoard = OpponentBoard;
+this.combinos.ServerBoard = ServerBoard;
+
+if (Meteor.isClient) {
+  Color.initialize(Color.colorCode);
+}
+'''
+fi > $TARGET_PATH/logic.js
