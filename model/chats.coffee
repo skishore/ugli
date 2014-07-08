@@ -18,10 +18,13 @@ class @Chats extends Collection
       {columns: room_id: 1},
     ]
 
-  @publish: (room_id) ->
+  @publish: (lobby_id, room_id) ->
+    check lobby_id, String
     if room_id?
       check room_id, String
-    @find room_id: room_id
+      @find {room_id: $in: [lobby_id, room_id]}
+    else
+      @find {room_id: lobby_id}
 
   @send_chat: (room_id, sender, message) ->
     check room_id, String

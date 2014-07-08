@@ -1,9 +1,16 @@
-Template.player_list.players = ->
-  (Rooms.findOne {_id: do Session.get_room_id}, {players: 1})?.players or []
+players = (room_id) ->
+  (Rooms.findOne {_id: room_id}, {players: 1})?.players or []
 
-Template.player_list.num_players = ->
-  (do Template.player_list.players).length
-
-Template.player_list.player_str = ->
-  count = do Template.player_list.num_players
+pluralize = (count) ->
   if count == 1 then 'person' else 'people'
+
+
+Template.player_list.game_players = ->
+  result = players do Session.get_game_id
+  result.unshift "#{result.length} #{pluralize result.length} in-game"
+  result
+
+Template.player_list.lobby_players = ->
+  result = players do Session.get_lobby_id
+  result.unshift "#{result.length} #{pluralize result.length} in the lobby"
+  result

@@ -1,2 +1,3 @@
 Template.top_bar.room_name = ->
-  (Rooms.findOne {_id: do Session.get_room_id}, {name: 1})?.name or ''
+  game = Rooms.findOne {_id: do Session.get_game_id}, {name: 1}
+  game?.name or Common.lobby_name

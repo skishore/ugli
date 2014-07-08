@@ -3,11 +3,8 @@ active_if = (condition) ->
 
 
 Template.game_details.game = ->
-  wait_id = do Session.get_wait_id
-  if wait_id?
-    game = Rooms.findOne {_id: wait_id}
-  else
-    game = Rooms.findOne {_id: do Session.get_game_details_id}
+  room_id = (do Session.get_game_id) or (do Session.get_game_details_id)
+  game = Rooms.findOne {_id: room_id}
 
   if game?
     num_empty_spots = Math.max game.summary.max_players - game.players.length, 0

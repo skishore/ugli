@@ -30,72 +30,64 @@ class @UGLICore
         throw new UGLIPermissionsError 'User dropped before being added!'
       user = @users[db_user._id]
       delete @users[db_user._id]
+      @rooms[@lobby_id].drop_user user
       if user.room_id?
         @rooms[user.room_id].drop_user user
-      if user.wait_id?
-        @rooms[user.wait_id].drop_user user
 
-  get_user_and_room: (user_id, user) ->
+  get_user: (user_id) ->
     if user_id not of @users
       throw new UGLIPermissionsError 'User called method before being added!'
-    user = @users[user_id]
-    assert user.room_id of @rooms, "Orphaned user: #{user}"
-    [user, @rooms[user.room_id]]
+    @users[user_id]
 
   publish_chats: (user_id, room_id) ->
-    Chats.publish @users[user_id]?.room_id
+    user = @get_user user_id
+    Chats.publish @lobby_id, user.room_id
 
   create_game: (user_id, config) ->
     game_room = @model.transaction =>
-      [user, room] = @get_user_and_room user_id
-      if room._id != @lobby_id
-        throw new UGLIPermissionsError 'Can only create a game from the lobby!'
-      if user.wait_id?
-        throw new UGLIPermissionsError "Can't create a game while waiting!"
+      user = @get_user user_id
+      if user.room_id?
+        throw new UGLIPermissionsError "Can't create a game while in one!"
       new Room @model, (do @room_names.get_unused_name), config
     @join_game user_id, game_room._id
 
   join_game: (user_id, room_id) ->
     @model.transaction =>
-      [user, room] = @get_user_and_room user_id
-      if room._id != @lobby_id
-        throw new UGLIPermissionsError 'Can only join a game from the lobby!'
+      user = @get_user user_id
+      if user.room_id?
+        throw new UGLIPermissionsError "Can't join a game while in one!"
       if room_id of @rooms and room_id != @lobby_id
-        room = @rooms[room_id]
-        if room.state == RoomState.PLAYING
-          @rooms[room_id].swap_user user, @rooms[@lobby_id]
-        else
-          @rooms[room_id].add_user user
+        @rooms[room_id].add_user user
+        user.room_id = room_id
 
   leave_game: (user_id, room_id, autoremove) ->
     @model.transaction =>
-      [user, room] = @get_user_and_room user_id
-      if room_id not of @rooms or room_id == @lobby_id
-        throw new UGLIPermissionsError "User can't leave room: #{room_id}"
+      user = @get_user user_id
+      if room_id != user.room_id
+        throw new UGLIPermissionsError "User can't leave game: #{room_id}"
       @rooms[room_id].drop_user user, autoremove
-      if user.room_id == null
-        @rooms[@lobby_id].add_user user
+      user.room_id = null
 
   start_game: (user_id, room_id) ->
     @model.transaction =>
-      [user, room] = @get_user_and_room user_id
-      if room_id != user.wait_id
-        throw new UGLIPermissionsError 'Can only start a WAITING game!'
-      game_room = @rooms[user.wait_id]
-      for other in game_room.users
-        @rooms[other.room_id].drop_user other
-      do game_room.start_game
+      user = @get_user user_id
+      if room_id != user.room_id
+        throw new UGLIPermissionsError "User can't start game: #{room_id}"
+      do @rooms[room_id].start_game
 
   send_chat: (user_id, room_id, message) ->
-    [user, room] = @get_user_and_room user_id
-    if room_id != room._id
+    user = @get_user user_id
+    if room_id != @lobby_id and room_id != user.room_id
       throw new UGLIPermissionsError "User can't send chat in room #{room_id}!"
     Chats.send_chat room_id, user.name, message
 
   send_game_message: (user_id, room_id, message) ->
     @model.transaction =>
-      [user, room] = @get_user_and_room user_id
-      if room_id != room._id or room.state != RoomState.PLAYING
+      user = @get_user user_id
+      if room_id != user.room_id
         throw new UGLIPermissionsError "User isn't in game in room #{room_id}!"
+      room = @rooms[room_id]
+      if room.state != RoomState.PLAYING
+        throw new UGLIPermissionsError "Can't play in #{room.state} game"
       room.game.handle_message user.name, message
       @model.update_game room

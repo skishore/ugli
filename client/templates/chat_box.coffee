@@ -13,14 +13,14 @@ scroll_chats = ->
 Template.chat_box.chats = ->
   # Scroll chats when this template is created anew, on login or room change.
   chats_were_scrolled = true
-  Chats.find {room_id: do Session.get_room_id}, {sort: created: 1}
+  Chats.find {room_id: do Session.get_chat_id}, {sort: created: 1}
 
 Template.chat_box.events
   'keydown #chat-input': (e) ->
     if e.keyCode == 13
       message = $(e.target).val().strip()
       if message
-        Meteor.call 'send_chat', (do Session.get_room_id), message
+        Meteor.call 'send_chat', (do Session.get_chat_id), message
         $(e.target).val ''
 
   'scroll #chat-message-list': (e) ->

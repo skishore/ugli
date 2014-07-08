@@ -3,11 +3,7 @@ ugli_client = null
 
 
 Template.ingame_ui.game = ->
-  Rooms.findOne {_id: do Session.get_room_id}
-
-Template.ingame_ui.game_str = ->
-  JSON.stringify Rooms.findOne {_id: do Session.get_room_id}
-
+  Rooms.findOne {_id: do Session.get_game_id}
 
 Template.ingame_ui.rendered = ->
   Session.set 'ingame_ui_rendered', true
@@ -16,7 +12,7 @@ Template.ingame_ui.rendered = ->
 
 Meteor.startup ->
   Deps.autorun ->
-    if do Session.get_in_lobby
+    if not do Session.get_in_game
       Session.set 'ingame_ui_rendered', false
       ingame_ui_element = null
       ugli_client = null

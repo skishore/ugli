@@ -56,5 +56,5 @@ Template.game_list.events
 
 Meteor.startup ->
   Deps.autorun ->
-    if do Session.get_in_lobby
+    if not do Session.get_in_game
       Session.set_game_list_page 0

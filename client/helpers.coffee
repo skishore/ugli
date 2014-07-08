@@ -1,5 +1,5 @@
-UI.registerHelper 'in_lobby', ->
-  do Session.get_in_lobby
+UI.registerHelper 'in_game', ->
+  do Session.get_in_game
 
 UI.registerHelper 'title', ->
   Common.title

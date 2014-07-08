@@ -47,21 +47,21 @@
 <template name="game_info">
   <div id="game-info" class="panel panel-info">
     <div class="panel-heading">
-      {{#if in_lobby}}
-        <h4 class="panel-title">Games</h4>
-      {{else}}
+      {{#if in_game}}
         <h4 class="panel-title">Game</h4>
+      {{else}}
+        <h4 class="panel-title">Games</h4>
       {{/if}}
     </div>
     <div class="panel-body">
-      {{#if in_lobby}}
+      {{#if in_game}}
+        {{> ingame_ui}}
+      {{else}}
         {{#if show_game_details}}
           {{> game_details}}
         {{else}}
           {{> game_list}}
         {{/if}}
-      {{else}}
-        {{> ingame_ui}}
       {{/if}}
     </div>
   </div>
@@ -190,15 +190,15 @@
       <h4 class="panel-title">Menu</h4>
     </div>
     <div class="panel-body">
-      {{#if in_lobby}}
+      {{#if in_game}}
+        <div class="btn-wrapper">
+          <a class="leave-game btn btn-sm btn-default">Leave game</a>
+        </div>
+      {{else}}
         <div class="btn-wrapper">
           <a class="create-game btn btn-sm btn-primary {{disable_create_game}}">
             Create game
           </a>
-        </div>
-      {{else}}
-        <div class="btn-wrapper">
-          <a class="leave-game btn btn-sm btn-default">Leave game</a>
         </div>
       {{/if}}
       <div class="btn-wrapper">
@@ -217,15 +217,12 @@
       <h4 class="panel-title">Players</h4>
     </div>
     <div class="panel-body">
-      <div class="player-row">
-        {{num_players}} {{player_str}}
-        {{#if in_lobby}}
-          in the lobby
-        {{else}}
-          in-game
-        {{/if}}
-      </div>
-      {{#each players}}
+      {{#if in_game}}
+        {{#each game_players}}
+          <div class="player-row">{{this}}</div>
+        {{/each}}
+      {{/if}}
+      {{#each lobby_players}}
         <div class="player-row">{{this}}</div>
       {{/each}}
     </div>

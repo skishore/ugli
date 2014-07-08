@@ -2,26 +2,24 @@ Meteor.startup ->
   Deps.autorun ->
     if (do Meteor.userId)?
       Meteor.subscribe 'current_room'
-      room_id = do Session.get_room_id
-      if room_id?
-        Meteor.subscribe 'chats', room_id
-      if do Session.get_in_lobby
+      Meteor.subscribe 'chats', do Session.get_game_id
+      if not do Session.get_in_game
         Meteor.subscribe 'game_rooms'
 
   Deps.autorun ->
     rooms = do (Rooms.find {players: Meteor.user()?.username}).fetch
 
-    room_id = null
-    in_lobby = true
-    wait_id = null
+    lobby_id = null
+    game_id = null
+    in_game = false
 
     for room in rooms
-      if room.state == RoomState.WAITING
-        wait_id = room._id
+      if room.state == RoomState.LOBBY
+        lobby_id = room._id
       else
-        room_id = room._id
-        in_lobby = room.state == RoomState.LOBBY
+        game_id = room._id
+        in_game = room.state == RoomState.PLAYING
 
-    Session.set_room_id room_id
-    Session.set_in_lobby in_lobby
-    Session.set_wait_id wait_id
+    Session.set_lobby_id lobby_id
+    Session.set_game_id game_id
+    Session.set_in_game in_game
