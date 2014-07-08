@@ -218,10 +218,12 @@
     </div>
     <div class="panel-body">
       {{#if in_game}}
+        <div class="player-row player-header">{{game_header}}</div>
         {{#each game_players}}
           <div class="player-row">{{this}}</div>
         {{/each}}
       {{/if}}
+      <div class="player-row player-header">{{lobby_header}}</div>
       {{#each lobby_players}}
         <div class="player-row">{{this}}</div>
       {{/each}}
