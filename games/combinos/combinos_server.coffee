@@ -25,14 +25,16 @@ class @CombinosServer extends UGLIServer
 
   handle_message: (player, message) ->
     if message.type == 'move'
-      @handle_move player, message.moves
+      @handle_move player, message.move_queue
     else
       throw new UGLIClientError "Unknown message type: #{message.type}"
 
-  handle_move: (player, moves) ->
-    check moves, [[Number]]
-    for keys in moves
-      @boards[player].update keys
+  handle_move: (player, move_queue) ->
+    check move_queue, [{syncIndex: Number, move: [[Number]]}]
+    for move in move_queue
+      if @boards[player].syncIndex < move.syncIndex
+        for keys in move.move
+          @boards[player].update keys
 
   join_game: (player) ->
     if @num_players == @max_players
