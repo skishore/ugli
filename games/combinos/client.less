@@ -1,0 +1,37 @@
+#base-modal {
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  .radio-inline {
+    margin-left: 0px;
+    padding-left: 12px;
+  }
+
+  .radio-inline input[type="radio"] {
+    margin: 2px 6px 2px 0;
+  }
+}
+
+.combinos-client {
+  background-color: #eee;
+  border: 1px solid #bbb;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  display: inline-block;
+
+  >.player {
+    border-bottom: 1px solid #bbb;
+    padding: 2px 8px 1px;
+    text-align: left;
+
+    .sync-icon {
+      display: inline-block;
+      float: right;
+    }
+  }
+
+  &.synced >.player .sync-icon {
+    display: none;
+  }
+}

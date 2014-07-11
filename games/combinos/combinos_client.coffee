@@ -1,3 +1,6 @@
+SYNC_ICON_HTML = '&middot;&middot;&middot;'
+
+
 class @CombinosClient extends UGLIClient
   @make_config_ui: (container) ->
     container.html('''
@@ -17,6 +20,7 @@ class @CombinosClient extends UGLIClient
 
   make_game_ui: ->
     @boards = {}
+    @containers = {}
     @opponents = {}
     @handle_update @view
 
@@ -24,12 +28,26 @@ class @CombinosClient extends UGLIClient
     for player, data of view.boards
       if player of @boards
         @boards[player].deserialize data
-        @opponents[player].deserialize data
+        if @boards[player].serverSyncIndex == @boards[player].syncIndex
+          @containers[player].addClass 'synced'
       else
-        target = $('<div>').addClass 'centered combinos'
-        @container.append target
-        @boards[player] = new combinos.ClientBoard target, data, @send.bind @
+        target = $('<div>').addClass 'combinos'
+        container = $('<div>').addClass('synced combinos-client').append(
+            $('<div>').addClass('player').text(player).append(
+                ($('<div>').addClass('sync-icon').html SYNC_ICON_HTML))
+            target)
+        @container.append container
+        # Register the new container and construct the board inside it.
+        send = @send_board_update .bind @, player
+        @boards[player] = new combinos.ClientBoard target, data, send
+        @containers[player] = container
+        @fix_container_height container
 
-        target = $('<div>').addClass 'centered combinos'
-        @container.append target
-        @opponents[player] = new combinos.OpponentBoard target, data
+  fix_container_height: (container) ->
+    # For whatever reason, Bootstrap's CSS adds 5px of height to each game
+    # container, possibly by adding a pseudoelement or something.
+    container.height (do container.height) - 5
+
+  send_board_update: (player, message) ->
+    @containers[player].removeClass 'synced'
+    @send message
