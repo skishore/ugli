@@ -15,10 +15,12 @@ Constants.js
 Point.js
 Block.js
 
-KeyRepeater.js
+DifficultyCurve.js
 Graphics.js
+KeyRepeater.js
 Physics.js
 Board.js
+
 ClientBoard.js
 OpponentBoard.js
 ServerBoard.js
