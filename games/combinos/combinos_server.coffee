@@ -24,8 +24,12 @@ class @CombinosServer extends UGLIServer
     boards: boards
 
   handle_message: (player, message) ->
+    if message.game_index != @boards[player].gameIndex
+      throw new UGLIClientError "Got update for old game: #{message.game_index}"
     if message.type == 'move'
       @handle_move player, message.move_queue
+    else if message.type == 'start'
+      @handle_start player
     else
       throw new UGLIClientError "Unknown message type: #{message.type}"
 
@@ -35,6 +39,11 @@ class @CombinosServer extends UGLIServer
       if @boards[player].syncIndex < move.syncIndex
         for keys in move.move
           @boards[player].update keys
+
+  handle_start: (player) ->
+    if @boards[player].state != combinos.Constants.GAMEOVER
+      throw new UGLIClientError "Can't reset #{@boards[player].state} board"
+    do @boards[player].reset
 
   join_game: (player) ->
     if @num_players == @max_players

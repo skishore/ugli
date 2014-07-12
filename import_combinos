@@ -41,6 +41,7 @@ if true; then
     cat $SOURCE_PATH/${FILES[$i]}
   done
   printf '''
+this.combinos.Constants = Constants;
 this.combinos.ClientBoard = ClientBoard;
 this.combinos.OpponentBoard = OpponentBoard;
 this.combinos.ServerBoard = ServerBoard;
