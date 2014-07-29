@@ -4,6 +4,7 @@ SOURCE_PATH="../combinos"
 TARGET_PATH="games/combinos"
 
 FILES=(
+external/protovis/3.3.1/protovis.min.js
 util.js
 
 Action.js
@@ -16,10 +17,12 @@ Point.js
 Block.js
 
 DifficultyCurve.js
+DifficultyUI.js
 Graphics.js
 KeyRepeater.js
 Physics.js
 Board.js
+LocalBoard.js
 
 ClientBoard.js
 OpponentBoard.js

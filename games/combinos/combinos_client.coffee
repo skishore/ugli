@@ -38,8 +38,11 @@ class @CombinosClient extends UGLIClient
             target)
         @container.append container
         # Register the new container and construct the board inside it.
-        send = @send_board_update .bind @, player
-        @boards[player] = new combinos.ClientBoard target, data, send
+        if player == @me
+          send = @send_board_update .bind @, player
+          @boards[player] = new combinos.ClientBoard target, data, send
+        else
+          @boards[player] = new combinos.OpponentBoard target, data
         @containers[player] = container
         @fix_container_height container
 
