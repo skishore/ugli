@@ -2,7 +2,10 @@ class @LeaveGameModal
   @show: (@room_id) ->
     room = Rooms.findOne {_id: @room_id}
     if room?.players.length == 1
-      $('#leave-game-modal').modal 'show'
+      if Common.autoremove?
+        Meteor.call 'leave_game', @room_id, Common.autoremove
+      else
+        $('#leave-game-modal').modal 'show'
     else
       Meteor.call 'leave_game', @room_id
 

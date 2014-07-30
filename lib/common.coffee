@@ -9,3 +9,6 @@ class @Common
   @title = 'Hanabi'
   @ugli_client = -> HanabiClient
   @ugli_server = -> HanabiServer
+  # Set an autoremove boolean here to control whether rooms are automatically
+  # deleted when the last user leaves. If unset, a dialog will be shown.
+  #@autoremove = true
