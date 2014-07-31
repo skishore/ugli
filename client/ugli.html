@@ -7,8 +7,7 @@
       {{> signed_out_message}}
     {{/if}}
   </div>
-  {{> create_game_modal}}
-  {{> leave_game_modal}}
+  {{> base_modal}}
 </body>
 
 <template name="top_bar">
@@ -250,38 +249,13 @@
   </div>
 </template>
 
-<template name="create_game_modal">
-  <div id="create-game-modal" class="ugli-modal modal fade">
+<template name="base_modal">
+  <div id="base-modal" class="ugli-modal modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h4>Create game</h4>
-        </div>
+        <div class="modal-header"><h4></h4></div>
         <div class="modal-body"></div>
-        <div class="modal-footer">
-          <a class="cancel btn btn-sm btn-default">Cancel</a>
-          <a class="ok btn btn-sm btn-primary">Ok</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<template name="leave_game_modal">
-  <div id="leave-game-modal" class="ugli-modal modal fade">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4>Leave game</h4>
-        </div>
-        <div class="modal-body">
-          <p>You are the last person to leave this game.</p>
-          <p>Do you want to delete it as well?</p>
-        </div>
-        <div class="modal-footer">
-          <a class="yes btn btn-sm btn-default">Yes</a>
-          <a class="no btn btn-sm btn-default">No</a>
-        </div>
+        <div class="modal-footer"></div>
       </div>
     </div>
   </div>
