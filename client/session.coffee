@@ -25,6 +25,14 @@ Session.set_in_game = (in_game) ->
   check in_game, Boolean
   Session.set 'in_game', in_game
 
+# True if the user is currently in a multiplayer game in the PLAYING state.
+Session.get_in_multiplayer_game = ->
+  Session.get 'in_multiplayer_game'
+
+Session.set_in_multiplayer_game = (in_multiplayer_game) ->
+  check in_multiplayer_game, Boolean
+  Session.set 'in_multiplayer_game', in_multiplayer_game
+
 # The id of the room that the chat window is currently set to.
 Session.get_chat_id = ->
   Session.get 'chat_id'

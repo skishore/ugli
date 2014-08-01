@@ -157,7 +157,7 @@
 
 <template name="chat_box">
   <div id="chat-box" class="panel panel-warning">
-    {{#if in_game}}
+    {{#if in_multiplayer_game}}
       <div class="panel-heading tabbed-heading">
         <ul class="nav nav-tabs" role="tablist">
           <li class="{{game_chat_active}}">
@@ -232,7 +232,7 @@
       <h4 class="panel-title">Players</h4>
     </div>
     <div class="panel-body">
-      {{#if in_game}}
+      {{#if in_multiplayer_game}}
         <div class="player-row player-header">{{game_header}}</div>
         {{#each game_players}}
           <div class="player-row">{{this}}</div>

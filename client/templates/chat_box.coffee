@@ -47,7 +47,7 @@ Template.chat_box.rendered = ->
 
 Meteor.startup ->
   Deps.autorun ->
-    set_chat_id do Session.get_in_game
+    set_chat_id do Session.get_in_multiplayer_game
 
   Deps.autorun ->
     Template.chat_box.chats().observe

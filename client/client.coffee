@@ -12,6 +12,7 @@ Meteor.startup ->
     lobby_id = null
     game_id = null
     in_game = false
+    in_multiplayer_game = false
 
     for room in rooms
       if room.state == RoomState.LOBBY
@@ -19,7 +20,9 @@ Meteor.startup ->
       else
         game_id = room._id
         in_game = room.state == RoomState.PLAYING
+        in_multiplayer_game = in_game and room.multiplayer
 
     Session.set_lobby_id lobby_id
     Session.set_game_id game_id
     Session.set_in_game in_game
+    Session.set_in_multiplayer_game in_multiplayer_game
