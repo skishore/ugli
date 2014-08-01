@@ -29,7 +29,8 @@ class @Model
     assert room._id of @rooms, "Missing room_id: #{room}"
     assert room.users.length == 0, "Tried to delete non-empty room: #{room}"
     delete @rooms[room._id]
-    @room_names.free_name room.name
+    if room.multiplayer
+      @room_names.free_name room.name
     @_updates.push {type: 'delete_room', room: room}
     @_num_updates += 1
 

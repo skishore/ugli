@@ -21,6 +21,9 @@ Meteor.startup ->
     'create_game': (config) ->
       core.create_game @userId, config
 
+    'create_singleplayer_game': ->
+      core.create_singleplayer_game @userId
+
     'join_game': (room_id) ->
       core.join_game @userId, room_id
 

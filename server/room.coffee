@@ -4,22 +4,26 @@
 #   users: a list of User objects currently in this room
 
 class @Room
-  constructor: (@model, name, config, user) ->
+  constructor: (@model, name, config, singleplayer) ->
     @users = []
-    if name? or config? or user?
+    if name? or config? or singleplayer?
       @name = name
       @game = new (do Common.ugli_server) @, config
+      @multiplayer = not singleplayer
       @state = RoomState.WAITING
     else
       @name = 'Lobby'
       @summary = false
       @game = false
+      @multiplayer = false
       @state = RoomState.LOBBY
     @model.create_room @
 
   add_user: (user) ->
     assert (not @users.some user.conflicts), "Duplicate user: #{user}"
     @game.join_game user.name if @game
+    if @state == RoomState.WAITING and not @multiplayer
+      @state = RoomState.PLAYING
     @users.push user
     @model.update_room @
 
@@ -28,7 +32,7 @@ class @Room
     assert (index >= 0), "Missing user: #{user}"
     @game.leave_game user.name if @game
     @users.splice index, 1
-    if @users.length == 0 and @state != RoomState.LOBBY
+    if @users.length == 0 and @multiplayer
       if !!autoremove
         @model.delete_room @
       else

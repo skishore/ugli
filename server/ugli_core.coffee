@@ -50,6 +50,16 @@ class @UGLICore
       new Room @model, (do @room_names.get_unused_name), config
     @join_game user_id, game_room._id
 
+  create_singleplayer_game: (user_id) ->
+    game_room = @model.transaction =>
+      user = @get_user user_id
+      if user.room_id?
+        @rooms[user.room_id].drop_user user, true
+        user.room_id = null
+      config = Common.singleplayer_config
+      new Room @model, (do @room_names.get_unused_name), config, true
+    @join_game user_id, game_room._id
+
   join_game: (user_id, room_id) ->
     @model.transaction =>
       user = @get_user user_id

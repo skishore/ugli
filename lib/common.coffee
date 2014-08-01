@@ -12,3 +12,6 @@ class @Common
   # Set an autoremove boolean here to control whether rooms are automatically
   # deleted when the last user leaves. If unset, a dialog will be shown.
   #@autoremove = true
+  # Set a singleplayer_config boolean here to cause there to be a persistent
+  # "Play singleplayer" button visible in the menu box.
+  #@singleplayer_config = {max_players: 2}

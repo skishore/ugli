@@ -1,7 +1,7 @@
 rows_per_page = 8
 page_range = 5
 
-game_clause = state: '$ne': RoomState.LOBBY
+game_clause = {multiplayer: true}
 
 clamp = (page, num_pages) ->
   Math.max (Math.min page, num_pages - 1), 0

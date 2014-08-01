@@ -216,9 +216,12 @@
       <div class="btn-wrapper">
         <a class="show-options btn btn-sm btn-default">Options</a>
       </div>
-      <div class="btn-wrapper">
-        <a class="show-about btn btn-sm btn-default">About UGLI</a>
-      </div>
+      {{#if show_singleplayer}}
+        <div class="btn-wrapper">
+          <a class="play-singleplayer btn btn-sm btn-default
+              {{disable_play_singleplayer}}">Play singleplayer</a>
+        </div>
+      {{/if}}
     </div>
   </div>
 </template>
