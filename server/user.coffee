@@ -8,7 +8,6 @@ class @User
     @_id = user._id
     @name = user.username
     @room_id = null
-    @wait_id = null
 
   conflicts: (other) ->
     @_id == other._id or @name == other.name

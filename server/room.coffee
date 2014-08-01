@@ -32,7 +32,7 @@ class @Room
     assert (index >= 0), "Missing user: #{user}"
     @game.leave_game user.name if @game
     @users.splice index, 1
-    if @users.length == 0 and @multiplayer
+    if @game and @users.length == 0
       if !!autoremove
         @model.delete_room @
       else

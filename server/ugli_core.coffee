@@ -11,6 +11,7 @@ class @UGLICore
   constructor: ->
     @users = {}
     @rooms = {}
+    @singleplayer_rooms = {}
     @room_names = new RoomNames
     @model = new Model @rooms, @room_names
     # Create the lobby and record its _id.
@@ -51,14 +52,18 @@ class @UGLICore
     @join_game user_id, game_room._id
 
   create_singleplayer_game: (user_id) ->
-    game_room = @model.transaction =>
+    @model.transaction =>
       user = @get_user user_id
       if user.room_id?
+        if user.room_id == @singleplayer_rooms[user_id]?._id
+          throw new UGLIPermissionsError "Tried to rejoin singleplayer game!"
         @rooms[user.room_id].drop_user user, true
         user.room_id = null
-      config = Common.singleplayer_config
-      new Room @model, (do @room_names.get_unused_name), config, true
-    @join_game user_id, game_room._id
+      if user_id not of @singleplayer_rooms
+        name = "#{user.name}'s singleplayer"
+        game_room = new Room @model, name, Common.singleplayer_config, true
+        @singleplayer_rooms[user_id] = game_room
+    @join_game user_id, @singleplayer_rooms[user_id]._id
 
   join_game: (user_id, room_id) ->
     @model.transaction =>
