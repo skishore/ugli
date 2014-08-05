@@ -11,9 +11,9 @@ class @UGLICore
   constructor: ->
     @users = {}
     @rooms = {}
-    @singleplayer_rooms = {}
     @room_names = new RoomNames
-    @model = new Model @rooms, @room_names
+    @singleplayer_rooms = {}
+    @model = new Model @rooms, @room_names, @singleplayer_rooms
     # Create the lobby and record its _id.
     @lobby_id = (@model.transaction => new Room @model)._id
     assert @lobby_id?, 'Failed to get a lobby_id!'
@@ -61,7 +61,7 @@ class @UGLICore
         user.room_id = null
       if user_id not of @singleplayer_rooms
         name = "#{user.name}'s singleplayer"
-        game_room = new Room @model, name, Common.singleplayer_config, true
+        game_room = new Room @model, name, Common.singleplayer_config, user_id
         @singleplayer_rooms[user_id] = game_room
     @join_game user_id, @singleplayer_rooms[user_id]._id
 

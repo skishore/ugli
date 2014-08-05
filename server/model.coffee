@@ -1,5 +1,5 @@
 class @Model
-  constructor: (@rooms, @room_names) ->
+  constructor: (@rooms, @room_names, @singleplayer_rooms) ->
     Rooms.remove {}
     Chats.remove {}
     do Chats.set_cleanup_timer
@@ -31,6 +31,8 @@ class @Model
     delete @rooms[room._id]
     if room.multiplayer
       @room_names.free_name room.name
+    else if room.singleplayer_id?
+      delete @singleplayer_rooms[room.singleplayer_id]
     @_updates.push {type: 'delete_room', room: room}
     @_num_updates += 1
 

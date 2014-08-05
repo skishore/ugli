@@ -4,12 +4,13 @@
 #   users: a list of User objects currently in this room
 
 class @Room
-  constructor: (@model, name, config, singleplayer) ->
+  constructor: (@model, name, config, singleplayer_id) ->
     @users = []
-    if name? or config? or singleplayer?
+    if name? or config? or singleplayer_id?
       @name = name
       @game = new (do Common.ugli_server) @, config
-      @multiplayer = not singleplayer
+      @multiplayer = not singleplayer_id?
+      @singleplayer_id = singleplayer_id if singleplayer_id?
       @state = RoomState.WAITING
     else
       @name = 'Lobby'
@@ -33,7 +34,7 @@ class @Room
     @game.leave_game user.name if @game
     @users.splice index, 1
     if @game and @users.length == 0
-      if !!autoremove
+      if !!autoremove or @singleplayer_id?
         @model.delete_room @
       else
         @state = RoomState.WAITING
