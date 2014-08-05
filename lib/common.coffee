@@ -15,3 +15,5 @@ class @Common
   # Set a singleplayer_config boolean here to cause there to be a persistent
   # "Play singleplayer" button visible in the menu box.
   #@singleplayer_config = {max_players: 2}
+  # Set this value to true to keep singleplayer rooms around when users leave.
+  #@persist_singleplayer_rooms = false

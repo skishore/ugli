@@ -6,9 +6,12 @@ create_body = ->
 
 class @LeaveGameModal
   @show: (@room_id) ->
-    room = Rooms.findOne {_id: @room_id}
-    if room?.multiplayer and room?.players.length == 1
-      if Common.autoremove?
+    room = Rooms.get @room_id
+    if room?.players.length == 1
+      if not room.multiplayer
+        autoremove = not Common.persist_singleplayer_rooms
+        Meteor.call 'leave_game', @room_id, autoremove
+      else if Common.autoremove?
         Meteor.call 'leave_game', @room_id, Common.autoremove
       else
         BaseModal.show @, 'Leave game', (do create_body), [

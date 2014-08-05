@@ -34,7 +34,7 @@ class @Room
     @game.leave_game user.name if @game
     @users.splice index, 1
     if @game and @users.length == 0
-      if !!autoremove or @singleplayer_id?
+      if !!autoremove
         @model.delete_room @
       else
         @state = RoomState.WAITING
