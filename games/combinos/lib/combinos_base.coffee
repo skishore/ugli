@@ -9,8 +9,8 @@ EXPLANATIONS = {
     Make your opponent top out before you do!
   '''
   race: '''
-    Score more points than your opponents in the available time!
-    Up to five players can play.
+    Face off against up to four other players!
+    Score more points than your opponents in the available time.
   '''
 }
 MAX_PLAYERS = {

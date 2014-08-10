@@ -18,3 +18,19 @@
     </label>
   {{/each}}
 </template>
+
+<template name="combinos_status_table">
+  <table class="table combinos-status-table">
+    <thead>
+      <tr><th colspan="2">{{header}}</th></tr>
+    </thead>
+    <tbody>
+      {{#each rows}}
+        <tr class="{{cls}}">
+          <td class="name">{{name}}</td>
+          <td class="score">{{score}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>

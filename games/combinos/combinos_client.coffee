@@ -27,13 +27,14 @@ class @CombinosClient extends UGLIClient
     @boards = {}
     @containers = {}
     @opponents = {}
-    if @view.game_type != 'singleplayer'
-      @timer = new CombinosStatusUI (@send.bind @), @container
     # Create separate containers for our board and opponent boards.
     @my_container = $('<div>').addClass 'my-container'
-    row_class = if @one_row then 'one-row' else 'two-rows'
-    @opponent_container = $('<div>').addClass "opponent-container #{row_class}"
-    @container.append @my_container, @opponent_container
+    @container.append @my_container
+    if @view.game_type != 'singleplayer'
+      cls = if @one_row then 'one-row' else 'two-rows'
+      @opponent_container = $('<div>').addClass "opponent-container #{cls}"
+      @status_ui = new CombinosStatusUI (@send.bind @), @view, @me
+      @container.append @opponent_container, @status_ui.container
     # Update the UI based on the initial view.
     @handle_update @view
 
@@ -50,6 +51,7 @@ class @CombinosClient extends UGLIClient
 
   handle_update: (view) ->
     @set_one_row @view.num_players <= PLAYERS_PER_ROW
+    @status_ui?.handle_update view
     # Create or update boards for any extant games.
     for player, data of view.boards
       if player of @boards

@@ -36,14 +36,6 @@
   }
 }
 
-.combinos-timer {
-  font-size: 18px;
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  width: 104px;
-}
-
 .my-container, .opponent-container {
   float: left;
   height: 100%;
@@ -82,5 +74,41 @@
 
   >.combinos-client {
     margin-left: 10px;
+  }
+}
+
+.combinos-status-ui {
+  float: left;
+  width: 135px;
+
+  .timer {
+    font-size: 18px;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .table.combinos-status-table {
+    margin-top: 24px;
+
+    >thead>tr>th {
+      padding: 2px;
+      text-align: center;
+    }
+
+    >tbody>tr.bold {
+      font-weight: bold;
+    }
+
+    >tbody>tr>td {
+      padding: 2px;
+
+      &.name {
+        width: 100%;
+      }
+
+      &.score {
+        text-align: right;
+      }
+    }
   }
 }
