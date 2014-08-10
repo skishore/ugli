@@ -23,6 +23,7 @@ class @CombinosServer extends UGLIServer
     boards: boards
     game_type: @game_type
     max_players: @max_players
+    num_players: @num_players
 
   handle_message: (player, message) ->
     if message.game_index != @boards[player].gameIndex

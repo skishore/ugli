@@ -1,0 +1,20 @@
+<template name="combinos_config_ui">
+  <div class="form-group form-inline">
+    <label for="game-type" class="control-label">Game type:</label>
+    <div class="game-type btn-group btn-group-sm" data-toggle="buttons">
+      {{> combinos_radio_options game_types}}
+    </div>
+  </div>
+  <div class="form-group form-inline">
+    <label for="max-players" class="control-label">Room size:</label>
+    <label class="max-players value-label"></label>
+  </div>
+</template>
+
+<template name="combinos_radio_options">
+  {{#each this}}
+    <label class="btn btn-default btn-white {{active}}">
+      <input type="radio" value="{{value}}"> {{label}}
+    </label>
+  {{/each}}
+</template>

@@ -4,21 +4,24 @@ PLAYERS_PER_ROW = 3
 
 class @CombinosClient extends UGLIClient
   @make_config_ui: (container) ->
-    game_type_input = $('''
-      <div class="form-group form-inline">
-        <label for="game-type" class="control-label">Game type:</label>
-      </div>
-    ''')
+    data = {game_types: [], max_players: []}
     for game_type, i in CombinosBase.multiplayer_types
-      attrs = "type='radio' #{if i == 0 then 'checked="checked"' else ''}"
-      label = (do game_type.charAt(0).toUpperCase) + (game_type.slice 1)
-      game_type_input.append($("""
-        <label class="radio-inline">
-          <input name="game-type" #{attrs} value="#{game_type}"> #{label}
-        </label>
-      """))
-    container.append game_type_input
-    -> game_type: do container.find('input[name="game-type"]:checked').val
+      data.game_types.push
+        value: game_type
+        label: (do game_type.charAt(0).toUpperCase) + (game_type.slice 1)
+        active: if i == 0 then 'active' else undefined
+    # Render the template using Meteor's UI.
+    template = UI.renderWithData Template.combinos_config_ui, data
+    UI.insert template, container[0]
+    # Set event handlers for the max_players label.
+    set_max_players = (game_type) ->
+      max_players = CombinosBase.max_players game_type
+      container.find('.max-players').text "#{max_players} players"
+    set_max_players CombinosBase.multiplayer_types[0]
+    container.find('.game-type label').click (e) ->
+      set_max_players do $(@).find('input').val
+    # Return a callback that extracts data from the form.
+    -> game_type: do container.find('.game-type>.active>input').val
 
   make_game_ui: ->
     @boards = {}
@@ -60,7 +63,7 @@ class @CombinosClient extends UGLIClient
     @add_game_container player, container
     # Construct the appropriate type of board inside the container.
     if player == @me
-      send = @send_board_update .bind @, player
+      send = @send_board_update.bind @, player
       @boards[player] = new combinos.ClientBoard target, data, send
     else
       scale = if @one_row then 0.75 else 0.5

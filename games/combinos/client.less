@@ -1,15 +1,38 @@
 #base-modal {
   .form-group {
-    margin-bottom: 0;
-  }
+    margin: 12px 0 0;
 
-  .radio-inline {
-    margin-left: 0px;
-    padding-left: 12px;
-  }
+    &:first-child {
+      margin-top: 0;
+    }
 
-  .radio-inline input[type="radio"] {
-    margin: 1px 6px 1px 0;
+    .control-label {
+      font-size: 13px;
+      margin-right: 8px;
+      text-align: right;
+      width: 80px;
+    }
+
+    .value-label {
+      font-size: 13px;
+      font-weight: normal;
+      margin-bottom: 0px;
+      vertical-align: middle;
+    }
+
+    .btn-default.btn-white {
+      color: #333;
+      background-color: #fff;
+      background-image: none;
+      border-color: #ccc;
+
+      &.active {
+        background-color: #ddd;
+        background-image: none;
+        border-color: #bbb;
+        box-shadow: none;
+      }
+    }
   }
 }
 
@@ -56,6 +79,7 @@
 
 .opponent-container {
   max-width: 404px;
+
   &.two-rows {
     max-width: 272px;
   }
