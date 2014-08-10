@@ -1,5 +1,5 @@
 SYNC_ICON_HTML = '&middot;&middot;&middot;'
-PLAYERS_PER_ROW = 3
+PLAYERS_PER_ROW = 2
 
 
 class @CombinosClient extends UGLIClient
@@ -27,9 +27,8 @@ class @CombinosClient extends UGLIClient
     @boards = {}
     @containers = {}
     @opponents = {}
-    @one_row = @view.max_players <= PLAYERS_PER_ROW
     if @view.game_type != 'singleplayer'
-      @timer = new CombinosTimer (@send.bind @), @container, @one_row
+      @timer = new CombinosStatusUI (@send.bind @), @container
     # Create separate containers for our board and opponent boards.
     @my_container = $('<div>').addClass 'my-container'
     row_class = if @one_row then 'one-row' else 'two-rows'
@@ -38,7 +37,20 @@ class @CombinosClient extends UGLIClient
     # Update the UI based on the initial view.
     @handle_update @view
 
+  set_one_row: (one_row) ->
+    if one_row == @one_row
+      return
+    @one_row = one_row
+    scale = if @one_row then 0.75 else 0.5
+    for player of @boards
+      if player != @me
+        @boards[player].set_scale scale
+        @containers[player].height 'auto'
+        @fix_container_styles player, @containers[player]
+
   handle_update: (view) ->
+    @set_one_row @view.num_players <= PLAYERS_PER_ROW
+    # Create or update boards for any extant games.
     for player, data of view.boards
       if player of @boards
         @boards[player].deserialize data
