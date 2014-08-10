@@ -4,19 +4,20 @@ PLAYERS_PER_ROW = 3
 
 class @CombinosClient extends UGLIClient
   @make_config_ui: (container) ->
-    container.html('''
+    game_type_input = $('''
       <div class="form-group form-inline">
         <label for="game-type" class="control-label">Game type:</label>
-        <label class="radio-inline">
-          <input type="radio" name="game-type"
-            checked="checked" value="singleplayer">
-          Singleplayer
-        </label>
-        <label class="radio-inline">
-          <input type="radio" name="game-type" value="multiplayer"> Multiplayer
-        </label>
       </div>
     ''')
+    for game_type, i in CombinosBase.multiplayer_types
+      attrs = "type='radio' #{if i == 0 then 'checked="checked"' else ''}"
+      label = (do game_type.charAt(0).toUpperCase) + (game_type.slice 1)
+      game_type_input.append($("""
+        <label class="radio-inline">
+          <input name="game-type" #{attrs} value="#{game_type}"> #{label}
+        </label>
+      """))
+    container.append game_type_input
     -> game_type: do container.find('input[name="game-type"]:checked').val
 
   make_game_ui: ->

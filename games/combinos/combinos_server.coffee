@@ -1,10 +1,10 @@
 class @CombinosServer extends UGLIServer
   initialize_state: (config) ->
-    if config.game_type not in ['singleplayer', 'multiplayer']
+    if config.game_type not in CombinosBase.game_types
       throw new UGLIClientError "Invalid game_type: #{config.game_type}"
     @game_type = config.game_type
     @num_players = 0
-    @max_players = if @game_type == 'singleplayer' then 1 else 2
+    @max_players = CombinosBase.max_players @game_type
     @boards = {}
     @seed = (do new Date().getTime)
 
