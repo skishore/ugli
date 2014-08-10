@@ -24,9 +24,12 @@ class @CombinosClient extends UGLIClient
     @containers = {}
     @opponents = {}
     @one_row = @view.max_players <= PLAYERS_PER_ROW
+    if @view.game_type != 'singleplayer'
+      @timer = new CombinosTimer (@send.bind @), @container, @one_row
     # Create separate containers for our board and opponent boards.
     @my_container = $('<div>').addClass 'my-container'
-    @opponent_container = $('<div>').addClass 'opponent-container'
+    row_class = if @one_row then 'one-row' else 'two-rows'
+    @opponent_container = $('<div>').addClass "opponent-container #{row_class}"
     @container.append @my_container, @opponent_container
     # Update the UI based on the initial view.
     @handle_update @view
