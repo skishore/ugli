@@ -20,8 +20,9 @@ class @CombinosServer extends UGLIServer
     boards = {}
     for player, board of @boards
       boards[player] = do board.serialize
-    game_type: @game_type
     boards: boards
+    game_type: @game_type
+    max_players: @max_players
 
   handle_message: (player, message) ->
     if message.game_index != @boards[player].gameIndex

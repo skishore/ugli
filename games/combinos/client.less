@@ -13,25 +13,43 @@
   }
 }
 
-.combinos-client {
-  background-color: #eee;
-  border: 1px solid #bbb;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  display: inline-block;
+.my-container, .opponent-container {
+  float: left;
+  height: 100%;
 
-  >.player {
-    border-bottom: 1px solid #bbb;
-    padding: 2px 8px 1px;
-    text-align: left;
+  >.combinos-client {
+    background-color: #eee;
+    border: 1px solid #bbb;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    display: block;
+    float: left;
 
-    .sync-icon {
-      display: inline-block;
-      float: right;
+    >.player {
+      border-bottom: 1px solid #bbb;
+      padding: 1px 8px 0px;
+      text-align: left;
+
+      .sync-icon {
+        display: inline-block;
+        float: right;
+      }
+    }
+
+    &.synced >.player .sync-icon {
+      display: none;
     }
   }
+}
 
-  &.synced >.player .sync-icon {
-    display: none;
+.my-container >.combinos-client {
+  margin-left: 5px;
+}
+
+.opponent-container {
+  max-width: 404px;
+
+  >.combinos-client {
+    margin-left: 10px;
   }
 }
