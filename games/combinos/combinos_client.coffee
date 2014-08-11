@@ -30,7 +30,7 @@ class @CombinosClient extends UGLIClient
     # Create separate containers for our board and opponent boards.
     @my_container = $('<div>').addClass 'my-container'
     @container.append @my_container
-    if @view.game_type != 'singleplayer'
+    if not @view.singleplayer
       cls = if @one_row then 'one-row' else 'two-rows'
       @opponent_container = $('<div>').addClass "opponent-container #{cls}"
       @status_ui = new CombinosStatusUI (@send.bind @), @view, @me

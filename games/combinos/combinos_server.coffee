@@ -6,6 +6,8 @@ class @CombinosServer extends UGLIServer
     @game_type = config.game_type
     @max_players = CombinosBase.max_players @game_type
     @num_players = 0
+    @singleplayer = @game_type == 'singleplayer'
+    # The only piece of state that is private to the server.
     @seed = Math.floor (1 << 30)*(do Math.random)
 
   get_lobby_view: ->
@@ -24,6 +26,7 @@ class @CombinosServer extends UGLIServer
     game_type: @game_type
     max_players: @max_players
     num_players: @num_players
+    singleplayer: @singleplayer
 
   handle_message: (player, message) ->
     if message.game_index != @boards[player].gameIndex
@@ -45,7 +48,7 @@ class @CombinosServer extends UGLIServer
           @boards[player].update keys
 
   handle_start: (player) ->
-    if @game_type != 'singleplayer'
+    if not @singleplayer
       throw new UGLIClientError "Can't press start in #{@game_type} game"
     if @boards[player].state != combinos.Constants.GAMEOVER
       throw new UGLIClientError "Can't reset #{@boards[player].state} board"
