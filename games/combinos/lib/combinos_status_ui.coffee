@@ -8,10 +8,10 @@ class @CombinosStatusUI
 
   handle_update: (view) ->
     data = {header: 'Current scores', rows: []}
-    for player of view.boards
+    for player of view.round.scores
       data.rows.push
         name: player
-        score: view.boards[player].score
+        score: view.round.scores[player]
         cls: if player == @me then 'bold' else undefined
     data.rows.sort (a, b) ->
       if a.score == b.score then a.name > b.name else b.score - a.score

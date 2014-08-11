@@ -7,6 +7,8 @@ class @CombinosServer extends UGLIServer
     @max_players = CombinosBase.max_players @game_type
     @num_players = 0
     @singleplayer = @game_type == 'singleplayer'
+    if not @singleplayer
+      @round_manager = new CombinosRoundManager @
     # The only piece of state that is private to the server.
     @seed = Math.floor (1 << 30)*(do Math.random)
 
@@ -26,6 +28,7 @@ class @CombinosServer extends UGLIServer
     game_type: @game_type
     max_players: @max_players
     num_players: @num_players
+    round: do @round_manager?.serialize
     singleplayer: @singleplayer
 
   handle_message: (player, message) ->
@@ -37,6 +40,7 @@ class @CombinosServer extends UGLIServer
       @handle_start player
     else
       throw new UGLIClientError "Unknown message type: #{message.type}"
+    do @round_manager?.handle_update
 
   handle_move: (player, move_queue) ->
     check move_queue, [{syncIndex: Number, move: [[Number]]}]
@@ -59,7 +63,9 @@ class @CombinosServer extends UGLIServer
       throw new UGLIClientError "#{player} joined a full game!"
     @num_players += 1
     @boards[player] = new combinos.ServerBoard @seed
+    @round_manager?.join_game player
 
   leave_game: (player) ->
     @num_players -= 1
     delete @boards[player]
+    @round_manager?.leave_game player
