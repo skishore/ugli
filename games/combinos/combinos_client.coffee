@@ -77,11 +77,12 @@ class @CombinosClient extends UGLIClient
     @add_game_container player, container
     # Construct the appropriate type of board inside the container.
     if player == @me
+      game_type = @view.game_type
       send = @send_board_update.bind @, player
-      @boards[player] = new combinos.ClientBoard target, data, send
+      @boards[player] = new combinos.ClientBoard target, data, game_type, send
     else
       scale = if @one_row then 0.75 else 0.5
-      @boards[player] = new combinos.OpponentBoard scale, target, data
+      @boards[player] = new combinos.OpponentBoard target, data, scale
     # Register the new container and fix its height.
     @containers[player] = container
     @fix_container_styles player, container
