@@ -221,3 +221,8 @@ class @HanabiServer extends UGLIServer
 
   leave_game: (player) ->
     @seats[@get_seat player] = false
+    if not @started
+      delete @seat_history[player]
+
+  start_game: (player) ->
+    @started = true
