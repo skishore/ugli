@@ -80,3 +80,7 @@ class @UGLIServer
     # Called when a player leaves this game. The leave cannot be canceled,
     # so this method should never throw an exception.
     console.log 'UGLIServer.leave_game has not been implemented.'
+
+  start_game: ->
+    # Called when the players leave the lobby and actually enter the game.
+    # By default, this method does nothing.

@@ -45,5 +45,6 @@ class @Room
   start_game: ->
     if @state != RoomState.WAITING
       throw new UGLIPermissionsError "Can't start a #{@state} game!"
+    do @game.start_game
     @state = RoomState.PLAYING
     @model.update_room @
