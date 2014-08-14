@@ -12,19 +12,13 @@ class @CombinosRoundUI
     do @update_timer
 
   handle_update: (round) ->
-    @end_time = @get_end_time round
+    @next_time = round.next_time
     do @update_timer
     @update_status_table @get_status_data round
 
-  get_end_time: (round) ->
-    if round.playing
-      return round.start_time + round.duration
-    else
-      return round.start_time
-
   update_timer: ->
     time = do new Date().getTime
-    time_left = @format_time (Math.max @end_time - time, 0)
+    time_left = @format_time (Math.max @next_time - time, 0)
     if time_left != @time_left
       @timer.text time_left
       @time_left = time_left

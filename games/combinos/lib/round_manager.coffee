@@ -1,70 +1,69 @@
+RoundStates = CombinosBase.ROUND_STATES
 WAITING = 3 # combinos.Constants.WAITING
 
 
 class @CombinosRoundManager
   constructor: (@game) ->
     assert not @game.singleplayer
-    @reset (do new Date().getTime)
-
-  reset: (time) ->
-    @start_time = time
-    @duration = CombinosBase.ROUND_DURATIONS[@game.game_type]
-    # The number and set of players currently in the round.
-    # If a player leaves a round, they will still be included in scores
-    # and they will still be scored when the round ends, but they will
-    # not be in @players.
-    @num_players = 0
-    @players = {}
-    @playing = false
+    @next_time = (do new Date().getTime)
     @scores = {}
+    @state = RoundStates.NOT_STARTED
 
   serialize: ->
-    start_time: @start_time
-    duration: @duration
-    playing: @playing
+    next_time: @next_time
     scores: @scores
+    state: @state
 
   handle_update: ->
     time = (do new Date().getTime)
-    if @playing
+    # If the round is waiting for time, continue after time > next_time.
+    if @state == RoundStates.WAITING_FOR_TIME
+      if time > @next_time
+        @state = RoundStates.WAITING_FOR_PLAYERS
+    # If the round is waiting for a second player, check if we have it.
+    if @state == RoundStates.WAITING_FOR_PLAYERS
+      if @game.num_players > 1
+        @start_round time
+    # Otherwise, if the round is being played, check if it is over. A round
+    # can end in either of two ways:
+    #   - Time runs out (that is, time > next_time)
+    #   - The game is a battle and a single player is left
+    else if @state == RoundStates.PLAYING
       num_players_alive = 0
-      for player of @players
+      for player of @scores
         # Pick up score updates from boards in the PLAYING or GAMEOVER states.
         if player of @game.boards and @game.boards[player]?.state != WAITING
           @scores[player] = @game.boards[player].score
           if @game.boards[player].state == combinos.Constants.PLAYING
             num_players_alive += 1
-      if (time > @start_time + @duration) or @num_players <= 1
+      if time > @next_time
         @end_round time
       else if @game.game_type == 'battle' and num_players_alive <= 1
         @end_round time
-    else if time > @start_time and @game.num_players > 1
-      @start_round time
 
   join_game: (player) ->
     @game.boards[player].state = WAITING
     do @handle_update
 
-  leave_game: (player) ->
-    if player of @players
-      delete @players[player]
-      @num_players -= 1
-      do @handle_update
-
   start_round: (time) ->
-    @start_time = time
-    @playing = true
+    @next_time = time + CombinosBase.ROUND_DURATIONS[@game.game_type]
+    @scores = {}
+    @state = RoundStates.PLAYING
+    # Update the server seed and reset each client's board.
+    # Additionally, record each client's score in the score dictionary so that
+    # we know who was in the round to start.
     @game.seed = Math.floor (1 << 30)*(do Math.random)
     for player of @game.boards
       @game.boards[player].reset @game.seed
-      @players[player] = true
       @scores[player] = 0
-    @num_players = @game.num_players
 
   end_round: (time) ->
     console.log "Ending round:"
     console.log do @serialize
-    @reset time + CombinosBase.BETWEEN_ROUND_DURATION
     for player of @game.boards
       @game.boards[player].state = WAITING
       do @game.boards[player].forceClientUpdate
+    # We modify next_time and state so that clients will update their timers,
+    # but keep scores so that they can review the results of the last game.
+    @next_time = time + CombinosBase.BETWEEN_ROUND_DURATION
+    @state = RoundStates.WAITING_FOR_TIME

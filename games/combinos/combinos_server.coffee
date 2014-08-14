@@ -68,4 +68,10 @@ class @CombinosServer extends UGLIServer
   leave_game: (player) ->
     @num_players -= 1
     delete @boards[player]
-    @round_manager?.leave_game player
+    do @round_manager?.handle_update
+
+  start_game: ->
+    # We don't want round timers to start until the game is started.
+    if @round_manager?.state == CombinosBase.ROUND_STATES.NOT_STARTED
+      @round_manager.state = CombinosBase.ROUND_STATES.WAITING_FOR_TIME
+      do @round_manager.handle_update

@@ -36,3 +36,12 @@ class @CombinosBase
     battle: 1000*60*6
     race: 1000*60*2
   }
+
+  # List of states that a multiplayer game's RoundManager can be in.
+  @ROUND_STATES = {
+    NOT_STARTED: 0
+    WAITING_FOR_TIME: 1
+    WAITING_FOR_PLAYERS: 2
+    PLAYING: 3
+    REVIEW: 4
+  }
