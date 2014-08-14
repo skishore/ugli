@@ -5,7 +5,7 @@ PLAYERS_PER_ROW = 2
 class @CombinosClient extends UGLIClient
   @make_config_ui: (container) ->
     data = {game_types: [], max_players: []}
-    for game_type, i in CombinosBase.multiplayer_types
+    for game_type, i in CombinosBase.MULTIPLAYER_TYPES
       data.game_types.push
         value: game_type
         label: (do game_type.charAt(0).toUpperCase) + (game_type.slice 1)
@@ -15,9 +15,9 @@ class @CombinosClient extends UGLIClient
     UI.insert template, container[0]
     # Set event handlers for the max_players label.
     set_max_players = (game_type) ->
-      max_players = CombinosBase.max_players game_type
+      max_players = CombinosBase.MAX_PLAYERS[game_type]
       container.find('.max-players').text "#{max_players} players"
-    set_max_players CombinosBase.multiplayer_types[0]
+    set_max_players CombinosBase.MULTIPLAYER_TYPES[0]
     container.find('.game-type label').click (e) ->
       set_max_players do $(@).find('input').val
     # Return a callback that extracts data from the form.

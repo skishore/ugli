@@ -8,7 +8,7 @@ class @CombinosRoundManager
 
   reset: (time) ->
     @start_time = time
-    @duration = CombinosBase.round_duration @game.game_type
+    @duration = CombinosBase.ROUND_DURATIONS[@game.game_type]
     # The number and set of players currently in the round.
     # If a player leaves a round, they will still be included in scores
     # and they will still be scored when the round ends, but they will
@@ -64,7 +64,7 @@ class @CombinosRoundManager
   end_round: (time) ->
     console.log "Ending round:"
     console.log do @serialize
-    @reset time + CombinosBase.between_round_duration
+    @reset time + CombinosBase.BETWEEN_ROUND_DURATION
     for player of @game.boards
       @game.boards[player].state = WAITING
       do @game.boards[player].forceClientUpdate
