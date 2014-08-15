@@ -34,7 +34,7 @@ class @CombinosBase
   @BETWEEN_ROUND_DURATION = 1000*30
   @ROUND_DURATIONS = {
     battle: 1000*60*6
-    race: 1000*60*2
+    race: 1000*60*6
   }
 
   # List of states that a multiplayer game's RoundManager can be in.
