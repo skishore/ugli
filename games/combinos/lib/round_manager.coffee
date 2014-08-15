@@ -25,21 +25,35 @@ class @CombinosRoundManager
       if @game.num_players > 1
         @start_round time
     # Otherwise, if the round is being played, check if it is over. A round
-    # can end in either of two ways:
+    # can end in several ways:
     #   - Time runs out (that is, time > next_time)
-    #   - The game is a battle and a single player is left
+    #   - Everyone is either knocked out or leaves
+    #   - There is only one player left and he is guaranteed to win
     else if @state == RoundStates.PLAYING
       num_players_alive = 0
+      live_player_score = 0
       for player of @scores
+        board = @game.boards[player]
         # Pick up score updates from boards in the PLAYING or GAMEOVER states.
-        if player of @game.boards and @game.boards[player]?.state != WAITING
-          @scores[player] = @game.boards[player].score
-          if @game.boards[player].state == combinos.Constants.PLAYING
+        if board? and board.state != WAITING
+          @scores[player] = board.score
+          if board.state == combinos.Constants.PLAYING
             num_players_alive += 1
-      if time > @next_time
+            live_player_score = board.score
+      if (time > @next_time) or (num_players_alive == 0) or
+         (num_players_alive == 1 and @last_player_wins live_player_score)
         @end_round time
-      else if @game.game_type == 'battle' and num_players_alive <= 1
-        @end_round time
+
+  last_player_wins: (score) ->
+    # Return true if this score is the unique maximum score in @scores,
+    # or if the game_type is battle.
+    if @game.game_type == 'battle'
+      return true
+    number_of_good_scores = 0
+    for _, other_score of @scores
+      if other_score >= score
+        number_of_good_scores += 1
+    return number_of_good_scores == 1
 
   join_game: (player) ->
     @game.boards[player].state = WAITING
