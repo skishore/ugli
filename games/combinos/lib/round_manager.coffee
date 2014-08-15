@@ -14,6 +14,12 @@ class @CombinosRoundManager
     scores: @scores
     state: @state
 
+  handle_client_update: ->
+    # Do basic checks to make sure the client isn't crazy, then a full update.
+    if @state == RoundStates.WAITING_FOR_TIME or @state == RoundStates.PLAYING
+      if (do new Date().getTime) > @next_time
+        do @handle_update
+
   handle_update: ->
     time = (do new Date().getTime)
     # If the round is waiting for time, continue after time > next_time.

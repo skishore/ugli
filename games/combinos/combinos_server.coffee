@@ -32,6 +32,11 @@ class @CombinosServer extends UGLIServer
     singleplayer: @singleplayer
 
   handle_message: (player, message) ->
+    # Check for the advance-round message.
+    if message.type == 'update_round'
+      do @round_manager?.handle_client_update
+      return
+    # All other types of updates are game updates.
     if message.game_index != @boards[player].gameIndex
       throw new UGLIClientError "Got update for old game: #{message.game_index}"
     if message.type == 'move'

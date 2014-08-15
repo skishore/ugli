@@ -4,31 +4,33 @@ class @CombinosRoundUI
     @timer = $('<div>').addClass 'timer'
     @container.append @timer
     @handle_update round
-    @interval = setInterval @tick.bind @, 1000
+    @interval = setInterval (@tick.bind @), 1000
 
   tick: ->
     if not $.contains window.document, @container[0]
       return clearInterval @interval
-    do @update_timer
+    if do @update_timer
+      @send {type: 'update_round'}
 
-  handle_update: (round) ->
-    @round = round
+  handle_update: (@round) ->
     do @update_timer
     @update_status_table @get_status_data round
 
   update_timer: ->
+    # Update the timer text. Returns true if we should try to start the round.
     time = do new Date().getTime
     if @round.state == CombinosBase.ROUND_STATES.WAITING_FOR_PLAYERS
       time_left = 'Need players...'
     else
       time_left = @format_time (Math.max @round.next_time - time, 0)
+      due = time > @round.next_time
     if time_left != @time_left
       @timer.text time_left
       @time_left = time_left
-    time_left
+    due
 
   format_time: (time) ->
-    seconds = Math.floor time/1000
+    seconds = Math.ceil time/1000
     seconds_text = '' + (seconds % 60)
     while seconds_text.length < 2
       seconds_text = '0' + seconds_text
