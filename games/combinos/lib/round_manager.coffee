@@ -43,6 +43,7 @@ class @CombinosRoundManager
 
   join_game: (player) ->
     @game.boards[player].state = WAITING
+    @game.boards[player].pauseReason = {text: 'Waiting for next round...'}
     do @handle_update
 
   start_round: (time) ->
@@ -58,12 +59,29 @@ class @CombinosRoundManager
       @scores[player] = 0
 
   end_round: (time) ->
-    console.log "Ending round:"
-    console.log do @serialize
-    for player of @game.boards
-      @game.boards[player].state = WAITING
-      do @game.boards[player].forceClientUpdate
+    ranking = do @get_round_ranking
+    console.log 'Ranking:', ranking
+    for player, board of @game.boards
+      text = ranking[player] or 'Waiting for next round...'
+      board.pauseReason = {last_state: board.state, text: text}
+      board.state = WAITING
+      do board.forceClientUpdate
     # We modify next_time and state so that clients will update their timers,
     # but keep scores so that they can review the results of the last game.
     @next_time = time + CombinosBase.BETWEEN_ROUND_DURATION
     @state = RoundStates.WAITING_FOR_TIME
+
+  get_round_ranking: ->
+    ranking = {}
+    if @game.game_type == 'battle'
+      for player of @scores
+        if @game.boards[player]?.state == combinos.Constants.PLAYING
+          ranking[player] = 1
+        else
+          ranking[player] = 2
+    else if @game.game_type == 'race'
+      scores = ([player, score] for player, score of @scores)
+      scores.sort (a, b) -> b[1] - a[1]
+      for row, i in scores
+        ranking[row[0]] = i + 1
+    ranking
