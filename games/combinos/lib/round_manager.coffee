@@ -99,7 +99,10 @@ class @CombinosRoundManager
           ranking[player] = 1
         else
           ranking[player] = 2
-    else if @game.game_type == 'race'
+          has_clear_winner = true
+    # Use score-based ranking for 'race' games, or if the game_type was
+    # 'battle' but both players are still alive.
+    if @game.game_type == 'race' or not has_clear_winner
       scores = ([player, score] for player, score of @scores)
       scores.sort (a, b) -> b[1] - a[1]
       for row, i in scores
