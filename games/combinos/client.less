@@ -83,6 +83,7 @@
 
   .timer {
     font-size: 18px;
+    font-weight: bold;
     margin-top: 12px;
     text-align: center;
   }
@@ -111,4 +112,23 @@
       }
     }
   }
+}
+
+.danger {
+  color: red;
+}
+
+.flashing-danger {
+  -webkit-animation: myfirst 0.25s steps(2, start) infinite;
+  animation: myfirst 0.25s steps(2, start) infinite;
+}
+
+@-webkit-keyframes myfirst {
+  from { background-color: white; color: black; }
+  to { background-color: red; color: black; }
+}
+
+@keyframes myfirst {
+  from { background-color: white; color: black; }
+  to { background-color: red; color: black; }
 }

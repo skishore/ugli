@@ -1,3 +1,8 @@
+RoundStates = CombinosBase.ROUND_STATES
+FLASHING_DANGER_TIME = 1000*30
+DANGER_TIME = 1000*25
+
+
 class @CombinosRoundUI
   constructor: (@send, round, @me) ->
     @container = $('<div>').addClass 'combinos-status-ui'
@@ -19,14 +24,23 @@ class @CombinosRoundUI
   update_timer: ->
     # Update the timer text. Returns true if we should try to start the round.
     time = do new Date().getTime
-    if @round.state == CombinosBase.ROUND_STATES.WAITING_FOR_PLAYERS
-      time_left = 'Need players...'
+    timer_css_class = ''
+    if @round.state == RoundStates.WAITING_FOR_PLAYERS
+      timer_str = 'Need players...'
     else
-      time_left = @format_time (Math.max @round.next_time - time, 0)
-      due = time > @round.next_time
-    if time_left != @time_left
-      @timer.text time_left
-      @time_left = time_left
+      time_left = (Math.max @round.next_time - time, 0)
+      timer_str = @format_time time_left
+      if @round.state == RoundStates.PLAYING
+        if time_left < DANGER_TIME
+          timer_css_class = 'danger'
+        else if time_left < FLASHING_DANGER_TIME
+          timer_css_class = 'flashing-danger'
+      due = time_left <= 0
+    if timer_str != @timer_str
+      @timer.text timer_str
+    if timer_css_class != @timer_css_class
+      @timer.removeClass('danger flashing-danger').addClass(timer_css_class)
+      @timer_css_class = timer_css_class
     due
 
   format_time: (time) ->
