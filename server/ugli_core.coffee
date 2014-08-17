@@ -98,6 +98,10 @@ class @UGLICore
   send_game_message: (user_id, room_id, message) ->
     @model.transaction =>
       user = @get_user user_id
+      if not user.room_id?
+        # On server restart, user's still think they're in the old game rooms.
+        # Drop these messages silently.
+        return
       if room_id != user.room_id
         throw new UGLIPermissionsError "User isn't in game in room #{room_id}!"
       room = @rooms[room_id]
