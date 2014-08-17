@@ -66,7 +66,7 @@ class @CombinosServer extends UGLIServer
     board.update keys
     if board.score != last_score and @game_type == 'battle'
       if opponent?.state == combinos.Constants.PLAYING
-        opponent.handleRawAttack board.score - last_score, board.combo
+        opponent.handleAttack board
 
   handle_start: (player) ->
     if not @singleplayer
