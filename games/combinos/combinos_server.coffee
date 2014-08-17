@@ -37,7 +37,7 @@ class @CombinosServer extends UGLIServer
       do @round_manager?.handle_client_update
       return
     # All other types of updates are game updates.
-    if message.game_index != @boards[player].gameIndex
+    if message.game_index != @boards[player]?.gameIndex
       throw new UGLIClientError "Got update for old game: #{message.game_index}"
     if message.type == 'move'
       @handle_move player, message.move_queue
@@ -49,12 +49,24 @@ class @CombinosServer extends UGLIServer
 
   handle_move: (player, move_queue) ->
     check move_queue, [{syncIndex: Number, move: [[Number]]}]
-    if @boards[player].state != combinos.Constants.PLAYING
+    board = @boards[player]
+    if board.state != combinos.Constants.PLAYING
       throw new UGLIClientError "#{player}'s board is not PLAYING"
+    # Get the opponent's board in battle mode to deliver attacks.
+    if @game_type == 'battle'
+      opponents = (other for other of @boards when other != player)
+      opponent = @boards[opponents[0]] if opponents.length > 0
     for move in move_queue
-      if @boards[player].syncIndex < move.syncIndex
+      if board.syncIndex < move.syncIndex
         for keys in move.move
-          @boards[player].update keys
+          @make_move board, keys, opponent
+
+  make_move: (board, keys, opponent) ->
+    last_score = board.score
+    board.update keys
+    if board.score != last_score and @game_type == 'battle'
+      if opponent?.state == combinos.Constants.PLAYING
+        opponent.handleRawAttack board.score - last_score, board.combo
 
   handle_start: (player) ->
     if not @singleplayer
@@ -67,7 +79,7 @@ class @CombinosServer extends UGLIServer
     if @num_players == @max_players
       throw new UGLIClientError "#{player} joined a full game!"
     @num_players += 1
-    @boards[player] = new combinos.ServerBoard @seed
+    @boards[player] = new combinos.ServerBoard @game_type, @seed
     @round_manager?.join_game player
 
   leave_game: (player) ->
