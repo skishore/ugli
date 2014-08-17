@@ -31,7 +31,7 @@ class @CombinosBase
   }
 
   # Multiplayer game type configuration constants.
-  @BETWEEN_ROUND_DURATION = 1000*20
+  @BETWEEN_ROUND_DURATION = 1000*15
   @ROUND_DURATIONS = {
     battle: 1000*60*6
     race: 1000*60*6

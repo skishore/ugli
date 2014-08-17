@@ -80,7 +80,6 @@ class @CombinosRoundManager
 
   end_round: (time) ->
     ranking = do @get_round_ranking
-    console.log 'Ranking:', ranking
     for player, board of @game.boards
       text = ranking[player] or 'Waiting for next round...'
       board.pauseReason = {last_state: board.state, text: text}
