@@ -4,6 +4,7 @@ SOURCE_PATH="../combinos"
 TARGET_PATH="games/combinos"
 
 FILES=(
+external/proparty/0.1.0/proparty.min.js
 external/protovis/3.3.1/protovis.min.js
 util.js
 
