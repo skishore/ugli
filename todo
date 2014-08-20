@@ -1,0 +1,13 @@
+Battle mode
+- Get piece coloration working
+- Speed up game in last two minute / last minute
+
+Race mode
+- Allow players to join games late
+
+Alphabet mode
+- Implement two-player alphabet race
+
+UGLI core
+- Record player histories and expose high scores
+- Add ELO ranking system for multiplayer
