@@ -11,7 +11,8 @@ Template.game_details.game = ->
     game.empty_spots = [0...num_empty_spots]
 
     username = Meteor.user()?.username
-    game.disable_start_game = active_if game.summary.host == username
+    can_start = game.summary.host == username or Common.any_player_can_start
+    game.disable_start_game = active_if can_start
     game.disable_join_game = active_if game.summary.open
     game.is_member = (game.players.indexOf username) >= 0
   else
