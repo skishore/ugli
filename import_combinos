@@ -48,6 +48,7 @@ if true; then
   done
   printf '''
 this.combinos.Constants = Constants;
+this.combinos.Options = Options;
 this.combinos.ClientBoard = ClientBoard;
 this.combinos.OpponentBoard = OpponentBoard;
 this.combinos.ServerBoard = ServerBoard;

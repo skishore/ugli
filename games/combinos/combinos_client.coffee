@@ -68,6 +68,9 @@ class @CombinosClient extends UGLIClient
         delete @containers[player]
         delete @boards[player]
 
+  handle_options_update: (options) ->
+    @boards[@me]?.updateSettings @get_settings options
+
   add_board_for_player: (player, data) ->
     target = $('<div>').addClass 'combinos'
     container = $('<div>').addClass('synced combinos-client').append(
@@ -77,15 +80,21 @@ class @CombinosClient extends UGLIClient
     @add_game_container player, container
     # Construct the appropriate type of board inside the container.
     if player == @me
-      game_type = @view.game_type
-      send = @send_board_update.bind @, player
-      @boards[player] = new combinos.ClientBoard target, data, game_type, send
+      settings = @get_settings @options
+      @boards[player] = new combinos.ClientBoard target, data, settings
     else
       scale = if @one_row then 0.75 else 0.5
       @boards[player] = new combinos.OpponentBoard target, data, scale
     # Register the new container and fix its height.
     @containers[player] = container
     @fix_container_styles player, container
+
+  get_settings: (options) ->
+    # Construct a settings dictionary to pass to the player's board.
+    game_type: @view.game_type
+    options: options
+    send: @send_board_update.bind @, @me
+    singleplayer: @view.game_type == 'singleplayer'
 
   add_game_container: (player, container) ->
     if player == @me

@@ -12,7 +12,7 @@ class @Common
 
   # If your game has per-player options, set @ugli_options to your
   # implementation of this class here.
-  #@ugli_options = -> CombinosOptions
+  @ugli_options = -> CombinosOptions
 
   # Set an autoremove boolean here to control whether rooms are automatically
   # deleted when the last user leaves. If unset, a dialog will be shown.
