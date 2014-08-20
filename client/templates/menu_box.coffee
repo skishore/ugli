@@ -15,5 +15,8 @@ Template.menu_box.events
   'click .btn.leave-game': (e) ->
     LeaveGameModal.show do Session.get_game_id
 
+  'click .btn.show-options': (e) ->
+    do OptionsModal.show
+
   'click .btn.play-singleplayer': (e) ->
     do PlaySingleplayerModal.show

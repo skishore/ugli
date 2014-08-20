@@ -27,3 +27,8 @@ Meteor.startup ->
         else
           ugli_client = new (do Common.ugli_client)(
             user, room, ingame_ui_element)
+
+  Deps.autorun ->
+    options = Meteor.user()?.profile?.options
+    if ugli_client?
+      ugli_client._handle_options_update options

@@ -1,5 +1,6 @@
 # An instance of UGLIClient stores the following data about the game:
 #   @me: which player this client is for
+#   @options: the player's current options
 #   @view: immutable view of game state
 #   @container: a jQuery-wrapped div that contains the game UI
 #
@@ -14,6 +15,7 @@ class @UGLIClient
     @_user_id = user._id
     @_room_id = room._id
     @me = user.username
+    @options = user.profile?.options or {}
     @view = @_extract_view room.game
     do @make_game_ui
 
@@ -24,6 +26,12 @@ class @UGLIClient
     new_view = @_extract_view room.game
     @handle_update new_view
     @view = new_view
+
+  _handle_options_update: (options) ->
+    options = options or {}
+    if not _.isEqual @options, options
+      @handle_options_update options
+      @options = options
 
   send: (message) ->
     Meteor.call 'send_game_message', @_room_id, message, (err, result) ->
@@ -54,3 +62,7 @@ class @UGLIClient
   handle_update: (view) ->
     # Takes a new view and updates the UI. The last view is available in @view.
     console.log 'UGLIClient.handle_update has not been implemented.'
+
+  handle_options_update: (options) ->
+    # Takes a new options dict and updates the UI. Old options are in @options.
+    console.log 'UGLIClient.handle_options_update has not been implemented.'

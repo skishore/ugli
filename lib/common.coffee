@@ -9,6 +9,9 @@ class @Common
   @title = 'Hanabi'
   @ugli_client = -> HanabiClient
   @ugli_server = -> HanabiServer
+  # If your game has per-player options, set @ugli_options to your
+  # implementation of this class here.
+  #@ugli_options = -> HanabiOptions
   # Set an autoremove boolean here to control whether rooms are automatically
   # deleted when the last user leaves. If unset, a dialog will be shown.
   #@autoremove = true
