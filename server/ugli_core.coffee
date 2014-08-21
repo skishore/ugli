@@ -33,7 +33,7 @@ class @UGLICore
       delete @users[db_user._id]
       @rooms[@lobby_id].drop_user user
       if user.room_id?
-        @rooms[user.room_id].drop_user user
+        @rooms[user.room_id].drop_user user, Common.autoremove
 
   get_user: (user_id) ->
     if user_id not of @users
