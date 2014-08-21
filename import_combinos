@@ -30,6 +30,7 @@ OpponentBoard.js
 ServerBoard.js
 )
 
+cp $SOURCE_PATH/color.css $TARGET_PATH/color.css
 cp $SOURCE_PATH/style.css $TARGET_PATH/style.css
 
 if true; then
@@ -56,7 +57,6 @@ this.combinos.ServerBoard = ServerBoard;
 if (Meteor.isClient) {
   Meteor.startup(function() {
     initialize_move_library();
-    Color.initialize(Color.colorCode);
   });
 }
 '''
