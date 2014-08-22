@@ -30,7 +30,10 @@ OpponentBoard.js
 ServerBoard.js
 )
 
-cp $SOURCE_PATH/color.css $TARGET_PATH/color.css
+pushd $SOURCE_PATH
+node generate_color.js
+popd
+mv $SOURCE_PATH/color.css $TARGET_PATH/color.css
 cp $SOURCE_PATH/style.css $TARGET_PATH/style.css
 
 if true; then
