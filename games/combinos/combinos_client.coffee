@@ -83,8 +83,9 @@ class @CombinosClient extends UGLIClient
       settings = @get_settings @options
       @boards[player] = new combinos.ClientBoard target, data, settings
     else
+      settings = {game_type: @view.game_type, singleplayer: false}
       scale = if @one_row then 0.75 else 0.5
-      @boards[player] = new combinos.OpponentBoard target, data, scale
+      @boards[player] = new combinos.OpponentBoard target, data, settings, scale
     # Register the new container and fix its height.
     @containers[player] = container
     @fix_container_styles player, container

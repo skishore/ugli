@@ -79,7 +79,8 @@ class @CombinosServer extends UGLIServer
     if @num_players == @max_players
       throw new UGLIClientError "#{player} joined a full game!"
     @num_players += 1
-    @boards[player] = new combinos.ServerBoard @game_type, @seed
+    settings = {game_type: @game_type, singleplayer: @singleplayer}
+    @boards[player] = new combinos.ServerBoard settings, @seed
     @round_manager?.join_game player
 
   leave_game: (player) ->
