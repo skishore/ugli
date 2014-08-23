@@ -1,4 +1,5 @@
 Meteor.startup ->
+  Meteor.users.remove {'profile.guest': true}
   core = new UGLICore
 
 

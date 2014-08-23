@@ -34,6 +34,7 @@ class @UGLICore
       @rooms[@lobby_id].drop_user user
       if user.room_id?
         @rooms[user.room_id].drop_user user, Common.autoremove
+    Meteor.users.remove {_id: db_user._id, 'profile.guest': true}
 
   get_user: (user_id) ->
     if user_id not of @users

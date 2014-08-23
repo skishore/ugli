@@ -20,7 +20,7 @@
         <ul class="nav navbar-nav">
           <li><a>{{room_name}}</a></li>
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right {{guest}}">
           {{#if logged_in}}
             <li><a>{{> loginButtons}}</a></li>
           {{/if}}
@@ -248,7 +248,13 @@
 
 <template name="signed_out_message">
   <div id="signed-out-message">
-    {{> loginButtons}} to play {{title}}.
+    {{> loginButtons}} to play {{title}}:
+    <div class="guest-account-message">
+      <a class="btn btn-default btn-sm">Use a guest account</a>
+    </div>
+    <div class="guest-account-warning">
+      As a guest, your high scores will not be saved.
+    </div>
   </div>
 </template>
 
