@@ -94,6 +94,7 @@ class @CombinosClient extends UGLIClient
     # Construct a settings dictionary to pass to the player's board.
     game_type: @view.game_type
     options: options
+    me: true
     send: @send_board_update.bind @, @me
     singleplayer: @view.game_type == 'singleplayer'
 

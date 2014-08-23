@@ -36,6 +36,9 @@ class @CombinosServer extends UGLIServer
     if message.type == 'update_round'
       do @round_manager?.handle_client_update
       return
+    else if message.type == 'start_late'
+      @round_manager?.handle_late_start player
+      return
     # All other types of updates are game updates.
     if message.game_index != @boards[player]?.gameIndex
       throw new UGLIClientError "Got update for old game: #{message.game_index}"

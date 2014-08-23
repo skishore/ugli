@@ -20,6 +20,11 @@ class @CombinosRoundManager
       if (do new Date().getTime) > @next_time
         do @handle_update
 
+  handle_late_start: (player) ->
+    if @can_start_late player
+      @game.boards[player].reset @game.seed
+      @scores[player] = 0
+
   handle_update: ->
     time = (do new Date().getTime)
     # If the round is waiting for time, continue after time > next_time.
@@ -64,6 +69,8 @@ class @CombinosRoundManager
   join_game: (player) ->
     @game.boards[player].state = WAITING
     @game.boards[player].pauseReason = {text: 'Waiting for next round...'}
+    if @can_start_late player
+      @game.boards[player].pauseReason.start_game_text = 'Click to start late'
     do @handle_update
 
   start_round: (time) ->
@@ -77,6 +84,10 @@ class @CombinosRoundManager
     for player of @game.boards
       @game.boards[player].reset @game.seed
       @scores[player] = 0
+
+  can_start_late: (player) ->
+    @state == RoundStates.PLAYING and player not of @scores and
+    CombinosBase.CAN_START_LATE[@game.game_type]
 
   end_round: (time) ->
     ranking = do @get_round_ranking

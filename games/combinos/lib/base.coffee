@@ -36,6 +36,9 @@ class @CombinosBase
     battle: 1000*60*6
     race: 1000*60*6
   }
+  @CAN_START_LATE = {
+    race: true
+  }
 
   # List of states that a multiplayer game's RoundManager can be in.
   @ROUND_STATES = {
