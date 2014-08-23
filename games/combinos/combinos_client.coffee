@@ -23,6 +23,9 @@ class @CombinosClient extends UGLIClient
     # Return a callback that extracts data from the form.
     -> game_type: do container.find('.game-type>.active>input').val
 
+  @make_help_ui: (container) ->
+    UI.insert (UI.render Template.combinos_help_ui), container[0]
+
   make_game_ui: ->
     @boards = {}
     @containers = {}

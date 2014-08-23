@@ -19,6 +19,45 @@
   {{/each}}
 </template>
 
+<template name="combinos_help_ui">
+  <div class="help-section">
+    Combinos is a block-dropping puzzle game with a twist.
+    The longer you play a game, the more frequently you'll
+    get pieces with six, seven, or more squares.
+    The basic rules are similar to Tetris:
+    fill up an entire line to clear it for points.
+    You will get more points for <b>clearing multiple lines</b>
+    simultaneously, and for making a <b>combo</b> - that is, for scoring
+    with consecutive pieces.
+  </div>
+  <div class="help-section">
+    To play, use the arrow keys to move a block, up or Z to rotate it,
+    and space to drop it in place.
+    You can also rotate a block counter-clockwise with X.
+    An important ability is the <b>hold</b>, which you can activate with C.
+    Using the hold will swap the current block for the held block,
+    which you can use to defer a bad block or save a good one.
+    <b>Note that you can't use the hold twice in a row without playing!</b>
+  </div>
+  <div class="help-section">
+    All keyboard bindings are configurable in the Options section of the menu.
+  </div>
+  <div class="help-section">
+    There are two multiplayer modes available right now.
+    The <b>Race</b> mode supports up to five players.
+    The goal of this game mode is to get a higher score than the
+    other players in the game in the time allotted.
+  </div>
+  <div class="help-section">
+    The <b>Battle</b> mode supports only two players.
+    In this mode, when you clear lines, you will attack the other player.
+    Each attack does some <b>queue damage</b> and some <b>poison damage</b>.
+    Queue damage adds a large block to the opponent's queue immediately,
+    while poison damage permanently make their distribution a bit worse.
+    <b>Big clears do extra queue damage. Combos do extra poison damage.</b>
+  </div>
+</template>
+
 <template name="combinos_status_table">
   <table class="table combinos-status-table">
     <thead>
