@@ -6,3 +6,7 @@ Template.top_bar.room_name = ->
     (Rooms.findOne {_id: do Session.get_game_id}, {name: 1})?.name
   else
     (Rooms.findOne {_id: do Session.get_lobby_id}, {name: 1})?.name
+
+Template.top_bar.events
+  'click .navbar-nav .navbar-help': ->
+    do HelpModal.show

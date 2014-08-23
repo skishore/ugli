@@ -55,6 +55,10 @@ class @UGLIClient
     )
     -> max_players: (parseInt (do container.find('.max-players').val), 10)
 
+  @make_help_ui: (container) ->
+    # Constructs static help UI inside the given jQuery-wrapped container.
+    container.append $('<div>').text 'No help provided.'
+
   make_game_ui: ->
     # Constructs game UI inside an empty @container.
     console.log 'UGLIClient.make_game_ui has not been implemented.'
