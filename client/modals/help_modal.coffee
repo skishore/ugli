@@ -6,4 +6,4 @@ class @HelpModal
       {class: 'btn-default', text: 'Ok', action: true}
     ]
 
-  @hide: (action) ->
+  @hide: (action) -> true

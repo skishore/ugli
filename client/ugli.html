@@ -22,6 +22,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right {{guest}}">
           <li><a class="buttonlike navbar-help">Help</a></li>
+          <li><a class="buttonlike navbar-feedback">Send feedback</a></li>
           {{#if logged_in}}
             <li><a>{{> loginButtons}}</a></li>
           {{/if}}
@@ -269,4 +270,23 @@
       </div>
     </div>
   </div>
+</template>
+
+<template name="feedback_modal">
+  <form class="feedback-form" role="form">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" class="form-control email"
+       placeholder="Your email">
+    </div>
+    <div class="form-group">
+      <label for="subject">Subject</label>
+      <input type="text" class="form-control subject"
+       placeholder="Subject" value="Re: {{title}}">
+    </div>
+    <div class="form-group">
+      <label for="body">Body</label>
+      <textarea class="form-control text"></textarea>
+    </div>
+  </form>
 </template>

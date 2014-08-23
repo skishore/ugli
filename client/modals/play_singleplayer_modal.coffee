@@ -18,3 +18,4 @@ class @PlaySingleplayerModal
   @hide: (leave_game) ->
     if leave_game
       Meteor.call 'create_singleplayer_game'
+    true

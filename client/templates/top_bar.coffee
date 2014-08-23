@@ -10,3 +10,6 @@ Template.top_bar.room_name = ->
 Template.top_bar.events
   'click .navbar-nav .navbar-help': ->
     do HelpModal.show
+
+  'click .navbar-nav .navbar-feedback': ->
+    do FeedbackModal.show

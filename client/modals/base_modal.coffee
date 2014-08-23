@@ -1,7 +1,7 @@
 make_callback = (handler, action) ->
   (e) ->
-    do BaseModal.hide
-    handler.hide action
+    if handler.hide action
+      do BaseModal.hide
 
 
 class @BaseModal
@@ -19,6 +19,9 @@ class @BaseModal
     @modal.modal 'show'
 
   @hide: ->
+    do @header.empty
+    do @body.empty
+    do @footer.empty
     @modal.modal 'hide'
 
 

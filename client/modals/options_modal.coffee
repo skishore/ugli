@@ -24,3 +24,5 @@ class @OptionsModal
         return
       Meteor.users.update {_id: do Meteor.userId},
           $set: 'profile.options': options
+    delete @options_binding
+    true

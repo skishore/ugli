@@ -39,3 +39,8 @@ Meteor.startup ->
 
     'send_game_message': (room_id, message) ->
       core.send_game_message @userId, room_id, message
+
+    'send_feedback_email': (options) ->
+      check options, {email: String, subject: String, text: String}
+      options.to = 'kshaunak+ugli@gmail.com'
+      Email.send options

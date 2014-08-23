@@ -23,3 +23,4 @@ class @LeaveGameModal
 
   @hide: (autoremove) ->
     Meteor.call 'leave_game', @room_id, autoremove
+    true
