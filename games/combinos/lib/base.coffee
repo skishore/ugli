@@ -17,7 +17,7 @@ class @CombinosBase
     '''
     battle: '''
       Clearing rows increases the sizes of the blocks your opponent gets.
-      Make your opponent top out before you do!
+      Score higher than your opponent while attacking them!
     '''
     race: '''
       Face off against up to four other players!

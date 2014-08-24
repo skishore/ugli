@@ -56,10 +56,7 @@ class @CombinosRoundManager
         @end_round time
 
   last_player_wins: (score) ->
-    # Return true if this score is the unique maximum score in @scores,
-    # or if the game_type is battle.
-    if @game.game_type == 'battle'
-      return true
+    # Return true if this score is the unique maximum score in @scores.
     number_of_good_scores = 0
     for _, other_score of @scores
       if other_score >= score
@@ -102,19 +99,10 @@ class @CombinosRoundManager
     @state = RoundStates.WAITING_FOR_TIME
 
   get_round_ranking: ->
+    # Ranking is dependent only on scores for all game modes.
     ranking = {}
-    if @game.game_type == 'battle'
-      for player of @scores
-        if @game.boards[player]?.state == combinos.Constants.PLAYING
-          ranking[player] = 1
-        else
-          ranking[player] = 2
-          has_clear_winner = true
-    # Use score-based ranking for 'race' games, or if the game_type was
-    # 'battle' but both players are still alive.
-    if @game.game_type == 'race' or not has_clear_winner
-      scores = ([player, score] for player, score of @scores)
-      scores.sort (a, b) -> b[1] - a[1]
-      for row, i in scores
-        ranking[row[0]] = i + 1
+    scores = ([player, score] for player, score of @scores)
+    scores.sort (a, b) -> b[1] - a[1]
+    for row, i in scores
+      ranking[row[0]] = i + 1
     ranking
