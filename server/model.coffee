@@ -61,19 +61,22 @@ class @Model
     @_updated_game_ids = {}
     for i in [0...num_updates]
       update = do @_updates.shift
-      type = update.type
-      room = update.room
-      if type == 'create_room'
-        room._id = Rooms.save_room room
-        assert room._id?, "Created room does not have an _id: #{room}"
-        @rooms[room._id] = room
-      else if type == 'update_room'
-        Rooms.save_room room
-      else if type == 'delete_room'
-        Rooms.remove {_id: room._id}
-      else if type == 'update_game'
-        Rooms.update_game room
-      else if type == 'log_game_message'
-        Chats.send_chat room._id, '', update.message
-      else
-        assert false, "Invalid update type: #{type}"
+      @["_commit_#{update.type}"] update
+
+  _commit_create_room: (update) ->
+    room = update.room
+    room._id = Rooms.save_room room
+    assert room._id?, "New room does not have an _id: #{room}"
+    @rooms[room._id] = room
+
+  _commit_update_room: (update) ->
+    Rooms.save_room update.room
+
+  _commit_delete_room: (update) ->
+    Rooms.remove {_id: update.room._id}
+
+  _commit_update_game: (update) ->
+    Rooms.update_game update.room
+
+  _commit_log_game_message: (update) ->
+    Chats.send_chat update.room._id, '', update.message
