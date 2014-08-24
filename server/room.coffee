@@ -34,7 +34,7 @@ class @Room
     @game.leave_game user.name if @game
     @users.splice index, 1
     if @game and @users.length == 0
-      if !!autoremove
+      if @should_autoremove autoremove
         @model.delete_room @
       else
         @state = RoomState.WAITING
@@ -48,3 +48,10 @@ class @Room
     do @game.start_game
     @state = RoomState.PLAYING
     @model.update_room @
+
+  should_autoremove: (autoremove) ->
+    if not @multiplayer
+      return Common.persist_singleplayer_games
+    else if Common.autoremove?
+      return Common.autoremove
+    autoremove

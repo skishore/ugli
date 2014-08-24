@@ -61,4 +61,11 @@ class @Rooms extends Collection
   @update_game: (room) ->
     assert room._id? and room.game
     data = {game: room.game._get_views room.users}
+    # Update the game summary only if it has changed.
+    # This check avoids unnecessary updates for clients in the lobby.
+    summary = do room.game.get_lobby_view
+    summary.host = room.users[0]?.name or '-'
+    if not _.isEqual summary, room.summary
+      data.summary = summary
+      room.summary = summary
     @update {_id: room._id}, {$set: data}
