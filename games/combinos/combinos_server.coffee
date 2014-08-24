@@ -17,6 +17,7 @@ class @CombinosServer extends UGLIServer
     explanation: CombinosBase.EXPLANATIONS[@game_type]
     open: @num_players < @max_players
     max_players: @max_players
+    would_forfeit: @round_manager?.state == CombinosBase.ROUND_STATES.PLAYING
 
   get_player_view: (player) -> {}
 
