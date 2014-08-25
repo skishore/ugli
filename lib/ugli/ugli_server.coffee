@@ -5,7 +5,6 @@
 #       Override these methods and modify in-memory state based on the update.
 #       To avoid getting the server into an inconsistent state, fully validate
 #       the update before modifying any state.
-#       TODO(skishore): We could checkpoint the state before calling handlers.
 #   - view computation: @get_player_view, @get_public_view, @get_lobby_view
 #       These methods are used to notify the client of a change to game state.
 #       Both the public_view and the player's view are passed to each player.
@@ -17,11 +16,19 @@
 # See below for detailed specifications for these methods.
 #
 # The framework also provides a @log_game_message method that can be used to
-# push small text status updates to the game log.
+# push small text status updates to the game log, and methods to record games:
+#   @record_singleplayer_game: (player, score) ->
+#     Takes a player name and the score they scored and records it.
+#   @record_multiplayer_game: (game_type, ranking) ->
+#     Takes a string game_type and a dict mapping player names to their
+#     1-indexed ranks at the end of the game and records it.
 
 class @UGLIServer
   constructor: (room, config) ->
-    @log_game_message = room.model.log_game_message.bind room.model, room
+    model = room.model
+    @log_game_message = model.log_game_message.bind model, room
+    @record_singleplayer_game = model.record_singleplayer_game.bind model
+    @record_multiplayer_game = model.record_multiplayer_game.bind model
     @initialize_state config
 
   _get_views: (users) ->

@@ -49,6 +49,24 @@ class @Model
     @_updates.push {type: 'log_game_message', room: room, message: message}
     @_num_updates += 1
 
+  record_singleplayer_game: (player, score) ->
+    check score, Match.Integer
+    if score > 0
+      @_updates.push
+        type: 'record_singleplayer_game'
+        player: player
+        score: score
+      @_num_updates += 1
+
+  record_multiplayer_game: (game_type, ranking) ->
+    assert game_type.length > 0, "Unexpected game_type: #{game_type}"
+    check ranking, Object
+    @_updates.push
+      type: 'record_multiplayer_game'
+      game_type: game_type
+      ranking: ranking
+    @_num_updates += 1
+
   _commit: ->
     # Applying updates in the order in which they were called is tricky,
     # because Meteor will yield each time we make a model call, during which
@@ -80,3 +98,9 @@ class @Model
 
   _commit_log_game_message: (update) ->
     Chats.send_chat update.room._id, '', update.message
+
+  _commit_record_singleplayer_game: (update) ->
+    GameRecords.record_singleplayer_game update.player, update.score
+
+  _commit_record_multiplayer_game: (update) ->
+    GameRecords.record_multiplayer_game update.game_type, update.ranking
