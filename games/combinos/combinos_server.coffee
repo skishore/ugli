@@ -13,11 +13,16 @@ class @CombinosServer extends UGLIServer
     @seed = Math.floor (1 << 30)*(do Math.random)
 
   get_lobby_view: ->
+    # Compute a would_forfeit dictionary.
+    would_forfeit = {}
+    for player, board of @boards
+      would_forfeit[player] = board.state == combinos.Constants.PLAYING
+    # Return the final lobby view.
     description: CombinosBase.DESCRIPTIONS[@game_type]
     explanation: CombinosBase.EXPLANATIONS[@game_type]
     open: @num_players < @max_players
     max_players: @max_players
-    would_forfeit: @round_manager?.state == CombinosBase.ROUND_STATES.PLAYING
+    would_forfeit: would_forfeit
 
   get_player_view: (player) -> {}
 
