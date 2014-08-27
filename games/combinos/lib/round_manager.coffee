@@ -88,6 +88,7 @@ class @CombinosRoundManager
 
   end_round: (time) ->
     ranking = do @get_round_ranking
+    @game.record_multiplayer_game @game.game_type, ranking
     for player, board of @game.boards
       text = ranking[player] or 'Waiting for next round...'
       board.pauseReason = {last_state: board.state, text: text}

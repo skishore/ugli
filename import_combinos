@@ -42,7 +42,7 @@ if true; then
 this.combinos = this.combinos || {};
 this.combinos.RawBlockData = RawBlockData;
 '''
-fi > $TARGET_PATH/data.js
+fi > $TARGET_PATH/lib/data.js
 
 if true; then
   printf '''var RawBlockData = combinos.RawBlockData;\n'''
@@ -63,4 +63,4 @@ if (Meteor.isClient) {
   });
 }
 '''
-fi > $TARGET_PATH/logic.js
+fi > $TARGET_PATH/lib/logic.js

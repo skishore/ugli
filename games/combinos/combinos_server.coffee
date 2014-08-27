@@ -1,3 +1,6 @@
+GameStates = combinos.Constants
+
+
 class @CombinosServer extends UGLIServer
   initialize_state: (config) ->
     if config.game_type not in CombinosBase.GAME_TYPES
@@ -16,7 +19,7 @@ class @CombinosServer extends UGLIServer
     # Compute a would_forfeit dictionary.
     would_forfeit = {}
     for player, board of @boards
-      would_forfeit[player] = board.state == combinos.Constants.PLAYING
+      would_forfeit[player] = board.state == GameStates.PLAYING
     # Return the final lobby view.
     description: CombinosBase.DESCRIPTIONS[@game_type]
     explanation: CombinosBase.EXPLANATIONS[@game_type]
@@ -59,7 +62,7 @@ class @CombinosServer extends UGLIServer
   handle_move: (player, move_queue) ->
     check move_queue, [{syncIndex: Number, move: [[Number]]}]
     board = @boards[player]
-    if board.state != combinos.Constants.PLAYING
+    if board.state != GameStates.PLAYING
       throw new UGLIClientError "#{player}'s board is not PLAYING"
     # Get the opponent's board in battle mode to deliver attacks.
     if @game_type == 'battle'
@@ -68,19 +71,24 @@ class @CombinosServer extends UGLIServer
     for move in move_queue
       if board.syncIndex < move.syncIndex
         for keys in move.move
-          @make_move board, keys, opponent
+          if @make_move player, board, keys, opponent
+            break
 
-  make_move: (board, keys, opponent) ->
+  make_move: (player, board, keys, opponent) ->
     last_score = board.score
     board.update keys
     if board.score != last_score and @game_type == 'battle'
-      if opponent?.state == combinos.Constants.PLAYING
+      if opponent?.state == GameStates.PLAYING
         opponent.handleAttack board
+    if board.state != GameStates.PLAYING
+      if @game_type == 'singleplayer'
+        @record_singleplayer_game player, board.score
+      return true
 
   handle_start: (player) ->
     if not @singleplayer
       throw new UGLIClientError "Can't press start in #{@game_type} game"
-    if @boards[player].state != combinos.Constants.GAMEOVER
+    if @boards[player].state != GameStates.GAMEOVER
       throw new UGLIClientError "Can't reset #{@boards[player].state} board"
     do @boards[player].reset
 
@@ -93,6 +101,9 @@ class @CombinosServer extends UGLIServer
     @round_manager?.join_game player
 
   leave_game: (player) ->
+    board = @boards[player]
+    if @game_type == 'singleplayer' and board.state == GameStates.PLAYING
+      @record_singleplayer_game player, board.score
     @num_players -= 1
     delete @boards[player]
     do @round_manager?.handle_update

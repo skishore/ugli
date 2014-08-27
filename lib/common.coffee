@@ -30,4 +30,4 @@ class @Common
 
   # The list of game types to show in the high-scores list, in order.
   # Leave this attribute unset if you do not wish to expose high scores.
-  #@game_types = ['singleplayer']
+  @game_types = ['singleplayer', 'battle', 'race']
