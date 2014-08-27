@@ -9,5 +9,6 @@ coffeescript
 http
 standard-app-packages
 less
-user-status
 email
+mizzao:user-status
+
