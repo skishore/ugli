@@ -51,7 +51,8 @@ class @UGLIServer
     #   explanation: a longer explanation of the game mode
     #   open: boolean that should be true if players can join the game
     #   max_players: the maximum number of players allowed in the game
-    #   would_forfeit: true if leaving now would forfeit the game
+    #   would_forfeit: (optional) a dict mapping players -> true if, by leaving,
+    #                  they would forfeit the current game
     console.log 'UGLIServer.get_lobby_view has not been implemented.'
 
   get_player_view: (player) ->

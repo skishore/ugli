@@ -6,7 +6,7 @@ ask_about_autoremove = ->
 
 ask_about_forfeit = ->
   $('<div>').append \
-    ($('<p>').text 'Leaving now may forfeit the current game.'),
+    ($('<p>').text 'Leaving now will forfeit the current game.'),
     ($('<p>').text 'Do you still want to leave?')
 
 
@@ -15,22 +15,22 @@ class @LeaveGameModal
     room = Rooms.get @room_id
     if not room?
       return
-    if room.multiplayer and room.summary?.would_forfeit
-      autoremove = !!Common.autoremove
-      BaseModal.show @, 'Leave game', (do ask_about_forfeit), [
-        {class: 'btn-default', text: 'Yes', action: {autoremove: true}}
-        {class: 'btn-primary', text: 'No', action: false}
-      ]
-    else if room.players.length == 1
-      if not room.multiplayer or Common.autoremove?
-        Meteor.call 'leave_game', @room_id
-      else
+    if room.multiplayer
+      player = (do Meteor.user)?.username
+      if room.summary.would_forfeit?[player]
+        autoremove = !!Common.autoremove
+        BaseModal.show @, 'Leave game', (do ask_about_forfeit), [
+          {class: 'btn-default', text: 'Yes', action: {autoremove: true}}
+          {class: 'btn-primary', text: 'No', action: false}
+        ]
+        return
+      else if room.players.length == 1 and not Common.autoremove?
         BaseModal.show @, 'Leave game', (do ask_about_autoremove), [
           {class: 'btn-default', text: 'Yes', action: {autoremove: true}}
           {class: 'btn-default', text: 'No', action: {autoremove: false}}
         ]
-    else
-      Meteor.call 'leave_game', @room_id
+        return
+    Meteor.call 'leave_game', @room_id
 
   @hide: (leave) ->
     if leave
