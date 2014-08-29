@@ -85,6 +85,7 @@ class @CombinosClient extends UGLIClient
     if player == @me
       settings = @get_settings @options
       @boards[player] = new combinos.ClientBoard target, data, settings
+      do target.focus
     else
       settings = {game_type: @view.game_type, singleplayer: false}
       scale = if @one_row then 0.75 else 0.5
