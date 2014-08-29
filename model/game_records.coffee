@@ -11,6 +11,46 @@ class @GameRecords extends Collection
       'result',
     ]
 
+  @format_high_scores: (game_type, key, top_ten, user) ->
+    result = ({
+      rank: i + 1
+      player: row.username
+      score: row.record[game_type][key]
+      games_played: row.record?[game_type].games_played
+    } for row, i in top_ten)
+    if user?
+      # If the player is not a guest, bold their row if they're in the
+      # top ten, otherwise append a new row for them.
+      for row in result
+        if row.player == user.username
+          row.bold = 'bold'
+          return result
+      row = {rank: '-', player: user.username, bold: 'bold'}
+      if user.record?[game_type]?
+        row.score = user.record[game_type][key]
+        row.games_played = user.record[game_type].games_played
+      else
+        row.score = row.games_played = '-'
+      result.push row
+    result
+
+  @get_high_scores: (game_type, player) ->
+    # Build a clause to query by and a list of fields to query for.
+    clause = {'profile.guests': null}
+    clause["record.#{game_type}"] = {$exists: true}
+    fields = {username: 1}
+    fields["record.#{game_type}"] = 1
+    # Build a sort key that depends on the game type.
+    key = if game_type == 'singleplayer' then 'high_score' else 'games_won'
+    sort = {}
+    sort["record.#{game_type}.#{key}"] = -1
+    options = {fields: fields, limit: 10, sort: sort}
+    # Get data for the player and for the top ten and merge the two.
+    top_ten = do (Meteor.users.find clause, options).fetch
+    player_clause = {username: player, 'profile.guest': null}
+    user = Meteor.users.findOne player_clause, {fields: fields}
+    @format_high_scores game_type, key, top_ten, user
+
   @record_singleplayer_game: (player, score) ->
     Meteor.users.update {username: player}, {
       $inc: {
