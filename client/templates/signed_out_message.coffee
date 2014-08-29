@@ -3,7 +3,7 @@ Template.signed_out_message.rendered = ->
 
 Template.signed_out_message.events
   'click .guest-account-message .btn': ->
-    username = "guest#{('' + Math.random()).slice(2, 8)}"
+    username = GUEST_NAMES[Math.floor GUEST_NAMES.length*do Math.random]
     Accounts.createUser {
       password: Meteor.uuid()
       username: username
