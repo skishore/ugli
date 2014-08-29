@@ -3,6 +3,8 @@
 # For multiplayer games, result is a mapping from players -> ranks.
 
 class @GameRecords extends Collection
+  TOP_N = 10
+
   @set_schema
     name: 'game_records'
     fields: [
@@ -10,7 +12,15 @@ class @GameRecords extends Collection
       'game_type',
       'result',
     ]
-  TOP_N = 10
+    indices: [
+      columns: created: 1
+    ]
+  if Meteor.isServer and Common.game_types?
+    for game_type in Common.game_types
+      key = if game_type == 'singleplayer' then 'high_score' else 'games_won'
+      columns = {}
+      columns["record.#{game_type}.#{key}"] = -1
+      Meteor.users._ensureIndex columns
 
   @format_high_scores: (game_type, key, clause, top_n, user) ->
     result = ({

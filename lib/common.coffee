@@ -27,3 +27,7 @@ class @Common
 
   # Set this value to true to keep singleplayer rooms around when users leave.
   #@persist_singleplayer_rooms = false
+
+  # The list of game types to show in the high-scores list, in order.
+  # Leave this attribute unset if you do not wish to expose high scores.
+  #@game_types = ['singleplayer']
