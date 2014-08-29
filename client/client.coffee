@@ -1,4 +1,9 @@
 Meteor.startup ->
+  # We hard-code the height of the in-game UI. The login message is smaller.
+  zoom = window.innerHeight/720
+  zoom = Math.max (Math.floor 4*zoom)/4, 1
+  $('body').css 'zoom', zoom
+
   Deps.autorun ->
     if (do Meteor.userId)?
       Meteor.subscribe 'current_room'
