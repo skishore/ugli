@@ -10,14 +10,15 @@ class @GameRecords extends Collection
       'game_type',
       'result',
     ]
+  TOP_N = 10
 
-  @format_high_scores: (game_type, key, top_ten, user) ->
+  @format_high_scores: (game_type, key, clause, top_n, user) ->
     result = ({
       rank: i + 1
       player: row.username
       score: row.record[game_type][key]
       games_played: row.record?[game_type].games_played
-    } for row, i in top_ten)
+    } for row, i in top_n)
     if user?
       # If the player is not a guest, bold their row if they're in the
       # top ten, otherwise append a new row for them.
@@ -27,8 +28,11 @@ class @GameRecords extends Collection
           return result
       row = {rank: '-', player: user.username, bold: 'bold'}
       if user.record?[game_type]?
-        row.score = user.record[game_type][key]
-        row.games_played = user.record[game_type].games_played
+        record = user.record[game_type]
+        clause["record.#{game_type}.#{key}"] = {$gt: record[key]}
+        row.rank = (Math.max (do (Meteor.users.find clause).count), TOP_N) + 1
+        row.score = record[key]
+        row.games_played = record.games_played
       else
         row.score = row.games_played = '-'
       result.push row
@@ -44,12 +48,12 @@ class @GameRecords extends Collection
     key = if game_type == 'singleplayer' then 'high_score' else 'games_won'
     sort = {}
     sort["record.#{game_type}.#{key}"] = -1
-    options = {fields: fields, limit: 10, sort: sort}
+    options = {fields: fields, limit: TOP_N, sort: sort}
     # Get data for the player and for the top ten and merge the two.
-    top_ten = do (Meteor.users.find clause, options).fetch
+    top_n = do (Meteor.users.find clause, options).fetch
     player_clause = {username: player, 'profile.guest': null}
     user = Meteor.users.findOne player_clause, {fields: fields}
-    @format_high_scores game_type, key, top_ten, user
+    @format_high_scores game_type, key, clause, top_n, user
 
   @record_singleplayer_game: (player, score) ->
     Meteor.users.update {username: player}, {
