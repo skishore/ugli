@@ -251,12 +251,14 @@
 <template name="signed_out_message">
   <div id="signed-out-message">
     {{> loginButtons}} to play {{title}}:
-    <div class="guest-account-message">
-      <a class="btn btn-default btn-sm">Use a guest account</a>
-    </div>
-    <div class="guest-account-warning">
-      As a guest, your high scores will not be saved.
-    </div>
+    {{#if show_guest_account}}
+      <div class="guest-account-message">
+        <a class="btn btn-default btn-sm">Use a guest account</a>
+      </div>
+      <div class="guest-account-warning">
+        As a guest, your high scores will not be saved.
+      </div>
+    {{/if}}
   </div>
 </template>
 

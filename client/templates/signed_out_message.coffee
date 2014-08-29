@@ -1,3 +1,7 @@
+Template.signed_out_message.show_guest_account = ->
+  (not Session.get 'Meteor.loginButtons.inSignupFlow') and
+  (not Session.get 'Meteor.loginButtons.inForgotPasswordFlow')
+
 Template.signed_out_message.rendered = ->
   Session.set 'Meteor.loginButtons.dropdownVisible', true
 
