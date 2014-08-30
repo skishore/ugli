@@ -5,7 +5,7 @@ make_callback = (handler, action) ->
 
 
 class @BaseModal
-  @show: (handler, header, body, buttons) ->
+  @show: (@handler, header, body, buttons) ->
     @header.text header
     (do @body.empty).append body
     do @footer.empty
@@ -19,10 +19,14 @@ class @BaseModal
     @modal.modal 'show'
 
   @hide: ->
+    @modal.modal 'hide'
+
+  @cleanup: ->
+    do @handler.cleanup if @handler?.cleanup?
+    delete @handler
     do @header.empty
     do @body.empty
     do @footer.empty
-    @modal.modal 'hide'
 
 
 Template.base_modal.rendered = ->
@@ -30,3 +34,4 @@ Template.base_modal.rendered = ->
   BaseModal.header = BaseModal.modal.find '.modal-header h4'
   BaseModal.body = BaseModal.modal.find '.modal-body'
   BaseModal.footer = BaseModal.modal.find '.modal-footer'
+  BaseModal.modal.on 'hidden.bs.modal', -> do BaseModal.cleanup

@@ -10,5 +10,7 @@ class @CreateGameModal
   @hide: (create_game) ->
     if create_game
       Meteor.call 'create_game', do @config_binding
-    delete @config_binding
     true
+
+  @cleanup: ->
+    delete @config_binding

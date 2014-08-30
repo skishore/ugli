@@ -28,5 +28,7 @@ class @FeedbackModal
       if not validated
         return false
       Meteor.call 'send_feedback_email', options
-    delete @feedback_elt
     true
+
+  @cleanup: ->
+    delete @feedback_elt
