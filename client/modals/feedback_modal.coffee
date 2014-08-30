@@ -5,7 +5,7 @@ class @FeedbackModal
     # Fill in the user's email, if it is available.
     user = do Meteor.user
     if user?.emails?.length > 0
-      @feedback_elt.find('.form-control.email').val user.emails[0].address
+      @feedback_elt.find('.form-control.from').val user.emails[0].address
 
     BaseModal.show @, 'Send feedback', @feedback_elt, [
       {class: 'btn-default', text: 'Cancel', action: false}
@@ -16,7 +16,7 @@ class @FeedbackModal
     if send
       options = {}
       validated = true
-      for field in ['email', 'subject', 'text']
+      for field in ['from', 'subject', 'text']
         element = @feedback_elt.find ".form-control.#{field}"
         value = do element.val
         if value?.length > 0
