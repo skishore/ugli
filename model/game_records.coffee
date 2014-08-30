@@ -34,9 +34,9 @@ class @GameRecords extends Collection
       # top ten, otherwise append a new row for them.
       for row in result
         if row.player == user.username
-          row.bold = 'bold'
+          row.active = 'active'
           return result
-      row = {rank: '-', player: user.username, bold: 'bold'}
+      row = {rank: '-', player: user.username, active: 'active'}
       if user.record?[game_type]?
         record = user.record[game_type]
         clause["record.#{game_type}.#{key}"] = {$gt: record[key]}
@@ -44,11 +44,11 @@ class @GameRecords extends Collection
         row.score = record[key]
         row.games_played = record.games_played
       else
-        row.score = row.games_played = '-'
+        row.score = row.games_played = 0
       result.push row
     result
 
-  @get_high_scores: (game_type, player) ->
+  @get_high_scores: (game_type, user_id) ->
     # Build a clause to query by and a list of fields to query for.
     clause = {'profile.guests': null}
     clause["record.#{game_type}"] = {$exists: true}
@@ -61,8 +61,8 @@ class @GameRecords extends Collection
     options = {fields: fields, limit: TOP_N, sort: sort}
     # Get data for the player and for the top ten and merge the two.
     top_n = do (Meteor.users.find clause, options).fetch
-    player_clause = {username: player, 'profile.guest': null}
-    user = Meteor.users.findOne player_clause, {fields: fields}
+    user_clause = {_id: user_id, 'profile.guest': null}
+    user = Meteor.users.findOne user_clause, {fields: fields}
     @format_high_scores game_type, key, clause, top_n, user
 
   @record_singleplayer_game: (player, score) ->

@@ -7,9 +7,15 @@ Template.top_bar.room_name = ->
   else
     (Rooms.findOne {_id: do Session.get_lobby_id}, {name: 1})?.name
 
+Template.top_bar.show_high_scores = ->
+  Common.game_types?
+
 Template.top_bar.events
   'click .navbar-nav .navbar-help': ->
     do HelpModal.show
+
+  'click .navbar-nav .navbar-high-scores': ->
+    do HighScoresModal.show
 
   'click .navbar-nav .navbar-feedback': ->
     do FeedbackModal.show

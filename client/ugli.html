@@ -22,6 +22,9 @@
         </ul>
         <ul class="nav navbar-nav navbar-right {{guest}}">
           <li><a class="buttonlike navbar-help">Help</a></li>
+          {{#if show_high_scores}}
+            <li><a class="buttonlike navbar-high-scores">High scores</a></li>
+          {{/if}}
           <li><a class="buttonlike navbar-feedback">Send feedback</a></li>
           {{#if logged_in}}
             <li><a class="buttonlike">{{> loginButtons}}</a></li>

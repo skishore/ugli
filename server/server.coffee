@@ -44,3 +44,6 @@ Meteor.startup ->
       check options, {email: String, subject: String, text: String}
       options.to = 'kshaunak+ugli@gmail.com'
       Email.send options
+
+    'get_high_scores': (game_type) ->
+      GameRecords.get_high_scores game_type, @userId

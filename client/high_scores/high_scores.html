@@ -1,0 +1,46 @@
+<template name="high_scores">
+  <div class="high-scores">
+    <div class="form-group btn-group-sm btn-group-vertical">
+      {{#each game_types}}
+        <label class="btn btn-default btn-white {{active}}">
+          {{label}}
+          <input type="radio" value="{{game_type}}">
+        </label>
+      {{/each}}
+    </div>
+    <div class="high-scores-body">
+      <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+    </div>
+    <div class="high-scores-footer"></div>
+  </div>
+</template>
+
+<template name="high_scores_table">
+  <div class="high-scores-table">
+    <h4 class="header">{{label}} top ten</h4>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th class="name">Player</th>
+          <th>{{key}}</th>
+          <th>Games played</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each high_scores}}
+          <tr class="{{active}}">
+            <td>{{rank}}</td>
+            <td class="name">{{player}}</td>
+            <td>{{score}}</td>
+            <td>{{games_played}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</template>
