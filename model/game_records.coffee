@@ -50,7 +50,7 @@ class @GameRecords extends Collection
 
   @get_high_scores: (game_type, user_id) ->
     # Build a clause to query by and a list of fields to query for.
-    clause = {'profile.guests': null}
+    clause = {'profile.guest': null}
     clause["record.#{game_type}"] = {$exists: true}
     fields = {username: 1}
     fields["record.#{game_type}"] = 1
