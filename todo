@@ -1,6 +1,26 @@
-Alphabet mode
-- Implement two-player alphabet race
+Core server-side functionality
+==============================
+- Implement setTimeout / clearTimeout
+- Pick a testing framework and write tests
 
-UGLI core
-- Record player histories and expose high scores
-- Add ELO ranking system for multiplayer
+Room/game layer
+===============
+x Implement options that save to users collection
+x Implement in-lobby singleplayer mode
+x API method on game completion that closes game, records win / loss
+x Create some sort of framework for a game with rounds
+- Private rooms / invites
+- ELO / other rating system
+- Automatic matchmaking
+
+Combinos
+========
+- Implement alphabet-hold game mode
+
+UI layer
+========
+x Show state and "full" status on game details page
+- Animation between games list and game details
+- Show reason for being unable to join game if join fails
+- Sort games list in the lobby by state / created
+- Flash tab when the game is waiting on the user for input
