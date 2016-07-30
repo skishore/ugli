@@ -19,7 +19,7 @@ class @CombinosRoundUI
 
   handle_update: (@round) ->
     do @update_timer
-    @update_status_table @get_status_data round
+    @update_status_table @get_status_data @round
 
   update_timer: ->
     # Update the timer text. Returns true if we should try to start the round.

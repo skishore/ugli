@@ -14,7 +14,7 @@ class @BaseModal
           .addClass('btn btn-sm')
           .addClass(button.class)
           .text(button.text)
-          .click(make_callback handler, button.action)
+          .click(make_callback @handler, button.action)
       @footer.append button_elt
     @modal.modal 'show'
 
